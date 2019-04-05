@@ -7,7 +7,7 @@ class App extends Component {
   render() {
     console.log('fetch');
     axios
-      .get('/api/getList')
+      .get('/api/allblogs')
       .then(function(response) {
         console.log('success');
         // handle success
