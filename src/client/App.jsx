@@ -1,36 +1,38 @@
-import React, { Component } from 'react';
-import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import './style/style.scss';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-class App extends Component {
-  render() {
+const App = _props => {
+  const [blogs, setBlogs] = useState([]);
+
+  useEffect(() => {
     console.log('fetch');
     axios
       .get('/api/allblogs')
-      .then(function(response) {
-        console.log('success');
-        // handle success
-        console.log(response);
+      .then(response => {
+        console.log('success', response.data);
+        setBlogs(response.data);
       })
-      .catch(function(error) {
+      .catch(error => {
         console.log('error');
-        // handle error
         console.log(error);
-      })
-      .then(function() {
-        console.log('always');
-        // always executed
       });
+  }, []);
 
-    return (
+  return (
+    <div>
+      <div>Create New Blog</div>
+      <div>Login</div>
+      <div>Search existing blogs</div>
       <div>
-        <div>Create New Blog</div>
-        <div>Login</div>
-        <div>Search existing blogs</div>
+        Blogs:
+        <ul>
+          {blogs.map(blog => (
+            <li key={blog._id}>{blog.name}</li>
+          ))}
+        </ul>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default App;

@@ -1,6 +1,6 @@
 import mongoose from '../mongoose';
 
-let BlogSchema = new mongoose.Schema({
+const BlogSchema = new mongoose.Schema({
   name: String
 });
 
