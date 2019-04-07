@@ -1,5 +1,5 @@
 import React from 'react';
-import configureAppStore from './store';
+import { configureAppStore } from './store';
 import { Provider } from 'react-redux';
 import Main from './components/Main';
 

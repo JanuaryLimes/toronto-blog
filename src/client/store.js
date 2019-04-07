@@ -1,7 +1,7 @@
 import { configureStore, getDefaultMiddleware } from 'redux-starter-kit';
 import { rootReducer } from './reducers/rootReducer';
 
-export default function configureAppStore(preloadedState) {
+export const configureAppStore = preloadedState => {
   const store = configureStore({
     reducer: rootReducer,
     middleware: [...getDefaultMiddleware()],
@@ -15,4 +15,4 @@ export default function configureAppStore(preloadedState) {
   }
 
   return store;
-}
+};

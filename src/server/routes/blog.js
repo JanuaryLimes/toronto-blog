@@ -15,4 +15,20 @@ router.get('/api/allblogs', (req, res) => {
     });
 });
 
+router.post('/api/blog', (req, res) => {
+  console.log('req.body', req.body, req.body.name);
+  if (req.body && req.body.name) {
+    Blog.create({ name: req.body.name }, (err, result) => {
+      if (err) {
+        res.status(500).json({ error: 'Unable to create blog', err: err });
+      } else {
+        console.log('result', result);
+        res.json(result);
+      }
+    });
+  } else {
+    res.status(500).json({ error: 'Unable to create blog' });
+  }
+});
+
 export default router;

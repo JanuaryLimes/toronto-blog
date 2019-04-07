@@ -10,7 +10,9 @@ const app = express();
 const http = Server(app);
 
 app.use(cors());
+app.use(express.json());
 app.use(https);
+
 app.use(blogRoute);
 
 app.use(express.static(join(__dirname, '../build'))); // Serve the static files from the React app
