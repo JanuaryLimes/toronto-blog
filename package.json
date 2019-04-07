@@ -5,6 +5,7 @@
   "dependencies": {
     "@babel/cli": "^7.4.3",
     "@babel/core": "^7.4.3",
+    "@babel/node": "^7.2.2",
     "@babel/preset-env": "^7.4.3",
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
@@ -29,7 +30,7 @@
     "eject": "react-scripts eject",
     "heroku-postbuild": "npm run build",
     "start-dev-react": "react-scripts start",
-    "start-dev-server": "babel --watch src/server -d dist & (sleep 5 && nodemon --inspect=9230 dist/server.js)"
+    "start-dev-server": "nodemon --inspect=9230 --exec babel-node src/server/server.js"
   },
   "proxy": "http://localhost:5000/",
   "eslintConfig": {
