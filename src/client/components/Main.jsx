@@ -23,8 +23,46 @@ const getAllBlogs = onSuccess => {
 const Main = ({ blogs, dispatchSetBlogs }) => {
   const [blogName, setBlogName] = useState('');
 
+  const onRegister = e => {
+    e.preventDefault();
+
+    axios
+      .post('/api/register', {
+        username: 'abcdef',
+        password: 'dupa123'
+      })
+      .then(response => {
+        console.log('response', response);
+      })
+      .catch(error => {
+        console.log('error', error);
+        console.log(error.response.data);
+      });
+  };
+  const onLogin = e => {
+    e.preventDefault();
+
+    axios
+      .post(
+        '/api/login',
+        {
+          username: 'abcdef',
+          password: 'dupa123'
+        },
+        { withCredentials: true }
+      )
+      .then(response => {
+        console.log('response', response);
+      })
+      .catch(error => {
+        console.log('error', error);
+        console.log(error.response.data);
+      });
+  };
+
   const onCreate = e => {
     e.preventDefault();
+
     if (blogName) {
       console.log('creating...', blogName);
       axios
@@ -43,6 +81,22 @@ const Main = ({ blogs, dispatchSetBlogs }) => {
     }
   };
 
+  const onGetSecure = e => {
+    e.preventDefault();
+
+    axios
+      .get('/api/protectedBlogs', { withCredentials: true })
+      .then(response => {
+        console.log('success', response.data);
+      })
+      .catch(error => {
+        console.log('error', error);
+      })
+      .then(() => {
+        console.groupEnd();
+      });
+  };
+
   useEffect(() => {
     getAllBlogs(dispatchSetBlogs);
   }, []);
@@ -56,6 +110,9 @@ const Main = ({ blogs, dispatchSetBlogs }) => {
         <button type="submit" onClick={onCreate}>
           Create
         </button>
+        <button onClick={onRegister}>Register</button>
+        <button onClick={onLogin}>Login</button>{' '}
+        <button onClick={onGetSecure}>get secure</button>
       </form>
       <div>Login</div>
       <div>Search existing blogs</div>

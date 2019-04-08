@@ -11,4 +11,4 @@ mongoose.connection.once('open', () => {
   console.log('db open');
 });
 
-export default mongoose;
+export { mongoose as mConnection };

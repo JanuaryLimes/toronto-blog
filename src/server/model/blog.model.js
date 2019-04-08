@@ -1,7 +1,7 @@
-import mongoose from '../mongoose';
+import { mConnection } from '../mongoose';
 
-const BlogSchema = new mongoose.Schema({
+const BlogSchema = new mConnection.Schema({
   name: String
 });
 
-export const Blog = mongoose.model('Blog', BlogSchema);
+export const Blog = mConnection.model('Blog', BlogSchema);

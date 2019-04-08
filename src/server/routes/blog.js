@@ -1,12 +1,13 @@
 import express from 'express';
 import { Blog } from '../model/blog.model';
+import passport from 'passport';
 
 const router = express.Router();
 
 router.get('/api/allblogs', (req, res) => {
   Blog.find({})
     .then(doc => {
-      console.log('Sent list of items', doc);
+      console.log('Sent list of items...');
       res.json(doc);
     })
     .catch(err => {
@@ -30,5 +31,15 @@ router.post('/api/blog', (req, res) => {
     res.status(500).json({ error: 'Unable to create blog' });
   }
 });
+
+router.get(
+  '/api/protectedBlogs',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const { user } = req;
+
+    res.status(200).send({ user, arr: [1, 2, 3] });
+  }
+);
 
 export default router;
