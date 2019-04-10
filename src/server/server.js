@@ -8,7 +8,9 @@ import blogRoute from './routes/blog';
 import authRoute from './auth/auth.route';
 import https from './https';
 import './auth/passportSetup';
+import { loadDevEnv } from './utils';
 
+loadDevEnv();
 const PORT = process.env.PORT || 5000;
 const app = express();
 const http = Server(app);
