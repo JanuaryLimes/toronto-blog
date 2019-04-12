@@ -3,7 +3,6 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { setBlogs } from '../actions';
 import { getBlogs } from '../selectors/blog.selector';
-import Register from '../components/Register';
 
 const getAllBlogs = onSuccess => {
   console.group('fetch data');
@@ -103,10 +102,7 @@ const Main = ({ blogs, dispatchSetBlogs }) => {
   }, []);
 
   return (
-    <div>
-      <div>
-        Create New Blog | Register <Register />
-      </div>
+    <div className="main-page">
       <form>
         <label>Name:</label>
         <input value={blogName} onChange={e => setBlogName(e.target.value)} />

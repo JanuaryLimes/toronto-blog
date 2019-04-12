@@ -2,48 +2,33 @@ import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import Input from '../components/Input';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import { getLoggedUser } from '../selectors/auth.selector';
+import { login } from '../actions';
 
-const RegisterPage = ({ history }) => {
+const LoginPage = ({ dispatchLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [repeatPassword, setRepeatPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [canRegister, setCanRegister] = useState(false);
+  const [canLogin, setCanLogin] = useState(false);
 
   useEffect(() => {
-    const canRegisterVal = usernameIsValid() && passwordPolicyPassed();
-    setCanRegister(canRegisterVal);
-  }, [username, password, repeatPassword]);
+    const canRegisterVal = username !== '' && password !== '';
+    setCanLogin(canRegisterVal);
+  }, [username, password]);
 
-  const usernameIsValid = () => {
-    if (username !== '') {
-      return true;
-    } else {
-      return false;
-    }
-  };
-  const passwordPolicyPassed = () => {
-    if (password === repeatPassword && password !== '') {
-      return true;
-    } else {
-      return false;
-    }
-  };
-  const onCreate = e => {
+  const onLogin = e => {
     e.preventDefault();
 
-    if (canRegister) {
+    if (canLogin) {
       setIsLoading(true);
       axios
-        .post('/api/register', {
-          username,
-          password
-        })
+        .post('/api/login', { username, password }, { withCredentials: true })
         .then(response => {
-          console.log('registered', response);
+          console.log('logged', response);
           setUsername('');
           setPassword('');
-          setRepeatPassword('');
+          dispatchLogin(response.data.user);
         })
         .catch(error => {
           console.log('error', error, error.response.data);
@@ -54,17 +39,6 @@ const RegisterPage = ({ history }) => {
     }
   };
 
-  const getValidationStatus = () => {
-    if (repeatPassword === '') {
-      return '';
-    }
-
-    if (password === repeatPassword) {
-      return 'is-valid';
-    } else {
-      return 'is-invalid';
-    }
-  };
   const usernameProps = {
     caption: 'Username',
     value: username,
@@ -76,13 +50,6 @@ const RegisterPage = ({ history }) => {
     onChange: setPassword,
     type: 'password'
   };
-  const repeatPasswordProps = {
-    caption: 'Repeat password',
-    value: repeatPassword,
-    onChange: setRepeatPassword,
-    type: 'password',
-    validationStatus: getValidationStatus()
-  };
 
   return (
     <div className="register-page">
@@ -91,14 +58,13 @@ const RegisterPage = ({ history }) => {
           <form>
             <Input {...usernameProps} />
             <Input {...passwordProps} />
-            <Input {...repeatPasswordProps} />
             <button
               className="btn btn-success"
               type="submit"
-              disabled={!canRegister}
-              onClick={onCreate}
+              disabled={!canLogin}
+              onClick={onLogin}
             >
-              Register
+              Login
             </button>
           </form>
           {isLoading && (
@@ -114,4 +80,19 @@ const RegisterPage = ({ history }) => {
   );
 };
 
-export default withRouter(RegisterPage);
+const mapStateToProps = state => ({
+  loggedUser: getLoggedUser(state)
+});
+
+const mapDispatchToProps = dispatch => ({
+  dispatchLogin: loggedUser => {
+    dispatch(login({ loggedUser }));
+  }
+});
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(LoginPage)
+);
