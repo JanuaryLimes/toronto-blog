@@ -8,39 +8,37 @@ import { loadDevEnv, isProduction } from '../utils';
 loadDevEnv();
 const secret = process.env.SECRET;
 const expirationTime = parseInt(process.env.JWT_EXPIRATION_MS);
-
 const router = express.Router();
-router.post('/api/register', async (req, res) => {
+
+router.post('/api/register', (req, res) => {
   const { username, password } = req.body;
   const hashCost = 10;
 
-  try {
-    const passwordHash = await bcrypt.hash(password, hashCost);
-
-    User.create({ username, passwordHash })
-      .then(value => {
-        console.log('value', value);
-        res.status(200).send({ username });
-      })
-      .catch(error => {
-        console.log('error', error);
-        res.status(400).send({ error });
+  bcrypt
+    .hash(password, hashCost)
+    .then(passwordHash => {
+      User.create({ username, passwordHash }, (err, user) => {
+        if (err) {
+          return res.status(400).send({ err });
+        }
+        return res.status(200).send({ username });
       });
-  } catch (error) {
-    res.status(400).send({
-      error: 'req body should take form { username, passport }'
+    })
+    .catch(hashError => {
+      return res.status(400).send({
+        error: 'req body should take form { username, passport }'
+      });
     });
-  }
 });
 
 router.post('/api/login', (req, res) => {
   passport.authenticate('local', { session: false }, (error, user) => {
     if (error || !user) {
-      res.status(400).json({ error });
+      return res.status(400).send({ error });
     }
 
     const payload = {
-      username: user.username,
+      username: user,
       expires: Date.now() + expirationTime
     };
 

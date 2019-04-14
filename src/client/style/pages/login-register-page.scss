@@ -1,9 +1,6 @@
 .register-page {
-  .home-link {
-    max-width: 850px;
-    padding-bottom: 1rem;
-    margin: 0 auto;
-  }
+  padding: 1rem;
+  padding-top: 3rem;
 
   .register-form {
     margin: 0 auto;
@@ -28,7 +25,12 @@
         padding: 1rem;
         padding-top: 0.5rem;
 
-        button {
+        .alert {
+          margin-top: 1rem;
+          margin-bottom: 0;
+        }
+
+        button.btn {
           margin-top: 1rem;
         }
       }

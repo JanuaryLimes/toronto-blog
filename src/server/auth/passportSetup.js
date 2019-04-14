@@ -9,29 +9,26 @@ loadDevEnv();
 const secret = process.env.SECRET;
 
 passport.use(
-  new passportLocal.Strategy(
-    // {
-    //   usernameField: 'username',
-    //   passwordField: 'password'
-    // },
-    async (username, password, done) => {
-      try {
-        const userDocument = await User.findOne({ username: username }).exec();
-        const passwordsMatch = await bcrypt.compare(
-          password,
-          userDocument.passwordHash
-        );
-
-        if (passwordsMatch) {
-          return done(null, userDocument);
-        } else {
-          return done('Incorrect Username / Password');
-        }
-      } catch (error) {
-        done(error);
+  new passportLocal.Strategy((username, password, done) => {
+    User.findOne({ username: username }, (err, user) => {
+      if (err || !user) {
+        return done(err || 'Incorrect Username / Password');
       }
-    }
-  )
+
+      bcrypt
+        .compare(password, user.passwordHash)
+        .then(passwordsMatch => {
+          if (passwordsMatch) {
+            return done(null, user.username);
+          } else {
+            return done('Incorrect Username / Password');
+          }
+        })
+        .catch(compareError => {
+          return done(compareError);
+        });
+    });
+  })
 );
 
 passport.use(
