@@ -18,6 +18,22 @@ const Header = ({ location, loggedUser }) => {
     console.log('path', pathname);
   }, [loggedUser]);
 
+  const getLoginLogout = () => {
+    if (loggedUser) {
+      return (
+        <Link to="/logout">
+          <button className="btn btn-primary">Log out</button>
+        </Link>
+      );
+    } else {
+      return (
+        <Link to="/login">
+          <button className="btn btn-primary">Log in</button>
+        </Link>
+      );
+    }
+  };
+
   return (
     <header className="bg-dark">
       <div className="header-container">
@@ -28,12 +44,12 @@ const Header = ({ location, loggedUser }) => {
         <div>
           {loginRegisterVisible() && (
             <span>
-              <Link to="/login">
-                <button className="btn btn-primary">Log in</button>
-              </Link>{' '}
-              <Link to="/register">
-                <button className="btn btn-info">Register</button>
-              </Link>
+              {getLoginLogout()}{' '}
+              {!loggedUser && (
+                <Link to="/register">
+                  <button className="btn btn-info">Register</button>
+                </Link>
+              )}
             </span>
           )}
           {loggedUser && <span>{loggedUser}</span>}
