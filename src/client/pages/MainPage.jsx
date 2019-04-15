@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { setBlogs } from '../actions';
+import { setBlogs, login } from '../actions';
 import { getBlogs } from '../selectors/blog.selector';
+import { useCookies } from 'react-cookie';
+import jwt from 'jsonwebtoken';
 
 const getAllBlogs = onSuccess => {
   console.group('fetch data');
@@ -20,66 +22,8 @@ const getAllBlogs = onSuccess => {
     });
 };
 
-const Main = ({ blogs, dispatchSetBlogs }) => {
-  const [blogName, setBlogName] = useState('');
-
-  const onRegister = e => {
-    e.preventDefault();
-
-    axios
-      .post('/api/register', {
-        username: 'abcdef',
-        password: 'dupa123'
-      })
-      .then(response => {
-        console.log('response', response);
-      })
-      .catch(error => {
-        console.log('error', error);
-        console.log(error.response.data);
-      });
-  };
-  const onLogin = e => {
-    e.preventDefault();
-
-    axios
-      .post(
-        '/api/login',
-        {
-          username: 'abcdef',
-          password: 'dupa123'
-        },
-        { withCredentials: true }
-      )
-      .then(response => {
-        console.log('response', response);
-      })
-      .catch(error => {
-        console.log('error', error);
-        console.log(error.response.data);
-      });
-  };
-
-  const onCreate = e => {
-    e.preventDefault();
-
-    if (blogName) {
-      console.log('creating...', blogName);
-      axios
-        .post('/api/blog', {
-          name: blogName
-        })
-        .then(response => {
-          console.log('response', response);
-          setBlogName('');
-          getAllBlogs(dispatchSetBlogs);
-        })
-        .catch(error => {
-          console.log('error', error);
-          console.log(error.response.data);
-        });
-    }
-  };
+const Main = ({ blogs, dispatchSetBlogs, dispatchLogin }) => {
+  const cookies = useCookies(['jwt']);
 
   const onGetSecure = e => {
     e.preventDefault();
@@ -99,20 +43,17 @@ const Main = ({ blogs, dispatchSetBlogs }) => {
 
   useEffect(() => {
     getAllBlogs(dispatchSetBlogs);
+
+    const cookieJwt = cookies[0].jwt;
+    if (cookieJwt) {
+      const payload = jwt.verify(cookieJwt, process.env.REACT_APP_SECRET);
+      dispatchLogin(payload.username);
+    }
   }, []);
 
   return (
     <div className="main-page">
-      <form>
-        <label>Name:</label>
-        <input value={blogName} onChange={e => setBlogName(e.target.value)} />
-        <button type="submit" onClick={onCreate}>
-          Create
-        </button>
-        <button onClick={onRegister}>Register</button>
-        <button onClick={onLogin}>Login</button>{' '}
-        <button onClick={onGetSecure}>get secure</button>
-      </form>
+      <button onClick={onGetSecure}>get secure</button>
       <div>Login</div>
       <div>Search existing blogs</div>
       <div>
@@ -134,6 +75,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   dispatchSetBlogs: blogs => {
     dispatch(setBlogs({ blogs }));
+  },
+  dispatchLogin: loggedUser => {
+    dispatch(login({ loggedUser }));
   }
 });
 
