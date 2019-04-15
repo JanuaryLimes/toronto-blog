@@ -13,6 +13,7 @@ const App = _props => {
         <Header />
         <Route exact path="/" component={MainPage} />
         <Route path="/login" component={LoginRegisterPage} />
+        <Route path="/logout" component={LoginRegisterPage} />
         <Route path="/register" component={LoginRegisterPage} />
       </Router>
     </Provider>

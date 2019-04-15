@@ -21,10 +21,31 @@ router.post('/api/register', (req, res) => {
         if (err) {
           return res.status(400).send({ err });
         }
-        return res.status(200).send({ username });
+
+        const payload = {
+          username: user.username,
+          expires: Date.now() + expirationTime
+        };
+        req.login(payload, { session: false }, error => {
+          if (error) {
+            return res.status(400).send({ error });
+          }
+
+          const token = jwt.sign(payload, secret, { algorithm: 'HS256' });
+
+          let cookieOptions = {
+            expires: new Date(payload.expires)
+          };
+          if (isProduction()) {
+            cookieOptions = { ...cookieOptions, httpOnly: true, secure: true };
+          }
+
+          res.cookie('jwt', token, cookieOptions);
+          return res.status(200).send({ user: payload.username });
+        });
       });
     })
-    .catch(hashError => {
+    .catch(_hashError => {
       return res.status(400).send({
         error: 'req body should take form { username, passport }'
       });
