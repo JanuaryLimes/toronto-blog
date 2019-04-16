@@ -36,12 +36,13 @@
     "secure-random": "^1.1.1"
   },
   "scripts": {
-    "start": "npm run build && npm run build-server && npm run build-shared && node dist/server.js",
+    "start": "npm run build-server && npm run build-shared && node dist/server.js",
     "build": "react-scripts build",
     "build-server": "babel src/server -d dist",
     "build-shared": "babel src/shared -d dist/shared",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "heroku-postbuild": "npm run build",
     "start-dev-react": "react-scripts start",
     "start-dev-server": "nodemon --inspect=9230 --exec babel-node src/server/server.js"
   },
