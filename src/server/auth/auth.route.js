@@ -3,12 +3,35 @@ import bcrypt from 'bcrypt';
 import { User } from './auth.model';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
-import { loadDevEnv, isProduction } from '../utils';
+import { loadDevEnv, isProduction, sayHi } from '@shared/utils';
 
 loadDevEnv();
 const secret = process.env.SECRET;
 const expirationTime = parseInt(process.env.JWT_EXPIRATION_MS);
 const router = express.Router();
+
+const setJwtCookie = (res, payload) => {
+  const token = jwt.sign(payload, secret, { algorithm: 'HS256' });
+
+  let cookieOptions = {
+    expires: new Date(payload.expires)
+  };
+  if (isProduction()) {
+    cookieOptions = { ...cookieOptions, httpOnly: true, secure: true };
+  }
+  console.log('set jwt cookie');
+  res.cookie('jwt', token, cookieOptions);
+};
+const setLoginCookie = (res, payload) => {
+  let cookieOptions = {
+    expires: new Date(payload.expires)
+  };
+  if (isProduction()) {
+    cookieOptions = { ...cookieOptions, secure: true };
+  }
+  console.log('set u cookie');
+  res.cookie('u', payload.username, cookieOptions);
+};
 
 router.post('/api/register', (req, res) => {
   const { username, password } = req.body;
@@ -31,16 +54,8 @@ router.post('/api/register', (req, res) => {
             return res.status(400).send({ error });
           }
 
-          const token = jwt.sign(payload, secret, { algorithm: 'HS256' });
-
-          let cookieOptions = {
-            expires: new Date(payload.expires)
-          };
-          if (isProduction()) {
-            cookieOptions = { ...cookieOptions, httpOnly: true, secure: true };
-          }
-
-          res.cookie('jwt', token, cookieOptions);
+          setJwtCookie(res, payload);
+          setLoginCookie(res, payload);
           return res.status(200).send({ user: payload.username });
         });
       });
@@ -65,20 +80,16 @@ router.post('/api/login', (req, res) => {
 
     req.login(payload, { session: false }, error => {
       if (error) {
-        res.status(400).send({ error });
+        return res.status(400).send({ error });
       }
-
-      const token = jwt.sign(payload, secret, { algorithm: 'HS256' });
 
       let cookieOptions = {
         expires: new Date(payload.expires)
       };
-      if (isProduction()) {
-        cookieOptions = { ...cookieOptions, httpOnly: true, secure: true };
-      }
-
-      res.cookie('jwt', token, cookieOptions);
-      res.status(200).send({ user: payload.username });
+      res.cookie(sayHi(), sayHi(), cookieOptions);
+      setJwtCookie(res, payload);
+      setLoginCookie(res, payload);
+      return res.status(200).send({ user: payload.username });
     });
   })(req, res);
 });
