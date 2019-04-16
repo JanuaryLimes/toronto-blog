@@ -25,12 +25,13 @@ const LoginRegisterPage = ({
   const [repeatPassword, setRepeatPassword] = useState('');
   const [canRegister, setCanRegister] = useState(false);
 
-  const jwtCookie = useCookies(['jwt']);
+  const cookies = useCookies();
 
   useEffect(() => {
     if (pathname === '/logout') {
       console.log('logout');
-      jwtCookie[2]('jwt');
+      cookies[2]('jwt');
+      cookies[2]('u');
       dispatchLogout();
       history.push('/');
     }

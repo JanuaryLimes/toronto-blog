@@ -1,6 +1,11 @@
 import dotenv from 'dotenv';
 import secureRandom from 'secure-random';
 
+const sayHi = () => {
+  console.log('Hi');
+  return 'hi';
+};
+
 const isProduction = () => {
   return process.env.NODE_ENV === 'production';
 };
@@ -17,4 +22,4 @@ const generateSecret = () => {
   return secret.toString('base64');
 };
 
-export { isProduction, loadDevEnv, generateSecret };
+export { isProduction, loadDevEnv, generateSecret, sayHi };

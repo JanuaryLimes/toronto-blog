@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { setBlogs, login } from '../actions';
 import { getBlogs } from '../selectors/blog.selector';
 import { useCookies } from 'react-cookie';
-import jwt from 'jsonwebtoken';
+import { sayHi } from '../../shared/utils';
 
 const getAllBlogs = onSuccess => {
   console.group('fetch data');
@@ -23,7 +23,7 @@ const getAllBlogs = onSuccess => {
 };
 
 const Main = ({ blogs, dispatchSetBlogs, dispatchLogin }) => {
-  const cookies = useCookies(['jwt']);
+  const cookies = useCookies();
 
   const onGetSecure = e => {
     e.preventDefault();
@@ -42,12 +42,13 @@ const Main = ({ blogs, dispatchSetBlogs, dispatchLogin }) => {
   };
 
   useEffect(() => {
-    getAllBlogs(dispatchSetBlogs);
+    sayHi();
+    console.log('from shared');
 
-    const cookieJwt = cookies[0].jwt;
-    if (cookieJwt) {
-      const payload = jwt.verify(cookieJwt, process.env.REACT_APP_SECRET);
-      dispatchLogin(payload.username);
+    getAllBlogs(dispatchSetBlogs);
+    const cookie = cookies[0].u;
+    if (cookie) {
+      dispatchLogin(cookie);
     }
   }, []);
 
