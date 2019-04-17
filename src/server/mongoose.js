@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { loadDevEnv } from '@shared/utils';
+import { loadDevEnv } from 'utils';
 
 loadDevEnv();
 mongoose.connect(process.env.MONGO_CS, { useNewUrlParser: true });

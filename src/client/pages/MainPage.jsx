@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { setBlogs, login } from '../actions';
 import { getBlogs } from '../selectors/blog.selector';
 import { useCookies } from 'react-cookie';
-import { sayHi } from '../../shared/utils';
+import { sayDupa } from 'utils';
 
 const getAllBlogs = onSuccess => {
   console.group('fetch data');
@@ -42,8 +42,7 @@ const Main = ({ blogs, dispatchSetBlogs, dispatchLogin }) => {
   };
 
   useEffect(() => {
-    sayHi();
-    console.log('from shared');
+    console.log('dupa dupa', sayDupa());
 
     getAllBlogs(dispatchSetBlogs);
     const cookie = cookies[0].u;

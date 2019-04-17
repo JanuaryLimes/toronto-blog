@@ -1,5 +1,4 @@
 import '@babel/polyfill';
-import './alias';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -9,7 +8,7 @@ import blogRoute from './routes/blog';
 import authRoute from './auth/auth.route';
 import https from './https';
 import './auth/passportSetup';
-import { loadDevEnv } from '@shared/utils';
+import { loadDevEnv } from 'utils';
 
 loadDevEnv();
 const PORT = process.env.PORT || 5000;
