@@ -1,4 +1,4 @@
-import { isProduction } from '@shared/utils';
+import { isProduction } from 'utils';
 
 const https = (req, res, next) => {
   const status = 302;

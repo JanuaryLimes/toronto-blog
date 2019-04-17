@@ -33,13 +33,14 @@
     "react-scripts": "^2.1.8",
     "redux": "^4.0.1",
     "redux-starter-kit": "^0.4.3",
-    "secure-random": "^1.1.1"
+    "secure-random": "^1.1.1",
+    "utils": "file:./packages/utils"
   },
   "scripts": {
-    "start": "npm run build-server && npm run build-shared && node dist/server.js",
+    "start": "npm run build-server && node dist/server.js",
     "build": "react-scripts build",
     "build-server": "babel src/server -d dist",
-    "build-shared": "babel src/shared -d dist/shared",
+    "build-utils": "cd packages/utils && npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "heroku-postbuild": "npm run build",

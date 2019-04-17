@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import { User } from './auth.model';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
-import { loadDevEnv, isProduction, sayHi } from '@shared/utils';
+import { loadDevEnv, isProduction, sayDupa } from 'utils';
 
 loadDevEnv();
 const secret = process.env.SECRET;
@@ -70,6 +70,7 @@ router.post('/api/register', (req, res) => {
 router.post('/api/login', (req, res) => {
   passport.authenticate('local', { session: false }, (error, user) => {
     if (error || !user) {
+      console.log(error);
       return res.status(400).send({ error });
     }
 
@@ -80,13 +81,14 @@ router.post('/api/login', (req, res) => {
 
     req.login(payload, { session: false }, error => {
       if (error) {
+        console.log(error);
         return res.status(400).send({ error });
       }
 
       let cookieOptions = {
         expires: new Date(payload.expires)
       };
-      res.cookie(sayHi(), sayHi(), cookieOptions);
+      res.cookie(sayDupa(), sayDupa(), cookieOptions);
       setJwtCookie(res, payload);
       setLoginCookie(res, payload);
       return res.status(200).send({ user: payload.username });

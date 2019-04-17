@@ -1,9 +1,9 @@
 import dotenv from 'dotenv';
 import secureRandom from 'secure-random';
 
-const sayHi = () => {
-  console.log('Hi');
-  return 'hi';
+const sayDupa = () => {
+  console.log('dupa from util');
+  return 'dupa from util ___';
 };
 
 const isProduction = () => {
@@ -22,4 +22,4 @@ const generateSecret = () => {
   return secret.toString('base64');
 };
 
-export { isProduction, loadDevEnv, generateSecret, sayHi };
+export { isProduction, loadDevEnv, generateSecret, sayDupa };
