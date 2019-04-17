@@ -1,6 +1,6 @@
 {
-  "name": "utils",
-  "version": "0.1.1",
+  "name": "toronto-utils",
+  "version": "0.1.2",
   "license": "MIT",
   "main": "lib/utils.js",
   "directories": {

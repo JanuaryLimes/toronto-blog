@@ -1,11 +1,6 @@
 import dotenv from 'dotenv';
 import secureRandom from 'secure-random';
 
-const sayDupa = () => {
-  console.log('dupa from util');
-  return 'dupa from util ___';
-};
-
 const isProduction = () => {
   return process.env.NODE_ENV === 'production';
 };
@@ -22,4 +17,4 @@ const generateSecret = () => {
   return secret.toString('base64');
 };
 
-export { isProduction, loadDevEnv, generateSecret, sayDupa };
+export { isProduction, loadDevEnv, generateSecret };

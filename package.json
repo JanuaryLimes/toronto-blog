@@ -34,13 +34,14 @@
     "redux": "^4.0.1",
     "redux-starter-kit": "^0.4.3",
     "secure-random": "^1.1.1",
-    "utils": "file:./packages/utils"
+    "toronto-utils": "./packages/toronto-utils"
   },
   "scripts": {
     "start": "npm run build-server && node dist/server.js",
     "build": "react-scripts build",
     "build-server": "babel src/server -d dist",
-    "build-utils": "cd packages/utils && npm run build",
+    "build-utils": "cd packages/toronto-utils && npm run build",
+    "update-utils": "npm run build-utils && yarn upgrade ./packages/toronto-utils",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "heroku-postbuild": "npm run build",

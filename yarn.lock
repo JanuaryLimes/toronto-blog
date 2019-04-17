@@ -1082,9 +1082,9 @@
   integrity sha1-iUk3HVqZ9Dge4PHfCpt6GH4H5lI=
 
 "@types/prop-types@*":
-  version "15.7.0"
-  resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.0.tgz#4c48fed958d6dcf9487195a0ef6456d5f6e0163a"
-  integrity sha512-eItQyV43bj4rR3JPV0Skpl1SncRCdziTEK9/v8VwXmV6d/qOUO8/EuWeHBbCZcsfSHfzI5UyMJLCSXtxxznyZg==
+  version "15.7.1"
+  resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.1.tgz#f1a11e7babb0c3cad68100be381d1e064c68f1f6"
+  integrity sha512-CFzn9idOEpHrgdw8JsoTkaDDyRWk1jrzIV8djzcgpq0y9tG4B4lFT+Nxh52DVpDXV+n4+NPNv7M1Dj5uMp6XFg==
 
 "@types/q@^1.5.1":
   version "1.5.2"
@@ -10512,6 +10512,17 @@ topo@2.x.x:
   dependencies:
     hoek "4.x.x"
 
+toronto-utils@./packages/toronto-utils:
+  version "0.1.2"
+  dependencies:
+    "@babel/cli" "^7.4.3"
+    "@babel/core" "^7.4.3"
+    "@babel/node" "^7.2.2"
+    "@babel/polyfill" "^7.4.3"
+    "@babel/preset-env" "^7.4.3"
+    dotenv "^7.0.0"
+    secure-random "^1.1.1"
+
 touch@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/touch/-/touch-3.1.0.tgz#fe365f5f75ec9ed4e56825e0bb76d24ab74af83b"
@@ -10891,17 +10902,6 @@ utils-merge@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
-
-"utils@file:./packages/utils":
-  version "0.1.1"
-  dependencies:
-    "@babel/cli" "^7.4.3"
-    "@babel/core" "^7.4.3"
-    "@babel/node" "^7.2.2"
-    "@babel/polyfill" "^7.4.3"
-    "@babel/preset-env" "^7.4.3"
-    dotenv "^7.0.0"
-    secure-random "^1.1.1"
 
 uuid@^3.0.1, uuid@^3.3.2:
   version "3.3.2"

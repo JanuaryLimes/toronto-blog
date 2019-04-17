@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import { User } from './auth.model';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
-import { loadDevEnv, isProduction, sayDupa } from 'utils';
+import { loadDevEnv, isProduction } from 'toronto-utils';
 
 loadDevEnv();
 const secret = process.env.SECRET;
@@ -88,7 +88,7 @@ router.post('/api/login', (req, res) => {
       let cookieOptions = {
         expires: new Date(payload.expires)
       };
-      res.cookie(sayDupa(), sayDupa(), cookieOptions);
+
       setJwtCookie(res, payload);
       setLoginCookie(res, payload);
       return res.status(200).send({ user: payload.username });

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { loadDevEnv } from 'utils';
+import { loadDevEnv } from 'toronto-utils';
 
 loadDevEnv();
 mongoose.connect(process.env.MONGO_CS, { useNewUrlParser: true });

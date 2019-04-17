@@ -8,7 +8,7 @@ import blogRoute from './routes/blog';
 import authRoute from './auth/auth.route';
 import https from './https';
 import './auth/passportSetup';
-import { loadDevEnv } from 'utils';
+import { loadDevEnv } from 'toronto-utils';
 
 loadDevEnv();
 const PORT = process.env.PORT || 5000;

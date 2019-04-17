@@ -1,4 +1,4 @@
-import { isProduction } from 'utils';
+import { isProduction } from 'toronto-utils';
 
 const https = (req, res, next) => {
   const status = 302;
