@@ -81,74 +81,84 @@ const LoginRegisterPage = ({
     }
   };
 
-  const onRegister = e => {
-    e.preventDefault();
-
-    if (canRegister) {
-      setIsLoading(true);
-      axios
-        .post('/api/register', {
-          username,
-          password
-        })
-        .then(response => {
-          console.log('registered', response);
-          setUsername('');
-          setPassword('');
-          setRepeatPassword('');
-          const user = response.data.user;
-          dispatchLogin(user);
-          setAlertVisible(true);
-          setAlertProps({
-            text: `User '${user}' successfully registered`,
-            type: 'alert-success',
-            onClose: () => setAlertVisible(false)
-          });
-        })
-        .catch(error => {
-          console.log('error', error);
-          console.log('eeee', error.response.data);
-          // todo register validation/error info etc.
-          setAlertVisible(true);
-          setAlertProps({
-            text: 'Unable to register: <todo: fail status>',
-            type: 'alert-danger',
-            onClose: () => setAlertVisible(false)
-          });
-        })
-        .then(() => {
-          setIsLoading(false);
-        });
+  const canClick = () => {
+    if (isLoginPage) {
+      return canLogin;
+    } else {
+      return canRegister;
     }
   };
-  const onLogin = e => {
+
+  const postArgs = () => {
+    if (isLoginPage) {
+      return ['/api/login', { username, password }, { withCredentials: true }];
+    } else {
+      return [
+        '/api/register',
+        {
+          username,
+          password
+        }
+      ];
+    }
+  };
+
+  const clearInputs = () => {
+    setUsername('');
+    setPassword('');
+    setRepeatPassword('');
+  };
+
+  const successText = user => {
+    if (isLoginPage) {
+      return 'Logged in as: ' + user;
+    } else {
+      return `User '${user}' successfully registered`;
+    }
+  };
+
+  const onSuccess = user => {
+    clearInputs();
+    dispatchLogin(user);
+    setAlertVisible(true);
+    setAlertProps({
+      text: successText(user),
+      type: 'alert-success',
+      onClose: () => setAlertVisible(false)
+    });
+  };
+
+  const errorText = error => {
+    console.log('todo error', error);
+
+    if (isLoginPage) {
+      return 'Wrong username or password';
+    } else {
+      return 'Unable to register: <todo: fail status>';
+    }
+  };
+
+  const onError = error => {
+    setAlertVisible(true);
+    setAlertProps({
+      text: errorText(error),
+      type: 'alert-danger',
+      onClose: () => setAlertVisible(false)
+    });
+  };
+
+  const onClickHandler = e => {
     e.preventDefault();
 
-    if (canLogin) {
+    if (canClick()) {
       setIsLoading(true);
       axios
-        .post('/api/login', { username, password }, { withCredentials: true })
+        .post(...postArgs())
         .then(response => {
-          console.log('logged');
-          setUsername('');
-          setPassword('');
-          const user = response.data.user;
-          dispatchLogin(user);
-          setAlertVisible(true);
-          setAlertProps({
-            text: 'Logged in as: ' + user,
-            type: 'alert-success',
-            onClose: () => setAlertVisible(false)
-          });
+          onSuccess(response.data.user);
         })
         .catch(error => {
-          console.log('error', error, error.response.data);
-          setAlertVisible(true);
-          setAlertProps({
-            text: 'Wrong username or password',
-            type: 'alert-danger',
-            onClose: () => setAlertVisible(false)
-          });
+          onError(error);
         })
         .then(() => {
           setIsLoading(false);
@@ -190,7 +200,7 @@ const LoginRegisterPage = ({
               className="btn btn-success"
               type="submit"
               disabled={isLoginPage ? !canLogin : !canRegister}
-              onClick={isLoginPage ? onLogin : onRegister}
+              onClick={onClickHandler}
             >
               {isLoginPage ? 'Login' : 'Register'}
             </button>
