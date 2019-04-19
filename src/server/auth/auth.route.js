@@ -85,10 +85,6 @@ router.post('/api/login', (req, res) => {
         return res.status(400).send({ error });
       }
 
-      let cookieOptions = {
-        expires: new Date(payload.expires)
-      };
-
       setJwtCookie(res, payload);
       setLoginCookie(res, payload);
       return res.status(200).send({ user: payload.username });

@@ -7,6 +7,7 @@ import axios from 'axios';
 import Input from '../components/Input';
 import Alert from '../components/Alert';
 import { useCookies } from 'react-cookie';
+import { isUsernameValid } from 'toronto-utils/lib/validation';
 
 const LoginRegisterPage = ({
   location,
@@ -44,7 +45,8 @@ const LoginRegisterPage = ({
   }, [pathname]);
 
   useEffect(() => {
-    const canRegisterVal = usernameIsValid() && passwordPolicyPassed();
+    const canRegisterVal =
+      isUsernameValid(username).valid && passwordPolicyPassed();
     setCanRegister(canRegisterVal);
   }, [username, password, repeatPassword]);
 
@@ -52,14 +54,6 @@ const LoginRegisterPage = ({
     const canRegisterVal = username !== '' && password !== '';
     setCanLogin(canRegisterVal);
   }, [username, password]);
-
-  const usernameIsValid = () => {
-    if (username !== '') {
-      return true;
-    } else {
-      return false;
-    }
-  };
 
   const passwordPolicyPassed = () => {
     if (password === repeatPassword && password !== '') {
