@@ -8,6 +8,9 @@ import Input from '../components/Input';
 import Alert from '../components/Alert';
 import { useCookies } from 'react-cookie';
 import { isUsernameValid } from 'toronto-utils/lib/validation';
+import lodash from 'lodash';
+
+let debounceCheck;
 
 const LoginRegisterPage = ({
   location,
@@ -25,7 +28,8 @@ const LoginRegisterPage = ({
   const [alertProps, setAlertProps] = useState({});
   const [repeatPassword, setRepeatPassword] = useState('');
   const [canRegister, setCanRegister] = useState(false);
-
+  const [usernameIsChecking, setUsernameIsChecking] = useState(false);
+  const [usernameIsAvailable, setUsernameIsAvailable] = useState(false);
   const cookies = useCookies();
 
   useEffect(() => {
@@ -46,14 +50,73 @@ const LoginRegisterPage = ({
 
   useEffect(() => {
     const canRegisterVal =
-      isUsernameValid(username).valid && passwordPolicyPassed();
+      isUsernameValid(username).valid &&
+      passwordPolicyPassed() &&
+      usernameIsAvailable;
     setCanRegister(canRegisterVal);
-  }, [username, password, repeatPassword]);
+  }, [username, password, repeatPassword, usernameIsAvailable]);
 
   useEffect(() => {
     const canRegisterVal = username !== '' && password !== '';
     setCanLogin(canRegisterVal);
   }, [username, password]);
+
+  useEffect(() => {
+    return () => {
+      console.log('componentWillUnmount');
+      debounceCheck = null;
+    };
+  }, []);
+
+  const debounceCallback = username => {
+    console.log('before axios', username);
+    axios
+      .get('/api/isUserAvailable?user=' + username)
+      .then(response => {
+        if (response.data.usernameAvailable) {
+          console.log('username check', true);
+          setUsernameIsAvailable(true);
+        } else {
+          console.log('username check', false);
+          setUsernameIsAvailable(false);
+        }
+      })
+      .catch(error => {
+        setUsernameIsAvailable(false);
+        console.log('error checking username', error);
+      })
+      .then(() => {
+        setUsernameIsChecking(false);
+      });
+  };
+
+  useEffect(() => {
+    if (username !== '') {
+      setUsernameIsChecking(true);
+      if (debounceCheck) {
+        debounceCheck(username);
+      } else {
+        debounceCheck = lodash.debounce(debounceCallback, 1000);
+        debounceCheck(username);
+      }
+    }
+  }, [username]);
+
+  const checkUsernameAvailability = () => {
+    if (isLoginPage || username === '') {
+      return null;
+    }
+
+    if (usernameIsChecking) {
+      return <div>loading...</div>;
+    } else {
+      if (usernameIsAvailable) {
+        return <div>{username} is available</div>;
+      } else {
+        return <div>{username} is not available</div>;
+      }
+    }
+  };
 
   const passwordPolicyPassed = () => {
     if (password === repeatPassword && password !== '') {
@@ -163,7 +226,7 @@ const LoginRegisterPage = ({
   const usernameProps = {
     caption: 'Username',
     value: username,
-    onChange: setUsername
+    onChange: val => setUsername(val.trim())
   };
   const passwordProps = {
     caption: 'Password',
@@ -187,6 +250,7 @@ const LoginRegisterPage = ({
         <div className="register-from-content">
           <form>
             <Input {...usernameProps} />
+            {checkUsernameAvailability()}
             <Input {...passwordProps} />
             {!isLoginPage && <Input {...repeatPasswordProps} />}
             {alertVisible && <Alert {...alertProps} />}

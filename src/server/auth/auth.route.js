@@ -92,4 +92,33 @@ router.post('/api/login', (req, res) => {
   })(req, res);
 });
 
+// /api/isUserAvailable?user=...
+router.get('/api/isUserAvailable', (req, res) => {
+  const inputUser = req.query.user;
+
+  console.log(req.query);
+
+  if (inputUser) {
+    User.find({ username: inputUser }, (err, docs) => {
+      if (err) {
+        return res.status(400).send({ error: err });
+      } else {
+        if (docs && docs.length === 0) {
+          console.log('usernameAvailable: true');
+          return res
+            .status(200)
+            .send({ usernameAvailable: true, username: inputUser });
+        } else {
+          console.log('usernameAvailable: false');
+          return res
+            .status(200)
+            .send({ usernameAvailable: false, username: inputUser });
+        }
+      }
+    });
+  } else {
+    return res.status(400).send({ error: 'Empty user' });
+  }
+});
+
 export default router;
