@@ -33,6 +33,20 @@
         button.btn {
           margin-top: 1rem;
         }
+        .check-username {
+          .spinner-container {
+            display: inline-block;
+            .spinner-border {
+              height: 1rem;
+              width: 1rem;
+              border-width: 0.1rem;
+            }
+          }
+          .feedback {
+            margin-left: 5px;
+            display: inline;
+          }
+        }
       }
     }
   }

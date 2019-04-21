@@ -29,7 +29,7 @@ const LoginRegisterPage = ({
   const [repeatPassword, setRepeatPassword] = useState('');
   const [canRegister, setCanRegister] = useState(false);
   const [usernameIsChecking, setUsernameIsChecking] = useState(false);
-  const [usernameIsAvailable, setUsernameIsAvailable] = useState(false);
+  const [usernameIsAvailable, setUsernameIsAvailable] = useState(undefined);
   const cookies = useCookies();
 
   useEffect(() => {
@@ -64,6 +64,9 @@ const LoginRegisterPage = ({
   useEffect(() => {
     return () => {
       console.log('componentWillUnmount');
+      if (debounceCheck) {
+        debounceCheck.cancel();
+      }
       debounceCheck = null;
     };
   }, []);
@@ -73,7 +76,8 @@ const LoginRegisterPage = ({
     axios
       .get('/api/isUserAvailable?user=' + username)
       .then(response => {
-        if (response.data.usernameAvailable) {
+        const { usernameAvailable } = response.data;
+        if (usernameAvailable) {
           console.log('username check', true);
           setUsernameIsAvailable(true);
         } else {
@@ -99,6 +103,11 @@ const LoginRegisterPage = ({
         debounceCheck = lodash.debounce(debounceCallback, 1000);
         debounceCheck(username);
       }
+    } else {
+      setUsernameIsAvailable(undefined);
+      if (debounceCheck) {
+        debounceCheck.cancel();
+      }
     }
   }, [username]);
 
@@ -108,12 +117,21 @@ const LoginRegisterPage = ({
     }
 
     if (usernameIsChecking) {
-      return <div>loading...</div>;
+      return (
+        <div className="check-username">
+          <div className="spinner-container">
+            <div className="spinner-border" role="status" />
+          </div>
+          <span className="feedback">checking availability</span>
+        </div>
+      );
     } else {
       if (usernameIsAvailable) {
-        return <div>{username} is available</div>;
+        return <div className="valid-feedback">{username} is available</div>;
       } else {
-        return <div>{username} is not available</div>;
+        return (
+          <div className="invalid-feedback">{username} is not available</div>
+        );
       }
     }
   };
@@ -126,7 +144,23 @@ const LoginRegisterPage = ({
     }
   };
 
-  const getValidationStatus = () => {
+  const getUsernameValidationStatus = () => {
+    if (
+      isLoginPage ||
+      usernameIsChecking ||
+      usernameIsAvailable === undefined
+    ) {
+      return '';
+    }
+
+    if (usernameIsAvailable) {
+      return 'is-valid';
+    } else {
+      return 'is-invalid';
+    }
+  };
+
+  const getRepeatPasswordValidationStatus = () => {
     if (repeatPassword === '') {
       return '';
     }
@@ -226,7 +260,8 @@ const LoginRegisterPage = ({
   const usernameProps = {
     caption: 'Username',
     value: username,
-    onChange: val => setUsername(val.trim())
+    onChange: val => setUsername(val.trim()),
+    validationStatus: getUsernameValidationStatus()
   };
   const passwordProps = {
     caption: 'Password',
@@ -239,7 +274,7 @@ const LoginRegisterPage = ({
     value: repeatPassword,
     onChange: setRepeatPassword,
     type: 'password',
-    validationStatus: getValidationStatus()
+    validationStatus: getRepeatPasswordValidationStatus()
   };
 
   return pathname === '/logout' ? (
