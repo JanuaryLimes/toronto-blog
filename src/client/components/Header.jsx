@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { getLoggedUser } from '../selectors/auth.selector';
+import { useSelector } from 'react-redux';
 
-const Header = ({ location, loggedUser }) => {
+const Header = ({ location }) => {
+  const loggedUser = useSelector(state => getLoggedUser(state));
   const { pathname } = location;
 
   const loginRegisterVisible = () => {
@@ -16,6 +17,7 @@ const Header = ({ location, loggedUser }) => {
 
   useEffect(() => {
     console.log('path', pathname);
+    console.log('loggedUser', loggedUser);
   }, [loggedUser]);
 
   const getLoginLogout = () => {
@@ -59,8 +61,4 @@ const Header = ({ location, loggedUser }) => {
   );
 };
 
-const mapStateToProps = state => ({
-  loggedUser: getLoggedUser(state)
-});
-
-export default withRouter(connect(mapStateToProps)(Header));
+export default withRouter(Header);

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useActions } from 'react-redux';
 import { login, logout } from '../actions';
-import { getLoggedUser } from '../selectors/auth.selector';
 import axios from 'axios';
 import Input from '../components/Input';
 import Alert from '../components/Alert';
@@ -12,12 +11,9 @@ import lodash from 'lodash';
 
 let debounceCheck;
 
-const LoginRegisterPage = ({
-  location,
-  dispatchLogin,
-  dispatchLogout,
-  history
-}) => {
+const LoginRegisterPage = ({ location, history }) => {
+  const dispatchLogout = useActions(() => logout());
+  const dispatchLogin = useActions(loggedUser => login({ loggedUser }));
   const { pathname } = location;
   const [isLoginPage, setIsLoginPage] = useState(true);
   const [username, setUsername] = useState('');
@@ -311,22 +307,4 @@ const LoginRegisterPage = ({
   );
 };
 
-const mapStateToProps = state => ({
-  loggedUser: getLoggedUser(state)
-});
-
-const mapDispatchToProps = dispatch => ({
-  dispatchLogin: loggedUser => {
-    dispatch(login({ loggedUser }));
-  },
-  dispatchLogout: () => {
-    dispatch(logout());
-  }
-});
-
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(LoginRegisterPage)
-);
+export default withRouter(LoginRegisterPage);
