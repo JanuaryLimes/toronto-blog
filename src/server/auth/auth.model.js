@@ -2,14 +2,13 @@ import { mConnection } from '../mongoose';
 
 const UserSchema = new mConnection.Schema({
   username: {
-    type: String,
-    index: true,
+    type: 'String',
+    required: true,
     unique: true,
-    dropDups: true,
-    required: true
+    index: true
   },
   passwordHash: {
-    type: String,
+    type: 'String',
     required: true
   }
 });
