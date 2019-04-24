@@ -1,6 +1,5 @@
 .register-page {
-  padding: 1rem;
-  padding-top: 3rem;
+  padding: 3rem 1rem;
 
   .register-form {
     margin: 0 auto;
@@ -46,6 +45,12 @@
             margin-left: 5px;
             display: inline;
           }
+        }
+
+        ul {
+          padding: 0;
+          padding-left: 1rem;
+          margin: 0;
         }
       }
     }

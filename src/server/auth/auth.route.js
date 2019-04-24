@@ -4,6 +4,7 @@ import { User } from './auth.model';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
 import { loadDevEnv, isProduction } from 'toronto-utils';
+import { isPasswordValid } from 'toronto-utils/lib/validation';
 
 loadDevEnv();
 const secret = process.env.SECRET;
@@ -36,6 +37,12 @@ const setLoginCookie = (res, payload) => {
 router.post('/api/register', (req, res) => {
   const { username, password } = req.body;
   const hashCost = 10;
+
+  const pCheck = isPasswordValid(password);
+
+  if (!pCheck.valid) {
+    return res.status(400).send({ pCheck });
+  }
 
   bcrypt
     .hash(password, hashCost)

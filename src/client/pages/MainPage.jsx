@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
-import { connect } from 'react-redux';
-import { setBlogs, login } from '../actions';
+import { useActions, useSelector } from 'react-redux';
+import { setBlogs } from '../actions';
 import { getBlogs } from '../selectors/blog.selector';
 
 const getAllBlogs = onSuccess => {
@@ -20,7 +20,10 @@ const getAllBlogs = onSuccess => {
     });
 };
 
-const Main = ({ blogs, dispatchSetBlogs, dispatchLogin }) => {
+const Main = () => {
+  const dispatchSetBlogs = useActions(blogs => setBlogs({ blogs }));
+  const blogs = useSelector(state => getBlogs(state));
+
   const onGetSecure = e => {
     e.preventDefault();
 
@@ -58,20 +61,4 @@ const Main = ({ blogs, dispatchSetBlogs, dispatchLogin }) => {
   );
 };
 
-const mapStateToProps = state => ({
-  blogs: getBlogs(state)
-});
-
-const mapDispatchToProps = dispatch => ({
-  dispatchSetBlogs: blogs => {
-    dispatch(setBlogs({ blogs }));
-  },
-  dispatchLogin: loggedUser => {
-    dispatch(login({ loggedUser }));
-  }
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Main);
+export default Main;

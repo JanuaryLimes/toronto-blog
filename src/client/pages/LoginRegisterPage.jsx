@@ -6,7 +6,7 @@ import axios from 'axios';
 import Input from '../components/Input';
 import Alert from '../components/Alert';
 import { useCookies } from 'react-cookie';
-import { isUsernameValid } from 'toronto-utils/lib/validation';
+import { isUsernameValid, isPasswordValid } from 'toronto-utils/lib/validation';
 import lodash from 'lodash';
 
 let debounceCheck;
@@ -26,6 +26,7 @@ const LoginRegisterPage = ({ location, history }) => {
   const [canRegister, setCanRegister] = useState(false);
   const [usernameIsChecking, setUsernameIsChecking] = useState(false);
   const [usernameIsAvailable, setUsernameIsAvailable] = useState(undefined);
+  const [passwordStrengthCheck, setPasswordStrengthCheck] = useState();
   const cookies = useCookies();
 
   useEffect(() => {
@@ -50,7 +51,13 @@ const LoginRegisterPage = ({ location, history }) => {
       passwordPolicyPassed() &&
       usernameIsAvailable;
     setCanRegister(canRegisterVal);
-  }, [username, password, repeatPassword, usernameIsAvailable]);
+  }, [
+    username,
+    password,
+    repeatPassword,
+    usernameIsAvailable,
+    passwordStrengthCheck
+  ]);
 
   useEffect(() => {
     const canRegisterVal = username !== '' && password !== '';
@@ -66,6 +73,34 @@ const LoginRegisterPage = ({ location, history }) => {
       debounceCheck = null;
     };
   }, []);
+
+  useEffect(() => {
+    if (!password || isLoginPage) {
+      setPasswordStrengthCheck(undefined);
+      return;
+    }
+    setPasswordStrengthCheck(isPasswordValid(password));
+  }, [password]);
+
+  const checkPasswordStrength = () => {
+    if (!passwordStrengthCheck) {
+      return null;
+    }
+
+    if (passwordStrengthCheck.valid) {
+      return null;
+    } else {
+      return (
+        <div className="invalid-feedback">
+          <ul>
+            {passwordStrengthCheck.msg.map(m => (
+              <li key={m}>{m}</li>
+            ))}
+          </ul>
+        </div>
+      );
+    }
+  };
 
   const debounceCallback = username => {
     console.log('before axios', username);
@@ -133,13 +168,27 @@ const LoginRegisterPage = ({ location, history }) => {
   };
 
   const passwordPolicyPassed = () => {
-    if (password === repeatPassword && password !== '') {
+    if (
+      password === repeatPassword &&
+      password !== '' &&
+      (passwordStrengthCheck && passwordStrengthCheck.valid)
+    ) {
       return true;
     } else {
       return false;
     }
   };
+  const getPasswordValidationStatus = () => {
+    if (isLoginPage || !passwordStrengthCheck) {
+      return '';
+    }
 
+    if (passwordStrengthCheck.valid) {
+      return 'is-valid';
+    } else {
+      return 'is-invalid';
+    }
+  };
   const getUsernameValidationStatus = () => {
     if (
       isLoginPage ||
@@ -216,12 +265,15 @@ const LoginRegisterPage = ({ location, history }) => {
   };
 
   const errorText = error => {
-    console.log('todo error', error);
+    if (error.response && error.response.data && error.response.data.pCheck) {
+      const passwordCheck = error.response.data.pCheck;
+      setPasswordStrengthCheck(passwordCheck);
+    }
 
     if (isLoginPage) {
       return 'Wrong username or password';
     } else {
-      return 'Unable to register: <todo: fail status>';
+      return 'Registration failed';
     }
   };
 
@@ -263,7 +315,8 @@ const LoginRegisterPage = ({ location, history }) => {
     caption: 'Password',
     value: password,
     onChange: setPassword,
-    type: 'password'
+    type: 'password',
+    validationStatus: getPasswordValidationStatus()
   };
   const repeatPasswordProps = {
     caption: 'Repeat password',
@@ -283,6 +336,7 @@ const LoginRegisterPage = ({ location, history }) => {
             <Input {...usernameProps} />
             {checkUsernameAvailability()}
             <Input {...passwordProps} />
+            {checkPasswordStrength()}
             {!isLoginPage && <Input {...repeatPasswordProps} />}
             {alertVisible && <Alert {...alertProps} />}
             <button
