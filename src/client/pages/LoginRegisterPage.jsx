@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { useActions } from 'react-redux';
 import { login, logout } from '../actions';
+import { useCookies } from 'react-cookie';
+import { isUsernameValid, isPasswordValid } from 'toronto-utils/lib/validation';
 import axios from 'axios';
 import Input from '../components/Input';
 import Alert from '../components/Alert';
-import { useCookies } from 'react-cookie';
-import { isUsernameValid, isPasswordValid } from 'toronto-utils/lib/validation';
 import lodash from 'lodash';
 
 let debounceCheck;
