@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
-import { useActions, useSelector } from 'react-redux';
+import { useActions, useSelector, useStore } from 'react-redux';
 import { setBlogs } from '../actions';
 import { getBlogs } from '../selectors/blog.selector';
 
 const getAllBlogs = onSuccess => {
-  console.group('fetch data');
+  console.log('fetch data');
   axios
     .get('/api/allblogs')
     .then(response => {
@@ -21,8 +21,15 @@ const getAllBlogs = onSuccess => {
 };
 
 const Main = () => {
-  const dispatchSetBlogs = useActions(blogs => setBlogs({ blogs }));
-  const blogs = useSelector(state => getBlogs(state));
+  const store = useStore();
+  const dispatchSetBlogs = useActions(blogs => {
+    console.log('use actions', blogs);
+    return setBlogs({ blogs });
+  }, []);
+  const blogs = useSelector(state => {
+    console.log('useSelector state', state);
+    return getBlogs(state);
+  });
 
   const onGetSecure = e => {
     e.preventDefault();
@@ -41,8 +48,14 @@ const Main = () => {
   };
 
   useEffect(() => {
+    console.log('before get blogs', store.getState());
     getAllBlogs(dispatchSetBlogs);
-  }, []);
+    console.log('after get blogs', store.getState());
+  }, [dispatchSetBlogs, store]);
+
+  // useEffect(() => {
+  //   console.log('################', blogs);
+  // });
 
   return (
     <div className="main-page">

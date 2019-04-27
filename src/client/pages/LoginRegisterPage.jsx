@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { withRouter } from 'react-router-dom';
 import { useActions } from 'react-redux';
 import { login, logout } from '../actions';
@@ -43,7 +43,20 @@ const LoginRegisterPage = ({ location, history }) => {
     } else {
       setIsLoginPage(false);
     }
-  }, [pathname]);
+  }, [pathname, cookies, history, dispatchLogout]);
+
+  const passwordPolicyPassed = useCallback(() => {
+    console.log('passwordPolicyPassed');
+    if (
+      password === repeatPassword &&
+      password !== '' &&
+      (passwordStrengthCheck && passwordStrengthCheck.valid)
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }, [password, repeatPassword, passwordStrengthCheck]);
 
   useEffect(() => {
     const canRegisterVal =
@@ -56,7 +69,8 @@ const LoginRegisterPage = ({ location, history }) => {
     password,
     repeatPassword,
     usernameIsAvailable,
-    passwordStrengthCheck
+    passwordStrengthCheck,
+    passwordPolicyPassed
   ]);
 
   useEffect(() => {
@@ -80,7 +94,7 @@ const LoginRegisterPage = ({ location, history }) => {
       return;
     }
     setPasswordStrengthCheck(isPasswordValid(password));
-  }, [password]);
+  }, [isLoginPage, password]);
 
   const checkPasswordStrength = () => {
     if (!passwordStrengthCheck) {
@@ -167,17 +181,6 @@ const LoginRegisterPage = ({ location, history }) => {
     }
   };
 
-  const passwordPolicyPassed = () => {
-    if (
-      password === repeatPassword &&
-      password !== '' &&
-      (passwordStrengthCheck && passwordStrengthCheck.valid)
-    ) {
-      return true;
-    } else {
-      return false;
-    }
-  };
   const getPasswordValidationStatus = () => {
     if (isLoginPage || !passwordStrengthCheck) {
       return '';

@@ -18,7 +18,7 @@ const Header = ({ location }) => {
   useEffect(() => {
     console.log('path', pathname);
     console.log('loggedUser', loggedUser);
-  }, [loggedUser]);
+  }, [loggedUser, pathname]);
 
   const getLoginLogout = () => {
     if (loggedUser) {

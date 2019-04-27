@@ -1,9 +1,7 @@
 import { configureStore, getDefaultMiddleware } from 'redux-starter-kit';
 import { rootReducer } from './reducers/rootReducer';
-import { useCookies } from 'react-cookie';
 
-const getPreloadedState = () => {
-  const cookies = useCookies();
+const getPreloadedState = cookies => {
   const cookie = cookies[0].u;
   if (cookie) {
     return { auth: { loggedUser: cookie } };
@@ -12,8 +10,8 @@ const getPreloadedState = () => {
   }
 };
 
-export const configureAppStore = () => {
-  const preloadedState = getPreloadedState();
+export const configureAppStore = cookies => {
+  const preloadedState = getPreloadedState(cookies);
 
   const store = configureStore({
     reducer: rootReducer,
