@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 import { useActions } from 'react-redux';
 import { login, logout } from '../actions';
 import { useCookies } from 'react-cookie';
@@ -12,8 +12,8 @@ import lodash from 'lodash';
 let debounceCheck;
 
 const LoginRegisterPage = ({ location, history }) => {
-  const dispatchLogout = useActions(() => logout());
-  const dispatchLogin = useActions(loggedUser => login({ loggedUser }));
+  const dispatchLogout = useActions(() => logout(), []);
+  const dispatchLogin = useActions(loggedUser => login({ loggedUser }), []);
   const { pathname } = location;
   const [isLoginPage, setIsLoginPage] = useState(true);
   const [username, setUsername] = useState('');
@@ -30,14 +30,6 @@ const LoginRegisterPage = ({ location, history }) => {
   const cookies = useCookies();
 
   useEffect(() => {
-    if (pathname === '/logout') {
-      console.log('logout');
-      cookies[2]('jwt');
-      cookies[2]('u');
-      dispatchLogout();
-      history.push('/');
-    }
-
     if (pathname === '/login') {
       setIsLoginPage(true);
     } else {
@@ -329,8 +321,17 @@ const LoginRegisterPage = ({ location, history }) => {
     validationStatus: getRepeatPasswordValidationStatus()
   };
 
+  const handleLogout = () => {
+    console.log('logout');
+    cookies[2]('jwt');
+    cookies[2]('u');
+    dispatchLogout();
+
+    return <Redirect to="/" />;
+  };
+
   return pathname === '/logout' ? (
-    <div />
+    handleLogout()
   ) : (
     <div className="register-page">
       <div className="register-form card bg-dark">

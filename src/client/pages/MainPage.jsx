@@ -4,24 +4,8 @@ import { useActions, useSelector, useStore } from 'react-redux';
 import { setBlogs } from '../actions';
 import { getBlogs } from '../selectors/blog.selector';
 
-const getAllBlogs = onSuccess => {
-  console.log('fetch data');
-  axios
-    .get('/api/allblogs')
-    .then(response => {
-      console.log('success', response.data);
-      onSuccess(response.data);
-    })
-    .catch(error => {
-      console.log('error', error);
-    })
-    .then(() => {
-      console.groupEnd();
-    });
-};
-
 const Main = () => {
-  const store = useStore();
+  //const store = useStore();
   const dispatchSetBlogs = useActions(blogs => {
     console.log('use actions', blogs);
     return setBlogs({ blogs });
@@ -48,10 +32,21 @@ const Main = () => {
   };
 
   useEffect(() => {
-    console.log('before get blogs', store.getState());
-    getAllBlogs(dispatchSetBlogs);
-    console.log('after get blogs', store.getState());
-  }, [dispatchSetBlogs, store]);
+    //console.log('before get blogs', store.getState());
+    axios
+      .get('/api/allblogs')
+      .then(response => {
+        console.log('success', response.data);
+        dispatchSetBlogs(response.data);
+      })
+      .catch(error => {
+        console.log('error', error);
+      })
+      .then(() => {
+        console.groupEnd();
+      });
+    //console.log('after get blogs', store.getState());
+  }, [dispatchSetBlogs]);
 
   // useEffect(() => {
   //   console.log('################', blogs);
