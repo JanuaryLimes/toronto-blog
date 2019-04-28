@@ -13,7 +13,7 @@ let debounceCheck;
 
 const LoginRegisterPage = ({ location, history }) => {
   const dispatchLogout = useActions(() => logout(), []);
-  const dispatchLogin = useActions(loggedUser => login({ loggedUser }), []);
+  const dispatchLogin = useActions(loggedUser => login({ loggedUser }));
   const { pathname } = location;
   const [isLoginPage, setIsLoginPage] = useState(true);
   const [username, setUsername] = useState('');
@@ -35,7 +35,7 @@ const LoginRegisterPage = ({ location, history }) => {
     } else {
       setIsLoginPage(false);
     }
-  }, [pathname, cookies, history, dispatchLogout]);
+  }, [pathname]);
 
   const passwordPolicyPassed = useCallback(() => {
     console.log('passwordPolicyPassed');
