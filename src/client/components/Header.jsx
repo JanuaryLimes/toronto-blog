@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { getLoggedUser } from '../selectors/auth.selector';
 import { useSelector } from 'react-redux';
@@ -15,46 +15,77 @@ const Header = ({ location }) => {
     }
   };
 
-  useEffect(() => {
-    console.log('path', pathname);
-    console.log('loggedUser', loggedUser);
-  }, [loggedUser, pathname]);
+  const homeLink = () => {
+    return (
+      <span className="link">
+        <Link to="/">
+          <button className="btn btn-secondary">Home</button>
+        </Link>
+      </span>
+    );
+  };
 
-  const getLoginLogout = () => {
-    if (loggedUser) {
+  const loginLink = () => {
+    if (loginRegisterVisible() && !loggedUser) {
       return (
-        <Link to="/logout">
-          <button className="btn btn-primary">Log out</button>
-        </Link>
-      );
-    } else {
-      return (
-        <Link to="/login">
-          <button className="btn btn-primary">Log in</button>
-        </Link>
+        <span className="link">
+          <Link to="/login">
+            <button className="btn btn-primary">Log in</button>
+          </Link>
+        </span>
       );
     }
+    return '';
+  };
+
+  const registerLink = () => {
+    if (loginRegisterVisible() && !loggedUser) {
+      return (
+        <span className="link">
+          <Link to="/register">
+            <button className="btn btn-info">Register</button>
+          </Link>
+        </span>
+      );
+    }
+
+    return '';
+  };
+
+  const dashboardLink = () => {
+    if (loggedUser) {
+      return (
+        <div className="dashboard-dropdown">
+          <span className="link">
+            <i className="fas fa-user" />
+          </span>
+          <div className="dashboard-dropdown-content bg-dark">
+            <div className="item no-hover">Logged as: {loggedUser}</div>
+            {pathname !== '/dashboard' && (
+              <Link to="/dashboard">
+                <div className="item">Dashboard</div>
+              </Link>
+            )}
+            <Link to="/logout">
+              <div className="item">Logout</div>
+            </Link>
+          </div>
+        </div>
+      );
+    }
+
+    return '';
   };
 
   return (
     <header className="bg-dark">
       <div className="header-container">
-        <Link to="/">
-          <button className="btn btn-secondary">Home</button>
-        </Link>
+        {homeLink()}
         <div className="space-grow" />
-        <div>
-          {loginRegisterVisible() && (
-            <span>
-              {getLoginLogout()}{' '}
-              {!loggedUser && (
-                <Link to="/register">
-                  <button className="btn btn-info">Register</button>
-                </Link>
-              )}
-            </span>
-          )}
-          {loggedUser && <span>{loggedUser}</span>}
+        <div className="header-container-right">
+          {loginLink()}
+          {registerLink()}
+          {dashboardLink()}
         </div>
       </div>
     </header>
