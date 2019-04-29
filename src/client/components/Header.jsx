@@ -1,10 +1,9 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { getLoggedUser } from '../selectors/auth.selector';
-import { useSelector } from 'react-redux';
+import { LoggedUser } from '../hooks/loggedUser';
 
 const Header = ({ location }) => {
-  const loggedUser = useSelector(state => getLoggedUser(state));
+  const loggedUser = LoggedUser();
   const { pathname } = location;
 
   const loginRegisterVisible = () => {

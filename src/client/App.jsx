@@ -7,6 +7,7 @@ import Header from './components/Header';
 import LoginRegisterPage from './pages/LoginRegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import { useCookies } from 'react-cookie';
+import PrivateRoute from './components/PrivateRoute';
 
 const App = _props => {
   const cookies = useCookies();
@@ -19,7 +20,7 @@ const App = _props => {
         <Route path="/login" component={LoginRegisterPage} />
         <Route path="/logout" component={LoginRegisterPage} />
         <Route path="/register" component={LoginRegisterPage} />
-        <Route path="/dashboard" component={DashboardPage} />
+        <PrivateRoute path="/dashboard" component={DashboardPage} />
       </Router>
     </Provider>
   );
