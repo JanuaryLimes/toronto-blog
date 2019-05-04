@@ -42,4 +42,14 @@ router.get(
   }
 );
 
+router.get(
+  '/api/protected/user-blog-posts',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const { user } = req;
+
+    res.status(200).send({ user, blogPosts: ['aaa', 'bbb', 'ddd'] });
+  }
+);
+
 export default router;

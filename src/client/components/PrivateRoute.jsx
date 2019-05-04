@@ -1,9 +1,9 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { LoggedUser } from '../hooks/loggedUser';
+import { useLoggedUser } from '../hooks/useLoggedUser';
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  const loggedUser = LoggedUser();
+  const loggedUser = useLoggedUser();
 
   return (
     <Route

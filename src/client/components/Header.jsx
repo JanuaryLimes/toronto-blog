@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { LoggedUser } from '../hooks/loggedUser';
+import { useLoggedUser } from '../hooks/useLoggedUser';
 
 const Header = ({ location }) => {
-  const loggedUser = LoggedUser();
+  const loggedUser = useLoggedUser();
   const { pathname } = location;
 
   const loginRegisterVisible = () => {
