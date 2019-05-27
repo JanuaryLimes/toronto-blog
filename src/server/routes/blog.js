@@ -48,7 +48,7 @@ router.get(
   (req, res) => {
     const { user } = req;
 
-    res.status(200).send({ user, blogPosts: ['aaa', 'bbb', 'ddd'] });
+    res.status(200).send({ user, userBlogPosts: ['aaa', 'bbb', 'ddd'] });
   }
 );
 
