@@ -9,7 +9,15 @@ import PrivateRoute from '../components/PrivateRoute';
 
 const CreateNewBlogPost = () => {
   return (
-    <div style={{ border: '1px solid white', padding: '1rem' }}>create new</div>
+    <div style={{ border: '1px solid white', padding: '1rem' }}>
+      <label>Title</label> <input />
+      <br />
+      <label>Content</label>
+      <br />
+      <textarea />
+      <br />
+      <button>Add post</button>
+    </div>
   );
 };
 
