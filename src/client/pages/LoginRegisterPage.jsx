@@ -116,7 +116,7 @@ const LoginRegisterPage = ({ location }) => {
   const debounceCallback = username => {
     console.log('before axios', username);
     axios
-      .get('/api/isUserAvailable?user=' + username)
+      .get('/api/auth/is-user-available?user=' + username)
       .then(response => {
         const { usernameAvailable } = response.data;
         if (usernameAvailable) {
@@ -227,10 +227,14 @@ const LoginRegisterPage = ({ location }) => {
 
   const postArgs = () => {
     if (isLoginPage) {
-      return ['/api/login', { username, password }, { withCredentials: true }];
+      return [
+        '/api/auth/login',
+        { username, password },
+        { withCredentials: true }
+      ];
     } else {
       return [
-        '/api/register',
+        '/api/auth/register',
         {
           username,
           password

@@ -21,11 +21,11 @@ const CreateNewBlogPost = () => {
   );
 };
 
-const DashboardPage = ({ match, location }) => {
+export default withRouter(function DashboardPage({ match, location }) {
   const loggedUser = useLoggedUser();
   const dispatch = useDispatch();
   const [blogPostData, isBlogPostDataLoading] = useGet({
-    path: '/api/protected/user-blog-posts'
+    path: '/api/secure/dashboard/user-blog-posts'
   });
   const userBlogPosts = useSelector(
     state => {
@@ -56,37 +56,39 @@ const DashboardPage = ({ match, location }) => {
     dispatch(setBlogPosts({ ...blogPostData }));
   }, [blogPostData, dispatch]);
 
-  return (
-    <div className="dashboard-page">
-      <div>
-        <p>goto your blog -></p>
-        {location.pathname !== match.url + '/create-new-blog-post' && (
-          <Link to={match.url + '/create-new-blog-post'}>
-            <button className="btn bg-primary">Create new blog post</button>
-          </Link>
-        )}
-        <PrivateRoute
-          path={match.url + '/create-new-blog-post'}
-          component={CreateNewBlogPost}
-        />
+  function render() {
+    return (
+      <div className="dashboard-page">
+        <div>
+          <p>goto your blog -></p>
+          {location.pathname !== match.url + '/create-new-blog-post' && (
+            <Link to={match.url + '/create-new-blog-post'}>
+              <button className="btn bg-primary">Create new blog post</button>
+            </Link>
+          )}
+          <PrivateRoute
+            path={match.url + '/create-new-blog-post'}
+            component={CreateNewBlogPost}
+          />
+        </div>
+        <hr />
+        <div>
+          <p>is data loading: {isBlogPostDataLoading.toString()}</p>
+          Downloaded user blog posts:
+          <ul>
+            {!isBlogPostDataLoading &&
+              blogPostData.userBlogPosts.map(blogPost => {
+                return (
+                  <li key={blogPost}>
+                    <div>{blogPost}</div>
+                  </li>
+                );
+              })}
+          </ul>
+        </div>
       </div>
-      <hr />
-      <div>
-        <p>is data loading: {isBlogPostDataLoading.toString()}</p>
-        Downloaded user blog posts:
-        <ul>
-          {!isBlogPostDataLoading &&
-            blogPostData.userBlogPosts.map(blogPost => {
-              return (
-                <li key={blogPost}>
-                  <div>{blogPost}</div>
-                </li>
-              );
-            })}
-        </ul>
-      </div>
-    </div>
-  );
-};
+    );
+  }
 
-export default withRouter(DashboardPage);
+  return render();
+});

@@ -4,7 +4,7 @@ import passport from 'passport';
 
 const router = express.Router();
 
-router.get('/api/allblogs', (req, res) => {
+router.get('/allblogs', (req, res) => {
   Blog.find({})
     .then(doc => {
       console.log('Sent list of items...');
@@ -16,7 +16,7 @@ router.get('/api/allblogs', (req, res) => {
     });
 });
 
-router.post('/api/blog', (req, res) => {
+router.post('/blog', (req, res) => {
   console.log('req.body', req.body, req.body.name);
   if (req.body && req.body.name) {
     Blog.create({ name: req.body.name }, (err, result) => {
@@ -33,22 +33,12 @@ router.post('/api/blog', (req, res) => {
 });
 
 router.get(
-  '/api/protectedBlogs',
+  '/protected-blogs',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     const { user } = req;
 
     res.status(200).send({ user, arr: [1, 2, 3] });
-  }
-);
-
-router.get(
-  '/api/protected/user-blog-posts',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    const { user } = req;
-
-    res.status(200).send({ user, userBlogPosts: ['aaa', 'bbb', 'ddd'] });
   }
 );
 
