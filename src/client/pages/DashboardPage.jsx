@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { withRouter, Link } from 'react-router-dom';
-import { useGet } from '../hooks/useAxios';
+import { useGet, usePost } from '../hooks/useAxios';
 import { useSelector, useDispatch } from 'react-redux';
 import { useLoggedUser } from '../hooks/useLoggedUser';
 import { getBlogPosts } from '../selectors/blogPosts.selector';
@@ -8,15 +8,37 @@ import { setBlogPosts } from '../actions';
 import PrivateRoute from '../components/PrivateRoute';
 
 const CreateNewBlogPost = () => {
+  const loggedUser = useLoggedUser();
+  const [postArgs, setPostArgs] = useState({});
+  const { isLoading, error } = usePost(postArgs);
+  const [title, setTitle] = useState('Title');
+  const [content, setContent] = useState('Content');
+
+  function addPost() {
+    setPostArgs({
+      path: '/api/secure/dashboard/create-new-blog-post',
+      body: {
+        title: title,
+        content: content,
+        blogName: loggedUser,
+        postDate: Date.now()
+      },
+      onSuccess: () => {
+        console.log('post success');
+      }
+    });
+  }
+
   return (
     <div style={{ border: '1px solid white', padding: '1rem' }}>
-      <label>Title</label> <input />
+      <label>Title</label>{' '}
+      <input value={title} onChange={e => setTitle(e.target.value)} />
       <br />
       <label>Content</label>
       <br />
-      <textarea />
+      <textarea value={content} onChange={e => setContent(e.target.value)} />
       <br />
-      <button>Add post</button>
+      <button onClick={addPost}>Add post</button>
     </div>
   );
 };
@@ -24,8 +46,15 @@ const CreateNewBlogPost = () => {
 export default withRouter(function DashboardPage({ match, location }) {
   const loggedUser = useLoggedUser();
   const dispatch = useDispatch();
-  const [blogPostData, isBlogPostDataLoading] = useGet({
-    path: '/api/secure/dashboard/user-blog-posts'
+
+  const mOnSuccess = useMemo(
+    () => data => dispatch(setBlogPosts({ ...data })),
+    [dispatch]
+  );
+
+  const { isLoading: isBlogPostDataLoading } = useGet({
+    path: '/api/secure/dashboard/user-blog-posts',
+    onSuccess: mOnSuccess
   });
   const userBlogPosts = useSelector(
     state => {
@@ -33,13 +62,13 @@ export default withRouter(function DashboardPage({ match, location }) {
         blogPost => blogPost.user === loggedUser
       );
 
-      if (blogPosts) {
-        return blogPosts;
+      if (blogPosts && blogPosts.userBlogPosts) {
+        return blogPosts.userBlogPosts;
       } else {
-        return [];
+        return null;
       }
     },
-    [loggedUser, blogPostData]
+    [loggedUser]
   );
 
   useEffect(() => {
@@ -51,10 +80,22 @@ export default withRouter(function DashboardPage({ match, location }) {
     console.log('userBlogPosts', userBlogPosts);
   }, [userBlogPosts]);
 
-  useEffect(() => {
-    console.log('blogPostData', blogPostData);
-    dispatch(setBlogPosts({ ...blogPostData }));
-  }, [blogPostData, dispatch]);
+  function displayUserBlogPosts() {
+    if (isBlogPostDataLoading || !userBlogPosts) {
+      return '';
+    }
+    return (
+      <ul>
+        {userBlogPosts.map(blogPost => {
+          return (
+            <li key={blogPost}>
+              <div>{blogPost}</div>
+            </li>
+          );
+        })}
+      </ul>
+    );
+  }
 
   function render() {
     return (
@@ -75,16 +116,7 @@ export default withRouter(function DashboardPage({ match, location }) {
         <div>
           <p>is data loading: {isBlogPostDataLoading.toString()}</p>
           Downloaded user blog posts:
-          <ul>
-            {!isBlogPostDataLoading &&
-              blogPostData.userBlogPosts.map(blogPost => {
-                return (
-                  <li key={blogPost}>
-                    <div>{blogPost}</div>
-                  </li>
-                );
-              })}
-          </ul>
+          {displayUserBlogPosts()}
         </div>
       </div>
     );
