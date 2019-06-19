@@ -22,7 +22,7 @@ app.use('/api', apiRouter);
 
 app.use(express.static(join(__dirname, '../build'))); // Serve the static files from the React app
 app.get('*', (req, res) => {
-  res.sendFile(join(__dirname + '../build/index.html')); // Handles any requests that don't match the ones above
+  res.sendFile(join(__dirname, '../build/index.html')); // Handles any requests that don't match the ones above
 });
 
 http.listen(PORT, function() {
