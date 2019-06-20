@@ -1,10 +1,7 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withRouter, Link } from 'react-router-dom';
-import { useGet, usePost } from '../hooks/useAxios';
-import { useSelector, useDispatch } from 'react-redux';
+import { usePost } from '../hooks/useAxios';
 import { useLoggedUser } from '../hooks/useLoggedUser';
-import { getBlogPosts } from '../selectors/blogPosts.selector';
-import { setBlogPosts } from '../actions';
 import PrivateRoute from '../components/PrivateRoute';
 
 const CreateNewBlogPost = () => {
@@ -13,6 +10,12 @@ const CreateNewBlogPost = () => {
   const { isLoading, error } = usePost(postArgs);
   const [title, setTitle] = useState('Title');
   const [content, setContent] = useState('Content');
+
+  useEffect(() => {
+    var c = isLoading + error; // todo make post in progress indicator, display error if any
+    c = '';
+    console.log(c);
+  }, [isLoading, error]);
 
   function addPost() {
     setPostArgs({
@@ -45,65 +48,14 @@ const CreateNewBlogPost = () => {
 
 export default withRouter(function DashboardPage({ match, location }) {
   const loggedUser = useLoggedUser();
-  const dispatch = useDispatch();
-
-  const mOnSuccess = useMemo(
-    () => data => {
-      console.log('data: ', data);
-      dispatch(setBlogPosts({ ...data }));
-    },
-    [dispatch]
-  );
-
-  const { isLoading: isBlogPostDataLoading } = useGet({
-    path: '/api/public/blogs/' + loggedUser,
-    onSuccess: mOnSuccess
-  });
-  const userBlogPosts = useSelector(
-    state => {
-      const blogPosts = getBlogPosts(state).find(
-        blogPost => blogPost.user === loggedUser
-      );
-
-      if (blogPosts && blogPosts.userBlogPosts) {
-        return blogPosts.userBlogPosts;
-      } else {
-        return null;
-      }
-    },
-    [loggedUser]
-  );
-
-  useEffect(() => {
-    console.log('match', match);
-    console.log('location', location);
-  }, [match, location]);
-
-  function displayUserBlogPosts() {
-    if (isBlogPostDataLoading || !userBlogPosts) {
-      return '';
-    }
-    return (
-      <ul>
-        {userBlogPosts.map(blogPost => {
-          return (
-            <li key={blogPost._id}>
-              <div style={{ border: '1px solid black', padding: '1rem' }}>
-                <div style={{ fontWeight: 'bold' }}>{blogPost.title}</div>
-                <div>{blogPost.content}</div>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
-    );
-  }
 
   function render() {
     return (
       <div className="dashboard-page">
         <div>
-          <p>goto your blog -></p>
+          <Link to={'/' + loggedUser}>
+            <button>go to your blog -></button>
+          </Link>
           {location.pathname !== match.url + '/create-new-blog-post' && (
             <Link to={match.url + '/create-new-blog-post'}>
               <button className="btn bg-primary">Create new blog post</button>
@@ -113,12 +65,6 @@ export default withRouter(function DashboardPage({ match, location }) {
             path={match.url + '/create-new-blog-post'}
             component={CreateNewBlogPost}
           />
-        </div>
-        <hr />
-        <div>
-          <p>is data loading: {isBlogPostDataLoading.toString()}</p>
-          Downloaded user blog posts:
-          {displayUserBlogPosts()}
         </div>
       </div>
     );
