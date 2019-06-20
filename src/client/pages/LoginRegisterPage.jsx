@@ -102,8 +102,8 @@ const LoginRegisterPage = ({ location }) => {
       return null;
     } else {
       return (
-        <div className="invalid-feedback">
-          <ul>
+        <div className="invalid-feedback text-sm text-red-600">
+          <ul className="list-disc m-0 mt-1 pl-2 pl-4">
             {passwordStrengthCheck.msg.map(m => (
               <li key={m}>{m}</li>
             ))}
@@ -160,19 +160,25 @@ const LoginRegisterPage = ({ location }) => {
 
     if (usernameIsChecking) {
       return (
-        <div className="check-username">
-          <div className="spinner-container">
-            <div className="spinner-border" role="status" />
+        <div>
+          <div className="spinner-border inline" role="status">
+            TODO loader...
           </div>
-          <span className="feedback">checking availability</span>
+          <span className="inline ml-1">checking availability</span>
         </div>
       );
     } else {
       if (usernameIsAvailable) {
-        return <div className="valid-feedback">{username} is available</div>;
+        return (
+          <div className="valid-feedback text-sm text-green-500">
+            {username} is available
+          </div>
+        );
       } else {
         return (
-          <div className="invalid-feedback">{username} is not available</div>
+          <div className="invalid-feedback text-sm text-red-600">
+            {username} is not available
+          </div>
         );
       }
     }
@@ -342,10 +348,10 @@ const LoginRegisterPage = ({ location }) => {
   return pathname === '/logout' ? (
     handleLogout()
   ) : (
-    <div className="register-page">
-      <div className="register-form card bg-dark">
-        <div className="register-from-content">
-          <form>
+    <div className="px-4 py-12 ">
+      <div className="bg-gray-700 m-auto max-w-sm rounded">
+        <div className="relative">
+          <form className="py-2 px-4">
             <Input {...usernameProps} />
             {checkUsernameAvailability()}
             <Input {...passwordProps} />
@@ -353,7 +359,7 @@ const LoginRegisterPage = ({ location }) => {
             {!isLoginPage && <Input {...repeatPasswordProps} />}
             {alertVisible && <Alert {...alertProps} />}
             <button
-              className="btn btn-success"
+              className="bg-green-500 hover:bg-green-600 my-2 px-2 px-4 py-1 rounded"
               type="submit"
               disabled={isLoginPage ? !canLogin : !canRegister}
               onClick={onClickHandler}
@@ -362,10 +368,8 @@ const LoginRegisterPage = ({ location }) => {
             </button>
           </form>
           {isLoading && (
-            <div className="loader">
-              <div className="spinner-border" role="status">
-                <span className="sr-only">Loading...</span>
-              </div>
+            <div className="loader bg-gray-400 absolute inset-0 flex items-center justify-center  ">
+              TODO loading...
             </div>
           )}
         </div>

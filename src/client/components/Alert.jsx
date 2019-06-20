@@ -9,23 +9,39 @@ const Alert = ({ text, type, onClose }) => {
     }
   };
 
-  return (
-    <div
-      className={['alert', type, 'alert-dismissible', 'fade', 'show'].join(' ')}
-      role="alert"
-    >
-      {text}
-      <button
-        type="button"
-        data-dismiss={getDataDismiss()}
-        className="close"
-        onClick={onClose}
-        aria-label="Close"
+  function getTypeClassNames() {
+    if (type === 'alert-success') {
+      return 'bg-green-300 text-green-700';
+    } else if (type === 'alert-danger') {
+      return 'bg-red-300 text-red-700';
+    }
+    return '';
+  }
+
+  function render() {
+    return (
+      <div
+        className={[
+          getTypeClassNames(),
+          'mb-2 mt-2 mt-4 p-2 pr-10 relative rounded'
+        ].join(' ')}
+        role="alert"
       >
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-  );
+        {text}
+        <button
+          type="button"
+          data-dismiss={getDataDismiss()}
+          className="close absolute close pt-1 px-3 right-0 text-xl top-0"
+          onClick={onClose}
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    );
+  }
+
+  return render();
 };
 
 Alert.defaultProps = {

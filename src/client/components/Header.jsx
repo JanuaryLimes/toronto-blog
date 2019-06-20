@@ -18,7 +18,9 @@ const Header = ({ location }) => {
     return (
       <span className="link">
         <Link to="/">
-          <button className="btn btn-secondary">Home</button>
+          <button className="btn btn-secondary focus:outline-none font-medium hover:bg-gray-600 px-2 py-1 rounded">
+            Home
+          </button>
         </Link>
       </span>
     );
@@ -77,7 +79,7 @@ const Header = ({ location }) => {
   };
 
   return (
-    <header className="bg-dark">
+    <header className="bg-dark bg-gray-700 p-1 p-2">
       <div className="header-container">
         {homeLink()}
         <div className="space-grow" />
