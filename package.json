@@ -38,18 +38,23 @@
     "toronto-utils": "./packages/toronto-utils"
   },
   "devDependencies": {
+    "autoprefixer": "^9.6.0",
+    "postcss-cli": "^6.1.2",
+    "tailwindcss": "^1.0.4",
     "typescript": "^3.5.2"
   },
   "scripts": {
     "start": "npm run build-server && node dist/server.js",
-    "build": "react-scripts build",
+    "build": "npm run build:css && react-scripts build",
     "build-server": "babel src/server -d dist",
     "build-utils": "cd packages/toronto-utils && npm run build",
     "update-utils": "npm run build-utils && yarn upgrade ./packages/toronto-utils",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "heroku-postbuild": "npm run build",
-    "start-dev-react": "npm run update-utils && react-scripts start",
+    "build:css": "postcss src/client/style/tailwind/index.tailwind.css -o src/client/style/tailwind/index.css",
+    "watch:css": "postcss src/client/style/tailwind/index.tailwind.css -o src/client/style/tailwind/index.css -w",
+    "start-dev-react": "npm run update-utils && (npm run watch:css & react-scripts start)",
     "start-dev-server": "nodemon --inspect=9230 --exec babel-node src/server/server.js"
   },
   "proxy": "http://localhost:5000/",
