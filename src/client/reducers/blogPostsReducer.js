@@ -1,13 +1,7 @@
 import { createReducer } from 'redux-starter-kit';
 import { setBlogPosts } from '../actions';
-import lodash from 'lodash';
 
 const setBlogPosts_type = setBlogPosts.type;
-
-const getUniqueList = (list1, list2) => {
-  const two = list1.concat(list2);
-  return [...lodash.uniq(two)];
-};
 
 const blogPostsReducer = createReducer([], {
   [setBlogPosts_type]: (state, action) => {
@@ -16,10 +10,13 @@ const blogPostsReducer = createReducer([], {
       const currentUserData = state.find(userData => userData.user === user);
       if (currentUserData) {
         console.log('a');
-        currentUserData.userBlogPosts = getUniqueList(
-          currentUserData.userBlogPosts,
-          userBlogPosts
-        );
+        var existingIds = currentUserData.userBlogPosts.map(a => a._id);
+        var newIds = userBlogPosts
+          .map(a => a._id)
+          .filter(b => !existingIds.includes(b));
+        var newPosts = userBlogPosts.filter(a => newIds.includes(a._id));
+
+        currentUserData.userBlogPosts.push(...newPosts);
       } else {
         console.log('b');
         state.push({ user, userBlogPosts });

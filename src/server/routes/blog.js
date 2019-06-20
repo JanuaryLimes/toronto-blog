@@ -1,6 +1,7 @@
 import express from 'express';
 import { Blog } from '../model/blog.model';
 import passport from 'passport';
+import { BlogPost } from '../model/blog-post.model';
 
 const router = express.Router();
 
@@ -41,5 +42,18 @@ router.get(
     res.status(200).send({ user, arr: [1, 2, 3] });
   }
 );
+
+router.get('/:blogName', (req, res) => {
+  const { blogName: user } = req.params;
+
+  BlogPost.find({ blogName: user }, (err, result) => {
+    if (err) {
+      return res.status(400).send({ err });
+    } else {
+      console.log('log result of blog name find: ', [...result]);
+      return res.status(200).send({ user, userBlogPosts: [...result] });
+    }
+  });
+});
 
 export default router;

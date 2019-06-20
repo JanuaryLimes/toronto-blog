@@ -48,12 +48,15 @@ export default withRouter(function DashboardPage({ match, location }) {
   const dispatch = useDispatch();
 
   const mOnSuccess = useMemo(
-    () => data => dispatch(setBlogPosts({ ...data })),
+    () => data => {
+      console.log('data: ', data);
+      dispatch(setBlogPosts({ ...data }));
+    },
     [dispatch]
   );
 
   const { isLoading: isBlogPostDataLoading } = useGet({
-    path: '/api/secure/dashboard/user-blog-posts',
+    path: '/api/public/blogs/' + loggedUser,
     onSuccess: mOnSuccess
   });
   const userBlogPosts = useSelector(
@@ -76,10 +79,6 @@ export default withRouter(function DashboardPage({ match, location }) {
     console.log('location', location);
   }, [match, location]);
 
-  useEffect(() => {
-    console.log('userBlogPosts', userBlogPosts);
-  }, [userBlogPosts]);
-
   function displayUserBlogPosts() {
     if (isBlogPostDataLoading || !userBlogPosts) {
       return '';
@@ -88,8 +87,11 @@ export default withRouter(function DashboardPage({ match, location }) {
       <ul>
         {userBlogPosts.map(blogPost => {
           return (
-            <li key={blogPost}>
-              <div>{blogPost}</div>
+            <li key={blogPost._id}>
+              <div style={{ border: '1px solid black', padding: '1rem' }}>
+                <div style={{ fontWeight: 'bold' }}>{blogPost.title}</div>
+                <div>{blogPost.content}</div>
+              </div>
             </li>
           );
         })}

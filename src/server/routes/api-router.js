@@ -21,6 +21,6 @@ apiRouter.use('/public', publicRouter);
 
 secureRouter.use('/dashboard', dashboardRouter);
 
-publicRouter.use(blogRoute);
+publicRouter.use('/blogs', blogRoute);
 
 export default apiRouter;
