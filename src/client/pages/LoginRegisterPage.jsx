@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { withRouter, Redirect } from 'react-router-dom';
-import { useActions } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { login, logout } from '../actions';
 import { useCookies } from 'react-cookie';
 import { isUsernameValid, isPasswordValid } from 'toronto-utils/lib/validation';
@@ -11,9 +11,14 @@ import lodash from 'lodash';
 
 let debounceCheck;
 
-const LoginRegisterPage = ({ location, history }) => {
-  const dispatchLogout = useActions(() => logout(), []);
-  const dispatchLogin = useActions(loggedUser => login({ loggedUser }));
+const LoginRegisterPage = ({ location }) => {
+  const dispatch = useDispatch();
+  const dispatchLogout = useCallback(() => dispatch(logout()), [dispatch]);
+  const dispatchLogin = useCallback(
+    loggedUser => dispatch(login({ loggedUser })),
+    [dispatch]
+  );
+
   const { pathname } = location;
   const [isLoginPage, setIsLoginPage] = useState(true);
   const [username, setUsername] = useState('');
@@ -111,7 +116,7 @@ const LoginRegisterPage = ({ location, history }) => {
   const debounceCallback = username => {
     console.log('before axios', username);
     axios
-      .get('/api/isUserAvailable?user=' + username)
+      .get('/api/auth/is-user-available?user=' + username)
       .then(response => {
         const { usernameAvailable } = response.data;
         if (usernameAvailable) {
@@ -222,10 +227,14 @@ const LoginRegisterPage = ({ location, history }) => {
 
   const postArgs = () => {
     if (isLoginPage) {
-      return ['/api/login', { username, password }, { withCredentials: true }];
+      return [
+        '/api/auth/login',
+        { username, password },
+        { withCredentials: true }
+      ];
     } else {
       return [
-        '/api/register',
+        '/api/auth/register',
         {
           username,
           password

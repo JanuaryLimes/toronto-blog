@@ -34,7 +34,7 @@ const setLoginCookie = (res, payload) => {
   res.cookie('u', payload.username, cookieOptions);
 };
 
-router.post('/api/register', (req, res) => {
+router.post('/register', (req, res) => {
   const { username, password } = req.body;
   const hashCost = 10;
 
@@ -74,7 +74,7 @@ router.post('/api/register', (req, res) => {
     });
 });
 
-router.post('/api/login', (req, res) => {
+router.post('/login', (req, res) => {
   passport.authenticate('local', { session: false }, (error, user) => {
     if (error || !user) {
       console.log(error);
@@ -99,8 +99,8 @@ router.post('/api/login', (req, res) => {
   })(req, res);
 });
 
-// /api/isUserAvailable?user=...
-router.get('/api/isUserAvailable', (req, res) => {
+// /api/auth/is-user-available?user=...
+router.get('/is-user-available', (req, res) => {
   const inputUser = req.query.user;
 
   console.log(req.query);

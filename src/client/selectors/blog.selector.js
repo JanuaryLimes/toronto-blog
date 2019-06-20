@@ -1,9 +1,10 @@
 import createSelector from 'selectorator';
 
-export const getBlogs = createSelector(
+const getBlogs = createSelector(
   ['blogs'],
   blogs => {
-    console.log('blogs selector', blogs);
     return blogs;
   }
 );
+
+export { getBlogs };

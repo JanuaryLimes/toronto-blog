@@ -11,14 +11,12 @@
     "lib"
   ],
   "dependencies": {
-    "@babel/cli": "^7.4.3",
-    "@babel/core": "^7.4.3",
-    "@babel/node": "^7.2.2",
-    "@babel/polyfill": "^7.4.3",
-    "@babel/preset-env": "^7.4.3",
-    "babel-jest": "^24.7.1",
-    "dotenv": "^7.0.0",
-    "secure-random": "^1.1.1"
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "babel-jest": "^24.8.0",
+    "dotenv": "^8.0.0",
+    "secure-random": "^1.1.2"
   },
   "scripts": {
     "build": "babel src -d lib",

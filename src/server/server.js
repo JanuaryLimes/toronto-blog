@@ -1,11 +1,9 @@
-import '@babel/polyfill';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { join } from 'path';
 import { Server } from 'http';
-import blogRoute from './routes/blog';
-import authRoute from './auth/auth.route';
+import apiRouter from './routes/api-router';
 import https from './https';
 import './auth/passportSetup';
 import { loadDevEnv } from 'toronto-utils';
@@ -20,8 +18,7 @@ app.use(cors());
 app.use(express.json());
 app.use(https);
 
-app.use(blogRoute);
-app.use(authRoute);
+app.use('/api', apiRouter);
 
 app.use(express.static(join(__dirname, '../build'))); // Serve the static files from the React app
 app.get('*', (req, res) => {

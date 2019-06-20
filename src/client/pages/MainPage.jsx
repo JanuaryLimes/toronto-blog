@@ -8,7 +8,7 @@ import { withRouter } from 'react-router-dom';
 class MainComponent extends Component {
   componentDidMount() {
     axios
-      .get('/api/allblogs')
+      .get('/api/public/allblogs')
       .then(response => {
         console.log('success', response.data);
         this.props.dispatchSetBlogs(response.data);
@@ -25,7 +25,7 @@ class MainComponent extends Component {
     e.preventDefault();
 
     axios
-      .get('/api/protectedBlogs', { withCredentials: true })
+      .get('/api/public/protected-blogs', { withCredentials: true })
       .then(response => {
         console.log('success', response.data);
       })
