@@ -1,6 +1,90 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { useLoggedUser } from '../hooks/useLoggedUser';
+import { Manager, Reference, Popper } from 'react-popper';
+
+function ClickablePopper() {
+  const node = useRef();
+  const [isOpen, setIsOpen] = useState(false);
+
+  function handleClick(e) {
+    if (node.current.contains(e.target)) {
+      // inside click
+      return;
+    }
+    // outside click
+    setIsOpen(false);
+  }
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClick);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+    };
+  }, []);
+
+  function render() {
+    return (
+      <div ref={node}>
+        <Manager>
+          <Reference>
+            {({ ref }) => (
+              <button
+                type="button"
+                ref={ref}
+                className="p-2 bg-red-400"
+                onClick={() => setIsOpen(!isOpen)}
+              >
+                Reference element
+              </button>
+            )}
+          </Reference>
+          {isOpen && (
+            <Popper
+              placement="bottom"
+              modifiers={{
+                offset: {
+                  offset: '0, 20'
+                },
+                preventOverflow: {
+                  boundariesElement: 'viewport'
+                }
+              }}
+            >
+              {({ ref, style, placement, arrowProps }) => (
+                <div ref={ref} style={style} data-placement={placement}>
+                  <div
+                    ref={arrowProps.ref}
+                    style={{
+                      ...arrowProps.style,
+                      position: 'absolute',
+                      borderLeftColor: 'transparent',
+                      borderRightColor: 'transparent',
+                      borderStyle: 'solid',
+                      borderWidth: '0px 14px 14px',
+                      top: '-14px'
+                    }}
+                    className="border-green-600"
+                    data-placement={placement}
+                  />
+                  <div className="p-2 bg-green-600">
+                    <div>Popper element element element </div>
+                    <div>Popper element</div>
+                    <div>Popper element</div>
+                    <div>Popper element</div>
+                  </div>
+                </div>
+              )}
+            </Popper>
+          )}
+        </Manager>
+      </div>
+    );
+  }
+
+  return render();
+}
 
 const Header = ({ location }) => {
   const loggedUser = useLoggedUser();
@@ -79,7 +163,7 @@ const Header = ({ location }) => {
   };
 
   return (
-    <header className="bg-dark bg-gray-700 p-1 p-2">
+    <header className="bg-dark bg-gray-700 p-1 p-2 shadow-md">
       <div className="header-container">
         {homeLink()}
         <div className="space-grow" />
@@ -87,6 +171,7 @@ const Header = ({ location }) => {
           {loginLink()}
           {registerLink()}
           {dashboardLink()}
+          <ClickablePopper />
         </div>
       </div>
     </header>
