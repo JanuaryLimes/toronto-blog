@@ -1,10 +1,96 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { useLoggedUser } from '../hooks/useLoggedUser';
-import { Manager, Reference, Popper } from 'react-popper';
+import tippy from 'tippy.js';
+import Tippy from '@tippy.js/react';
+
+// Import the light-border theme from tippy.js
+//import 'tippy.js/themes/light-border.css';
+
+const reactions = [
+  { emoji: '👍', label: 'Thumbs up' },
+  { emoji: '👎', label: 'Thumbs down' },
+  { emoji: '❤️', label: 'Heart' },
+  { emoji: '😂', label: 'Crying with laughter laughter laughter' },
+  { emoji: '🎉', label: 'Party' }
+];
+
+function EmojiPicker({ selectedReaction, onSelect }) {
+  return (
+    <>
+      <p style={{ textAlign: 'left', margin: '5px 0 0' }}>
+        {selectedReaction
+          ? selectedReaction.label
+          : 'Pick your reaction reaction reaction '}
+      </p>
+      <div style={{ height: 1, background: '#ddd', margin: '5px 0' }} />
+      <div className="ReactionButtons">
+        {reactions.map(reaction => (
+          <button
+            key={reaction.label}
+            aria-label={`React with ${reaction.label} emoji`}
+            aria-pressed={selectedReaction === reaction ? 'true' : 'false'}
+            onClick={() => {
+              onSelect(reaction);
+              tippy.hideAll();
+              console.log(tippy);
+            }}
+            style={{
+              backgroundColor: selectedReaction === reaction ? '#ddefff' : ''
+            }}
+          >
+            <span role="img" aria-label={reaction.label}>
+              {reaction.emoji}
+            </span>
+          </button>
+        ))}
+      </div>
+    </>
+  );
+}
+
+function Aaa() {
+  const [ariaExpanded, setAriaExpanded] = useState('false');
+  const [selectedReaction, setSelectedReaction] = useState(null);
+
+  return (
+    <div className="App">
+      {/* <h1>@tippy.js/react</h1>
+      <h2>Accessible Emoji Reaction Picker</h2> */}
+      <span>
+        <Tippy
+          content={
+            <EmojiPicker
+              selectedReaction={selectedReaction}
+              onSelect={setSelectedReaction}
+            />
+          }
+          placement="bottom"
+          trigger="click"
+          animation="scale"
+          appendTo="parent"
+          //theme="light-border"
+          aria={null}
+          arrow={true}
+          inertia={true}
+          interactive={true}
+          duration={[300, 75]}
+          onMount={() => setAriaExpanded('true')}
+          onHide={() => setAriaExpanded('false')}
+        >
+          <button aria-expanded={ariaExpanded} className="bg-green-500 p-2">
+            Add your reaction
+          </button>
+        </Tippy>
+      </span>
+      {/* {selectedReaction && <p>Selected reaction: {selectedReaction.emoji}</p>} */}
+    </div>
+  );
+}
 
 function ClickablePopper() {
-  const node = useRef();
+  return Aaa();
+  /*const node = useRef();
   const [isOpen, setIsOpen] = useState(false);
 
   function handleClick(e) {
@@ -83,7 +169,7 @@ function ClickablePopper() {
     );
   }
 
-  return render();
+  return render();*/
 }
 
 const Header = ({ location }) => {
