@@ -163,7 +163,7 @@ const Header = ({ location }) => {
   };
 
   return (
-    <header className="bg-dark bg-gray-700 p-1 p-2 shadow-md">
+    <header className="bg-dark bg-gray-700 p-2 shadow-md">
       <div className="header-container">
         {homeLink()}
         <div className="space-grow" />

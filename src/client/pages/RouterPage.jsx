@@ -16,7 +16,7 @@ const RouterPage = () => {
             <Header />
           </div>
           <div className="flex-1 overflow-auto flex flex-col">
-            <div className="flex-1">
+            <div className="flex-1 shadow-lg p-2">
               <Switch>
                 <Route exact path="/" component={MainPage} />
                 <Route path="/login" component={LoginRegisterPage} />
@@ -26,7 +26,12 @@ const RouterPage = () => {
                 <Route path="/:blogName" component={BlogPage} />
               </Switch>
             </div>
-            <footer>footer?</footer>
+            <footer
+              className="p-2 bg-gray-700 relative"
+              style={{ zIndex: '-1' }}
+            >
+              footer?
+            </footer>
           </div>
         </div>
       </Router>
