@@ -2,17 +2,36 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Input = ({ type, caption, value, onChange, validationStatus }) => {
-  return (
-    <div className="input-container">
-      <label>{caption}</label>
-      <input
-        className={['form-control', validationStatus].join(' ')}
-        value={value}
-        type={type}
-        onChange={e => onChange(e.target.value)}
-      />
-    </div>
-  );
+  function getValidationStatusClassName(status) {
+    if (status) {
+      if (status === 'is-valid') {
+        return 'bg-green-500';
+      } else if (status === 'is-invalid') {
+        return 'bg-red-500';
+      }
+    }
+    return '';
+  }
+
+  function render() {
+    var validationClass = getValidationStatusClassName(validationStatus);
+    return (
+      <div className="flex flex-col">
+        <label className="mt-2">{caption}</label>
+        <input
+          className={[
+            'bg-white text-gray-900 py-1 px-2 rounded',
+            validationClass
+          ].join(' ')}
+          value={value}
+          type={type}
+          onChange={e => onChange(e.target.value)}
+        />
+      </div>
+    );
+  }
+
+  return render();
 };
 
 Input.propTypes = {

@@ -1,0 +1,38 @@
+:root {
+  --toronto-color: darkgray;
+}
+
+.tippy-tooltip.toronto-theme {
+  background-color: var(--toronto-color);
+  color: white;
+  padding: 0;
+}
+
+.tippy-tooltip.toronto-theme[data-animatefill] {
+  background-color: transparent;
+}
+
+.tippy-tooltip.toronto-theme .tippy-backdrop {
+  background-color: var(--toronto-color);
+}
+
+.tippy-tooltip.toronto-theme[x-placement^='top'] .tippy-arrow {
+  border-top-color: var(--toronto-color);
+}
+.tippy-tooltip.toronto-theme[x-placement^='bottom'] .tippy-arrow {
+  border-bottom-color: var(--toronto-color);
+}
+.tippy-tooltip.toronto-theme[x-placement^='left'] .tippy-arrow {
+  border-left-color: var(--toronto-color);
+}
+.tippy-tooltip.toronto-theme[x-placement^='right'] .tippy-arrow {
+  border-right-color: var(--toronto-color);
+}
+
+.tippy-tooltip.toronto-theme .tippy-roundarrow {
+  fill: var(--toronto-color);
+}
+
+.tippy-tooltip.toronto-theme {
+  box-shadow: 0px 5px 30px 5px rgba(0, 0, 0, 0.75);
+}

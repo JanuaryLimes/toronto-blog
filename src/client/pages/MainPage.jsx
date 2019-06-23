@@ -39,7 +39,7 @@ class MainComponent extends Component {
 
   render() {
     return (
-      <div className="main-page">
+      <div className="p-4">
         <button onClick={e => this.onGetSecure(e)}>get secure</button>
         <div>Login</div>
         <div>Search existing blogs</div>

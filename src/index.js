@@ -1,5 +1,3 @@
-import 'bootstrap';
-import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './client/style/style.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
