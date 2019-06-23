@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, forwardRef } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { useLoggedUser } from '../hooks/useLoggedUser';
-import tippy from 'tippy.js';
+// import tippy from 'tippy.js';
 import Tippy from '@tippy.js/react';
 
 // Import the light-border theme from tippy.js
@@ -32,8 +32,8 @@ function EmojiPicker({ selectedReaction, onSelect }) {
             aria-pressed={selectedReaction === reaction ? 'true' : 'false'}
             onClick={() => {
               onSelect(reaction);
-              tippy.hideAll();
-              console.log(tippy);
+              // tippy.hideAll();
+              // console.log(tippy);
             }}
             style={{
               backgroundColor: selectedReaction === reaction ? '#ddefff' : ''
@@ -49,27 +49,46 @@ function EmojiPicker({ selectedReaction, onSelect }) {
   );
 }
 
+const ThisWillWork = forwardRef((props, ref) => {
+  function render() {
+    return (
+      <button
+        ref={ref}
+        aria-expanded={props.ariaExpanded}
+        className="bg-green-500 p-2 py-1 relative"
+      >
+        dupa dupa
+        {/* <span><i className="fas fa-user" />dupa dupa</span> */}
+      </button>
+    );
+  }
+
+  return render();
+});
+
 function Aaa() {
   const [ariaExpanded, setAriaExpanded] = useState('false');
   const [selectedReaction, setSelectedReaction] = useState(null);
-
+  const tippyInstance = useRef();
   return (
-    <div className="App">
-      {/* <h1>@tippy.js/react</h1>
-      <h2>Accessible Emoji Reaction Picker</h2> */}
+    <div>
       <span>
         <Tippy
           content={
             <EmojiPicker
               selectedReaction={selectedReaction}
-              onSelect={setSelectedReaction}
+              onSelect={e => {
+                setSelectedReaction(e);
+                tippyInstance.current.hide();
+                console.log(tippyInstance);
+              }}
             />
           }
+          onCreate={instance => (tippyInstance.current = instance)}
           placement="bottom"
           trigger="click"
           animation="scale"
           appendTo="parent"
-          //theme="light-border"
           aria={null}
           arrow={true}
           inertia={true}
@@ -78,12 +97,18 @@ function Aaa() {
           onMount={() => setAriaExpanded('true')}
           onHide={() => setAriaExpanded('false')}
         >
-          <button aria-expanded={ariaExpanded} className="bg-green-500 p-2">
-            Add your reaction
-          </button>
+          <ThisWillWork ariaExpanded={ariaExpanded} />
+
+          {/* <button
+            aria-expanded={ariaExpanded}
+            className="bg-green-500 p-2 py-1"
+          >
+            <span>
+              <i className="fas fa-user" />
+            </span>
+          </button> */}
         </Tippy>
       </span>
-      {/* {selectedReaction && <p>Selected reaction: {selectedReaction.emoji}</p>} */}
     </div>
   );
 }
