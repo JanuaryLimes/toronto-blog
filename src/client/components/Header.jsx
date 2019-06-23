@@ -1,52 +1,62 @@
-import React, { useState, useRef, forwardRef } from 'react';
+import React, { useState, useRef, forwardRef, useEffect } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { useLoggedUser } from '../hooks/useLoggedUser';
-// import tippy from 'tippy.js';
 import Tippy from '@tippy.js/react';
 
-// Import the light-border theme from tippy.js
-//import 'tippy.js/themes/light-border.css';
+function TorontoTippy({
+  buttonContent,
+  children,
+  tooltipColor = 'bg-gray-700'
+}) {
+  const [ariaExpanded, setAriaExpanded] = useState('false');
+  // const [selectedReaction, setSelectedReaction] = useState(null);
+  const tippyInstance = useRef();
 
-const reactions = [
-  { emoji: '👍', label: 'Thumbs up' },
-  { emoji: '👎', label: 'Thumbs down' },
-  { emoji: '❤️', label: 'Heart' },
-  { emoji: '😂', label: 'Crying with laughter laughter laughter' },
-  { emoji: '🎉', label: 'Party' }
-];
+  useEffect(() => {
+    var dummy = document.createElement('div');
+    dummy.classList.add(tooltipColor);
+    document.body.appendChild(dummy);
+    var color = getComputedStyle(dummy, null).getPropertyValue(
+      'background-color'
+    );
+    console.log('dummy set', color);
+    document.body.removeChild(dummy);
+    document.documentElement.style.setProperty('--toronto-color', color);
+  }, [tooltipColor]);
 
-function EmojiPicker({ selectedReaction, onSelect }) {
-  return (
-    <>
-      <p style={{ textAlign: 'left', margin: '5px 0 0' }}>
-        {selectedReaction
-          ? selectedReaction.label
-          : 'Pick your reaction reaction reaction '}
-      </p>
-      <div style={{ height: 1, background: '#ddd', margin: '5px 0' }} />
-      <div className="ReactionButtons">
-        {reactions.map(reaction => (
-          <button
-            key={reaction.label}
-            aria-label={`React with ${reaction.label} emoji`}
-            aria-pressed={selectedReaction === reaction ? 'true' : 'false'}
-            onClick={() => {
-              onSelect(reaction);
-              // tippy.hideAll();
-              // console.log(tippy);
-            }}
-            style={{
-              backgroundColor: selectedReaction === reaction ? '#ddefff' : ''
-            }}
-          >
-            <span role="img" aria-label={reaction.label}>
-              {reaction.emoji}
-            </span>
-          </button>
+  function render() {
+    return (
+      <Tippy
+        content={children.map((child, i) => (
+          <div onClick={() => tippyInstance.current.hide()} key={i}>
+            {child}
+          </div>
         ))}
-      </div>
-    </>
-  );
+        onCreate={instance => (tippyInstance.current = instance)}
+        placement="bottom"
+        trigger="click"
+        animation="scale"
+        aria={null}
+        theme="toronto"
+        arrow={true}
+        inertia={true}
+        arrowType="round"
+        interactive={true}
+        duration={[300, 200]}
+        onMount={() => setAriaExpanded('true')}
+        onHide={() => setAriaExpanded('false')}
+      >
+        <button
+          aria-expanded={ariaExpanded}
+          className="bg-green-500 p-2 py-1 relative"
+        >
+          {buttonContent}
+        </button>
+      </Tippy>
+    );
+  }
+
+  return render();
 }
 
 const ThisWillWork = forwardRef((props, ref) => {
@@ -65,137 +75,70 @@ const ThisWillWork = forwardRef((props, ref) => {
 
   return render();
 });
+// const Aaa = ({ tooltipColor = 'bg-gray-700' }) => {
+//   const [ariaExpanded, setAriaExpanded] = useState('false');
+//   const [selectedReaction, setSelectedReaction] = useState(null);
+//   const tippyInstance = useRef();
 
-function Aaa() {
-  const [ariaExpanded, setAriaExpanded] = useState('false');
-  const [selectedReaction, setSelectedReaction] = useState(null);
-  const tippyInstance = useRef();
-  return (
-    <div>
-      <span>
-        <Tippy
-          content={
-            <EmojiPicker
-              selectedReaction={selectedReaction}
-              onSelect={e => {
-                setSelectedReaction(e);
-                tippyInstance.current.hide();
-                console.log(tippyInstance);
-              }}
-            />
-          }
-          onCreate={instance => (tippyInstance.current = instance)}
-          placement="bottom"
-          trigger="click"
-          animation="scale"
-          appendTo="parent"
-          aria={null}
-          arrow={true}
-          inertia={true}
-          interactive={true}
-          duration={[300, 75]}
-          onMount={() => setAriaExpanded('true')}
-          onHide={() => setAriaExpanded('false')}
-        >
-          <ThisWillWork ariaExpanded={ariaExpanded} />
+//   useEffect(() => {
+//     var dummy = document.createElement('div');
+//     dummy.classList.add(tooltipColor);
+//     document.body.appendChild(dummy);
+//     var color = getComputedStyle(dummy, null).getPropertyValue(
+//       'background-color'
+//     );
+//     console.log('dummy set', color);
+//     document.body.removeChild(dummy);
+//     document.documentElement.style.setProperty('--toronto-color', color);
+//   }, [tooltipColor]);
 
-          {/* <button
-            aria-expanded={ariaExpanded}
-            className="bg-green-500 p-2 py-1"
-          >
-            <span>
-              <i className="fas fa-user" />
-            </span>
-          </button> */}
-        </Tippy>
-      </span>
-    </div>
-  );
-}
+//   return (
+//     <div>
+//       <span>
+//         <Tippy
+//           content={
+//             <EmojiPicker
+//               selectedReaction={selectedReaction}
+//               onSelect={e => {
+//                 setSelectedReaction(e);
+//                 tippyInstance.current.hide();
+//                 console.log(tippyInstance);
+//               }}
+//             />
+//           }
+//           onCreate={instance => (tippyInstance.current = instance)}
+//           placement="bottom"
+//           trigger="click"
+//           animation="scale"
+//           aria={null}
+//           theme="toronto"
+//           arrow={true}
+//           inertia={true}
+//           arrowType="round"
+//           interactive={true}
+//           duration={[300, 200]}
+//           onMount={() => setAriaExpanded('true')}
+//           onHide={() => setAriaExpanded('false')}
+//         >
+//           <ThisWillWork ariaExpanded={ariaExpanded} />
 
-function ClickablePopper() {
-  return Aaa();
-  /*const node = useRef();
-  const [isOpen, setIsOpen] = useState(false);
+//           {/* <button
+//             aria-expanded={ariaExpanded}
+//             className="bg-green-500 p-2 py-1"
+//           >
+//             <span>
+//               <i className="fas fa-user" />
+//             </span>
+//           </button> */}
+//         </Tippy>
+//       </span>
+//     </div>
+//   );
+// };
 
-  function handleClick(e) {
-    if (node.current.contains(e.target)) {
-      // inside click
-      return;
-    }
-    // outside click
-    setIsOpen(false);
-  }
-
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClick);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClick);
-    };
-  }, []);
-
-  function render() {
-    return (
-      <div ref={node}>
-        <Manager>
-          <Reference>
-            {({ ref }) => (
-              <button
-                type="button"
-                ref={ref}
-                className="p-2 bg-red-400"
-                onClick={() => setIsOpen(!isOpen)}
-              >
-                Reference element
-              </button>
-            )}
-          </Reference>
-          {isOpen && (
-            <Popper
-              placement="bottom"
-              modifiers={{
-                offset: {
-                  offset: '0, 20'
-                },
-                preventOverflow: {
-                  boundariesElement: 'viewport'
-                }
-              }}
-            >
-              {({ ref, style, placement, arrowProps }) => (
-                <div ref={ref} style={style} data-placement={placement}>
-                  <div
-                    ref={arrowProps.ref}
-                    style={{
-                      ...arrowProps.style,
-                      position: 'absolute',
-                      borderLeftColor: 'transparent',
-                      borderRightColor: 'transparent',
-                      borderStyle: 'solid',
-                      borderWidth: '0px 14px 14px',
-                      top: '-14px'
-                    }}
-                    className="border-green-600"
-                    data-placement={placement}
-                  />
-                  <div className="p-2 bg-green-600">
-                    <div>Popper element element element </div>
-                    <div>Popper element</div>
-                    <div>Popper element</div>
-                    <div>Popper element</div>
-                  </div>
-                </div>
-              )}
-            </Popper>
-          )}
-        </Manager>
-      </div>
-    );
-  }
-
-  return render();*/
-}
+// function ClickablePopper() {
+//   return <Aaa />;
+// }
 
 const Header = ({ location }) => {
   const loggedUser = useLoggedUser();
@@ -282,7 +225,19 @@ const Header = ({ location }) => {
           {loginLink()}
           {registerLink()}
           {dashboardLink()}
-          <ClickablePopper />
+          {/* <ClickablePopper /> */}
+
+          <TorontoTippy
+            buttonContent={
+              <span>
+                <i className="fas fa-user" />
+              </span>
+            }
+          >
+            <div>hej</div>
+            <div>hej</div>
+            <div>hej</div>
+          </TorontoTippy>
         </div>
       </div>
     </header>
