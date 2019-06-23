@@ -11,9 +11,29 @@ import lodash from 'lodash';
 
 let debounceCheck;
 
-const LoginRegisterPage = ({ location }) => {
+export const LogoutComponent = () => {
   const dispatch = useDispatch();
   const dispatchLogout = useCallback(() => dispatch(logout()), [dispatch]);
+  const cookies = useCookies();
+
+  const handleLogout = () => {
+    console.log('logout');
+    cookies[2]('jwt');
+    cookies[2]('u');
+    dispatchLogout();
+
+    return <Redirect to="/" />;
+  };
+
+  function render() {
+    return handleLogout();
+  }
+
+  return render();
+};
+
+const LoginRegisterPage = ({ location }) => {
+  const dispatch = useDispatch();
   const dispatchLogin = useCallback(
     loggedUser => dispatch(login({ loggedUser })),
     [dispatch]
@@ -32,7 +52,6 @@ const LoginRegisterPage = ({ location }) => {
   const [usernameIsChecking, setUsernameIsChecking] = useState(false);
   const [usernameIsAvailable, setUsernameIsAvailable] = useState(undefined);
   const [passwordStrengthCheck, setPasswordStrengthCheck] = useState();
-  const cookies = useCookies();
 
   useEffect(() => {
     if (pathname === '/login') {
@@ -336,46 +355,39 @@ const LoginRegisterPage = ({ location }) => {
     validationStatus: getRepeatPasswordValidationStatus()
   };
 
-  const handleLogout = () => {
-    console.log('logout');
-    cookies[2]('jwt');
-    cookies[2]('u');
-    dispatchLogout();
-
-    return <Redirect to="/" />;
-  };
-
-  return pathname === '/logout' ? (
-    handleLogout()
-  ) : (
-    <div className="px-4 py-12 ">
-      <div className="bg-gray-700 m-auto max-w-sm rounded">
-        <div className="relative">
-          <form className="py-2 px-4">
-            <Input {...usernameProps} />
-            {checkUsernameAvailability()}
-            <Input {...passwordProps} />
-            {checkPasswordStrength()}
-            {!isLoginPage && <Input {...repeatPasswordProps} />}
-            {alertVisible && <Alert {...alertProps} />}
-            <button
-              className="bg-green-500 hover:bg-green-600 my-2 px-2 px-4 py-1 rounded"
-              type="submit"
-              disabled={isLoginPage ? !canLogin : !canRegister}
-              onClick={onClickHandler}
-            >
-              {isLoginPage ? 'Login' : 'Register'}
-            </button>
-          </form>
-          {isLoading && (
-            <div className="loader bg-gray-400 absolute inset-0 flex items-center justify-center  ">
-              TODO loading...
-            </div>
-          )}
+  function render() {
+    return (
+      <div className="px-4 py-12 ">
+        <div className="bg-gray-700 m-auto max-w-sm rounded">
+          <div className="relative">
+            <form className="py-2 px-4">
+              <Input {...usernameProps} />
+              {checkUsernameAvailability()}
+              <Input {...passwordProps} />
+              {checkPasswordStrength()}
+              {!isLoginPage && <Input {...repeatPasswordProps} />}
+              {alertVisible && <Alert {...alertProps} />}
+              <button
+                className="bg-green-500 hover:bg-green-600 my-2 px-2 px-4 py-1 rounded"
+                type="submit"
+                disabled={isLoginPage ? !canLogin : !canRegister}
+                onClick={onClickHandler}
+              >
+                {isLoginPage ? 'Login' : 'Register'}
+              </button>
+            </form>
+            {isLoading && (
+              <div className="loader bg-gray-400 absolute inset-0 flex items-center justify-center  ">
+                TODO loading...
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
+
+  return render();
 };
 
 export default withRouter(LoginRegisterPage);
