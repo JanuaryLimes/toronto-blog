@@ -8,6 +8,10 @@ import axios from 'axios';
 import Input from '../components/Input';
 import Alert from '../components/Alert';
 import lodash from 'lodash';
+import { BouncingLoader, DonutSpinnerLoader } from '../components/Loaders';
+import { FadeInOut } from '../components/Posed';
+import { PoseGroup } from 'react-pose';
+import { PosedLi } from '../components/Posed';
 
 let debounceCheck;
 
@@ -123,9 +127,11 @@ const LoginRegisterPage = ({ location }) => {
       return (
         <div className="invalid-feedback text-sm text-red-600">
           <ul className="list-disc m-0 mt-1 pl-2 pl-4">
-            {passwordStrengthCheck.msg.map(m => (
-              <li key={m}>{m}</li>
-            ))}
+            <PoseGroup>
+              {passwordStrengthCheck.msg.map(m => (
+                <PosedLi key={m}>{m}</PosedLi>
+              ))}
+            </PoseGroup>
           </ul>
         </div>
       );
@@ -173,34 +179,46 @@ const LoginRegisterPage = ({ location }) => {
   }, [username]);
 
   const checkUsernameAvailability = () => {
-    if (isLoginPage || username === '') {
-      return null;
+    var checkingAvailability = false,
+      usernameStatusAvailable = false,
+      usernameStatusNotAvailable = false;
+
+    if (!(isLoginPage || username === '')) {
+      if (usernameIsChecking) {
+        checkingAvailability = true;
+      } else {
+        if (usernameIsAvailable) {
+          usernameStatusAvailable = true;
+        } else {
+          usernameStatusNotAvailable = true;
+        }
+      }
     }
 
-    if (usernameIsChecking) {
-      return (
-        <div>
-          <div className="spinner-border inline" role="status">
-            TODO loader...
+    return (
+      <>
+        <FadeInOut condition={checkingAvailability}>
+          <div>
+            <div className="inline-flex">
+              <DonutSpinnerLoader />
+            </div>
+            <span className="inline ml-1">checking availability</span>
           </div>
-          <span className="inline ml-1">checking availability</span>
-        </div>
-      );
-    } else {
-      if (usernameIsAvailable) {
-        return (
+        </FadeInOut>
+
+        <FadeInOut condition={usernameStatusAvailable}>
           <div className="valid-feedback text-sm text-green-500">
             {username} is available
           </div>
-        );
-      } else {
-        return (
+        </FadeInOut>
+
+        <FadeInOut condition={usernameStatusNotAvailable}>
           <div className="invalid-feedback text-sm text-red-600">
             {username} is not available
           </div>
-        );
-      }
-    }
+        </FadeInOut>
+      </>
+    );
   };
 
   const getPasswordValidationStatus = () => {
@@ -355,6 +373,14 @@ const LoginRegisterPage = ({ location }) => {
     validationStatus: getRepeatPasswordValidationStatus()
   };
 
+  function getAlert() {
+    return (
+      <FadeInOut pose={alertVisible ? 'in' : 'out'}>
+        <Alert {...alertProps} />
+      </FadeInOut>
+    );
+  }
+
   function render() {
     return (
       <div className="px-4 py-12 ">
@@ -366,7 +392,7 @@ const LoginRegisterPage = ({ location }) => {
               <Input {...passwordProps} />
               {checkPasswordStrength()}
               {!isLoginPage && <Input {...repeatPasswordProps} />}
-              {alertVisible && <Alert {...alertProps} />}
+              {getAlert()}
               <button
                 className="bg-green-500 hover:bg-green-600 my-2 px-2 px-4 py-1 rounded"
                 type="submit"
@@ -376,11 +402,7 @@ const LoginRegisterPage = ({ location }) => {
                 {isLoginPage ? 'Login' : 'Register'}
               </button>
             </form>
-            {isLoading && (
-              <div className="loader bg-gray-400 absolute inset-0 flex items-center justify-center  ">
-                TODO loading...
-              </div>
-            )}
+            {isLoading && <BouncingLoader />}
           </div>
         </div>
       </div>
