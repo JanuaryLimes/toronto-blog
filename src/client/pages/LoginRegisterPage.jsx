@@ -217,7 +217,7 @@ const LoginRegisterPage = ({ location }) => {
         <div className="relative" style={{ height: relativeInfoMaxHeight }}>
           <div className="absolute inset-0">
             <OpacityModifier condition={checkingAvailability}>
-              <div ref={div1}>
+              <div ref={div1} className="pt-1">
                 <div className="inline-flex">
                   <DonutSpinnerLoader />
                 </div>
@@ -227,14 +227,20 @@ const LoginRegisterPage = ({ location }) => {
           </div>
           <div className="absolute inset-0">
             <OpacityModifier condition={usernameStatusAvailable}>
-              <div ref={div2} className="valid-feedback text-sm text-green-500">
+              <div
+                ref={div2}
+                className="valid-feedback pt-1 text-sm text-green-500"
+              >
                 {username} is available
               </div>
             </OpacityModifier>
           </div>
           <div className="absolute inset-0">
             <OpacityModifier condition={usernameStatusNotAvailable}>
-              <div ref={div3} className="invalid-feedback text-sm text-red-600">
+              <div
+                ref={div3}
+                className="invalid-feedback pt-1 text-sm text-red-600"
+              >
                 {username} is not available
               </div>
             </OpacityModifier>
