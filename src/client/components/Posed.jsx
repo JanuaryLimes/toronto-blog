@@ -21,11 +21,11 @@ const hideZero = {
 };
 const visible = {
   opacity: 1,
-  transition: { duration: 100 }
+  transition: spring
 };
 const hidden = {
   opacity: 0,
-  transition: { duration: 100 }
+  transition: spring
 };
 
 const PosedLi = posed.li({
@@ -33,7 +33,7 @@ const PosedLi = posed.li({
   exit: hideZero
 });
 
-const OpacityModifier = posed.div({
+const OpacityModifierPosed = posed.div({
   visible,
   hidden
 });
@@ -46,6 +46,14 @@ const FadeInOutPosed = posed.div({
 function FadeInOut({ condition, children }) {
   return (
     <FadeInOutPosed pose={condition ? 'in' : 'out'}>{children}</FadeInOutPosed>
+  );
+}
+
+function OpacityModifier({ condition, children }) {
+  return (
+    <OpacityModifierPosed pose={condition ? 'visible' : 'hidden'}>
+      {children}
+    </OpacityModifierPosed>
   );
 }
 

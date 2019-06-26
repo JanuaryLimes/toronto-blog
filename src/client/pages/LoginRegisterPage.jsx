@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { withRouter, Redirect } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { login, logout } from '../actions';
@@ -9,9 +9,8 @@ import Input from '../components/Input';
 import Alert from '../components/Alert';
 import lodash from 'lodash';
 import { BouncingLoader, DonutSpinnerLoader } from '../components/Loaders';
-import { FadeInOut } from '../components/Posed';
+import { FadeInOut, PosedLi, OpacityModifier } from '../components/Posed';
 import { PoseGroup } from 'react-pose';
-import { PosedLi } from '../components/Posed';
 
 let debounceCheck;
 
@@ -178,10 +177,26 @@ const LoginRegisterPage = ({ location }) => {
     }
   }, [username]);
 
+  const div1 = useRef();
+  const div2 = useRef();
+  const div3 = useRef();
+
+  const [relativeInfoMaxHeight, setRelativeInfoMaxHeight] = useState(0);
+
+  useEffect(() => {
+    let maxHeight = Math.max(
+      div1.current.clientHeight,
+      div2.current.clientHeight,
+      div3.current.clientHeight
+    );
+    setRelativeInfoMaxHeight(maxHeight);
+  }, []);
+
   const checkUsernameAvailability = () => {
     var checkingAvailability = false,
       usernameStatusAvailable = false,
-      usernameStatusNotAvailable = false;
+      usernameStatusNotAvailable = false,
+      show = true;
 
     if (!(isLoginPage || username === '')) {
       if (usernameIsChecking) {
@@ -193,31 +208,39 @@ const LoginRegisterPage = ({ location }) => {
           usernameStatusNotAvailable = true;
         }
       }
+    } else {
+      show = false;
     }
 
     return (
-      <>
-        <FadeInOut condition={checkingAvailability}>
-          <div>
-            <div className="inline-flex">
-              <DonutSpinnerLoader />
-            </div>
-            <span className="inline ml-1">checking availability</span>
+      <FadeInOut condition={show}>
+        <div className="relative" style={{ height: relativeInfoMaxHeight }}>
+          <div className="absolute inset-0">
+            <OpacityModifier condition={checkingAvailability}>
+              <div ref={div1}>
+                <div className="inline-flex">
+                  <DonutSpinnerLoader />
+                </div>
+                <span className="inline ml-1">checking availability</span>
+              </div>
+            </OpacityModifier>
           </div>
-        </FadeInOut>
-
-        <FadeInOut condition={usernameStatusAvailable}>
-          <div className="valid-feedback text-sm text-green-500">
-            {username} is available
+          <div className="absolute inset-0">
+            <OpacityModifier condition={usernameStatusAvailable}>
+              <div ref={div2} className="valid-feedback text-sm text-green-500">
+                {username} is available
+              </div>
+            </OpacityModifier>
           </div>
-        </FadeInOut>
-
-        <FadeInOut condition={usernameStatusNotAvailable}>
-          <div className="invalid-feedback text-sm text-red-600">
-            {username} is not available
+          <div className="absolute inset-0">
+            <OpacityModifier condition={usernameStatusNotAvailable}>
+              <div ref={div3} className="invalid-feedback text-sm text-red-600">
+                {username} is not available
+              </div>
+            </OpacityModifier>
           </div>
-        </FadeInOut>
-      </>
+        </div>
+      </FadeInOut>
     );
   };
 
