@@ -5,12 +5,12 @@ const Input = ({ type, caption, value, onChange, validationStatus }) => {
   function getValidationStatusClassName(status) {
     if (status) {
       if (status === 'is-valid') {
-        return 'bg-green-500';
+        return 'border-green-600';
       } else if (status === 'is-invalid') {
-        return 'bg-red-500';
+        return 'border-red-600';
       }
     }
-    return '';
+    return 'border-gray-600';
   }
 
   function render() {
@@ -20,7 +20,7 @@ const Input = ({ type, caption, value, onChange, validationStatus }) => {
         <label className="mt-2">{caption}</label>
         <input
           className={[
-            'bg-white text-gray-900 py-1 px-2 rounded',
+            'bg-white text-gray-900 py-1 px-2 rounded border-2 outline-none',
             validationClass
           ].join(' ')}
           value={value}

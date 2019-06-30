@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { withRouter, Redirect } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { login, logout } from '../actions';
@@ -11,6 +11,7 @@ import lodash from 'lodash';
 import { BouncingLoader, DonutSpinnerLoader } from '../components/Loaders';
 import { FadeInOut, PosedLi, OpacityModifier } from '../components/Posed';
 import { PoseGroup } from 'react-pose';
+import { useMeasure } from '../hooks/useMeasure';
 
 let debounceCheck;
 
@@ -124,8 +125,8 @@ const LoginRegisterPage = ({ location }) => {
       return null;
     } else {
       return (
-        <div className="invalid-feedback text-sm text-red-600">
-          <ul className="list-disc m-0 mt-1 pl-2 pl-4">
+        <div className="invalid-feedback text-sm bg-red-700 mt-1 px-2 py-1 rounded">
+          <ul className="list-disc m-0 mt-1 pl-2 pl-4 ">
             <PoseGroup>
               {passwordStrengthCheck.msg.map(m => (
                 <PosedLi key={m}>{m}</PosedLi>
@@ -177,20 +178,16 @@ const LoginRegisterPage = ({ location }) => {
     }
   }, [username]);
 
-  const div1 = useRef();
-  const div2 = useRef();
-  const div3 = useRef();
+  const [div1, { height: viewHeight1 }] = useMeasure();
+  const [div2, { height: viewHeight2 }] = useMeasure();
+  const [div3, { height: viewHeight3 }] = useMeasure();
 
   const [relativeInfoMaxHeight, setRelativeInfoMaxHeight] = useState(0);
 
   useEffect(() => {
-    let maxHeight = Math.max(
-      div1.current.clientHeight,
-      div2.current.clientHeight,
-      div3.current.clientHeight
-    );
+    let maxHeight = Math.max(viewHeight1, viewHeight2, viewHeight3);
     setRelativeInfoMaxHeight(maxHeight);
-  }, []);
+  }, [viewHeight1, viewHeight2, viewHeight3]);
 
   const checkUsernameAvailability = () => {
     var checkingAvailability = false,
@@ -217,31 +214,35 @@ const LoginRegisterPage = ({ location }) => {
         <div className="relative" style={{ height: relativeInfoMaxHeight }}>
           <div className="absolute inset-0">
             <OpacityModifier condition={checkingAvailability}>
-              <div ref={div1} className="pt-1">
-                <div className="inline-flex">
-                  <DonutSpinnerLoader />
+              <div {...div1}>
+                <div className="pt-1">
+                  <div className="inline-flex">
+                    <DonutSpinnerLoader />
+                  </div>
+                  <span className="inline ml-1">checking availability</span>
                 </div>
-                <span className="inline ml-1">checking availability</span>
               </div>
             </OpacityModifier>
           </div>
           <div className="absolute inset-0">
             <OpacityModifier condition={usernameStatusAvailable}>
-              <div
-                ref={div2}
-                className="valid-feedback pt-1 text-sm text-green-500"
-              >
-                {username} is available
+              <div {...div2}>
+                <div className="pt-1">
+                  <div className="px-2 rounded valid-feedback text-sm bg-green-700 truncate">
+                    {username} is available
+                  </div>
+                </div>
               </div>
             </OpacityModifier>
           </div>
           <div className="absolute inset-0">
             <OpacityModifier condition={usernameStatusNotAvailable}>
-              <div
-                ref={div3}
-                className="invalid-feedback pt-1 text-sm text-red-600"
-              >
-                {username} is not available
+              <div {...div3}>
+                <div className="pt-1">
+                  <div className="px-2 rounded invalid-feedback text-sm bg-red-700 truncate">
+                    {username} is not available
+                  </div>
+                </div>
               </div>
             </OpacityModifier>
           </div>
@@ -278,15 +279,20 @@ const LoginRegisterPage = ({ location }) => {
   };
 
   const getRepeatPasswordValidationStatus = () => {
+    var result = { className: '', showRepeatPasswordErrorMessage: false };
+
     if (repeatPassword === '') {
-      return '';
+      return result;
+    } else {
+      if (password === repeatPassword) {
+        result.className = 'is-valid';
+      } else {
+        result.showRepeatPasswordErrorMessage = true;
+        result.className = 'is-invalid';
+      }
     }
 
-    if (password === repeatPassword) {
-      return 'is-valid';
-    } else {
-      return 'is-invalid';
-    }
+    return result;
   };
 
   const canClick = () => {
@@ -399,7 +405,7 @@ const LoginRegisterPage = ({ location }) => {
     value: repeatPassword,
     onChange: setRepeatPassword,
     type: 'password',
-    validationStatus: getRepeatPasswordValidationStatus()
+    validationStatus: getRepeatPasswordValidationStatus().className
   };
 
   function getAlert() {
@@ -410,20 +416,43 @@ const LoginRegisterPage = ({ location }) => {
     );
   }
 
+  function getRepeatPasswordSection() {
+    if (isLoginPage) {
+      return '';
+    }
+
+    return (
+      <>
+        <Input {...repeatPasswordProps} />
+        <FadeInOut
+          condition={
+            getRepeatPasswordValidationStatus().showRepeatPasswordErrorMessage
+          }
+        >
+          <div className="pt-1">
+            <div className="px-2 rounded invalid-feedback text-sm bg-red-700 truncate">
+              Passwords do not match
+            </div>
+          </div>
+        </FadeInOut>
+      </>
+    );
+  }
+
   function render() {
     return (
       <div className="px-4 py-12 ">
         <div className="bg-gray-700 m-auto max-w-sm rounded">
           <div className="relative">
-            <form className="py-2 px-4">
+            <form className="px-4 py-2 shadow-lg">
               <Input {...usernameProps} />
               {checkUsernameAvailability()}
               <Input {...passwordProps} />
               {checkPasswordStrength()}
-              {!isLoginPage && <Input {...repeatPasswordProps} />}
+              {getRepeatPasswordSection()}
               {getAlert()}
               <button
-                className="bg-green-500 hover:bg-green-600 my-2 px-2 px-4 py-1 rounded"
+                className="bg-green-700 hover:bg-green-600 my-2 px-2 px-4 py-1 rounded shadow"
                 type="submit"
                 disabled={isLoginPage ? !canLogin : !canRegister}
                 onClick={onClickHandler}
