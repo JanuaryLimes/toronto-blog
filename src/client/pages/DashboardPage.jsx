@@ -3,7 +3,7 @@ import { withRouter, Link } from 'react-router-dom';
 import { usePost } from '../hooks/useAxios';
 import { useLoggedUser } from '../hooks/useLoggedUser';
 import PrivateRoute from '../components/PrivateRoute';
-import Input from '../components/Input';
+import { Input, TextArea } from '../components/Input';
 
 const CreateNewBlogPost = () => {
   const loggedUser = useLoggedUser();
@@ -39,7 +39,7 @@ const CreateNewBlogPost = () => {
       <br />
       <label>Content</label>
       <br />
-      <textarea value={content} onChange={e => setContent(e.target.value)} />
+      <TextArea value={content} onChange={setContent} />
       <br />
       <button onClick={addPost}>Add post</button>
     </div>

@@ -5,7 +5,7 @@ import { login, logout } from '../actions';
 import { useCookies } from 'react-cookie';
 import { isUsernameValid, isPasswordValid } from 'toronto-utils/lib/validation';
 import axios from 'axios';
-import Input from '../components/Input';
+import { Input } from '../components/Input';
 import Alert from '../components/Alert';
 import lodash from 'lodash';
 import { BouncingLoader, DonutSpinnerLoader } from '../components/Loaders';
@@ -410,7 +410,7 @@ const LoginRegisterPage = ({ location }) => {
 
   function getAlert() {
     return (
-      <FadeInOut pose={alertVisible ? 'in' : 'out'}>
+      <FadeInOut condition={alertVisible}>
         <Alert {...alertProps} />
       </FadeInOut>
     );
@@ -442,7 +442,7 @@ const LoginRegisterPage = ({ location }) => {
   function render() {
     return (
       <div className="px-4 py-12 ">
-        <div className="bg-gray-700 m-auto max-w-sm rounded">
+        <div className="bg-gray-800 m-auto max-w-sm rounded">
           <div className="relative">
             <form className="px-4 py-2 shadow-lg">
               <Input {...usernameProps} />

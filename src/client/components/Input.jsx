@@ -1,37 +1,60 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Input = ({ type, caption, value, onChange, validationStatus }) => {
-  function getValidationStatusClassName(status) {
-    if (status) {
-      if (status === 'is-valid') {
-        return 'border-green-600';
-      } else if (status === 'is-invalid') {
-        return 'border-red-600';
-      }
+const INPUT_TYPE = {
+  Input: 0,
+  TextArea: 1
+};
+
+function getValidationStatusClassName(status) {
+  if (status) {
+    if (status === 'is-valid') {
+      return 'border-green-600';
+    } else if (status === 'is-invalid') {
+      return 'border-red-600';
     }
-    return 'border-gray-600';
+  }
+  return 'border-gray-600';
+}
+
+function render(type, props) {
+  var inputProps = {
+    className: [
+      'bg-white text-gray-900 py-1 px-2 rounded border-2 outline-none',
+      getValidationStatusClassName(props.validationClass)
+    ].join(' '),
+    value: props.value,
+    type: props.type,
+    onChange: e => props.onChange(e.target.value)
+  };
+
+  function getInput() {
+    switch (type) {
+      case INPUT_TYPE.Input:
+        return <input {...inputProps} />;
+      case INPUT_TYPE.TextArea:
+        return <textarea {...inputProps} style={{ height: '200px' }} />;
+      default:
+        return '';
+    }
   }
 
-  function render() {
-    var validationClass = getValidationStatusClassName(validationStatus);
-    return (
-      <div className="flex flex-col">
-        <label className="mt-2">{caption}</label>
-        <input
-          className={[
-            'bg-white text-gray-900 py-1 px-2 rounded border-2 outline-none',
-            validationClass
-          ].join(' ')}
-          value={value}
-          type={type}
-          onChange={e => onChange(e.target.value)}
-        />
-      </div>
-    );
-  }
+  return (
+    <div className="flex flex-col">
+      <label className="mt-2">{props.caption}</label>
+      {getInput()}
+    </div>
+  );
+}
 
-  return render();
+const Input = ({ type, caption, value, onChange, validationStatus }) => {
+  return render(INPUT_TYPE.Input, {
+    type,
+    caption,
+    value,
+    onChange,
+    validationStatus
+  });
 };
 
 Input.propTypes = {
@@ -47,4 +70,14 @@ Input.defaultProps = {
   validationStatus: ''
 };
 
-export default Input;
+function TextArea({ type, caption, value, onChange, validationStatus }) {
+  return render(INPUT_TYPE.TextArea, {
+    type,
+    caption,
+    value,
+    onChange,
+    validationStatus
+  });
+}
+
+export { Input, TextArea };
