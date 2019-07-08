@@ -9,11 +9,35 @@ import { Input } from '../components/Input';
 import Alert from '../components/Alert';
 import lodash from 'lodash';
 import { BouncingLoader, DonutSpinnerLoader } from '../components/Loaders';
-import { FadeInOut, PosedLi, OpacityModifier } from '../components/Posed';
+import { FadeInOut, PosedLi } from '../components/Posed';
 import { PoseGroup } from 'react-pose';
 import { useMeasure } from '../hooks/useMeasure';
+import { Spring } from 'react-spring/renderprops';
+import { useSpring, animated } from 'react-spring';
 
 let debounceCheck;
+
+function HeightModifier({ height, children, duration }) {
+  const props = useSpring({
+    height: height,
+    config: { duration: duration }
+  });
+
+  return (
+    <animated.div style={{ ...props, overflow: 'hidden' }}>
+      {children}
+    </animated.div>
+  );
+}
+
+function OpacityModifier({ condition, children, duration }) {
+  const props = useSpring({
+    opacity: condition ? 1 : 0,
+    config: { duration: duration }
+  });
+
+  return <animated.div style={props}>{children}</animated.div>;
+}
 
 export const LogoutComponent = () => {
   const dispatch = useDispatch();
@@ -182,72 +206,73 @@ const LoginRegisterPage = ({ location }) => {
   const [div2, { height: viewHeight2 }] = useMeasure();
   const [div3, { height: viewHeight3 }] = useMeasure();
 
-  const [relativeInfoMaxHeight, setRelativeInfoMaxHeight] = useState(0);
-
-  useEffect(() => {
-    let maxHeight = Math.max(viewHeight1, viewHeight2, viewHeight3);
-    setRelativeInfoMaxHeight(maxHeight);
-  }, [viewHeight1, viewHeight2, viewHeight3]);
-
   const checkUsernameAvailability = () => {
     var checkingAvailability = false,
       usernameStatusAvailable = false,
       usernameStatusNotAvailable = false,
-      show = true;
+      containerHeight = 0;
 
     if (!(isLoginPage || username === '')) {
       if (usernameIsChecking) {
         checkingAvailability = true;
+        containerHeight = viewHeight1;
       } else {
         if (usernameIsAvailable) {
           usernameStatusAvailable = true;
+          containerHeight = viewHeight2;
         } else {
           usernameStatusNotAvailable = true;
+          containerHeight = viewHeight3;
         }
       }
     } else {
-      show = false;
+      containerHeight = 0;
     }
 
     return (
-      <FadeInOut condition={show}>
-        <div className="relative" style={{ height: relativeInfoMaxHeight }}>
-          <div className="absolute inset-0">
-            <OpacityModifier condition={checkingAvailability}>
-              <div {...div1}>
-                <div className="pt-1">
-                  <div className="inline-flex">
-                    <DonutSpinnerLoader />
-                  </div>
-                  <span className="inline ml-1">checking availability</span>
-                </div>
-              </div>
-            </OpacityModifier>
-          </div>
-          <div className="absolute inset-0">
-            <OpacityModifier condition={usernameStatusAvailable}>
-              <div {...div2}>
-                <div className="pt-1">
-                  <div className="px-2 rounded valid-feedback text-sm bg-green-700 truncate">
-                    {username} is available
+      <div>
+        <HeightModifier height={containerHeight}>
+          <div className="relative">
+            <div className="absolute inset-0 z-10">
+              <OpacityModifier condition={checkingAvailability} duration={250}>
+                <div {...div1}>
+                  <div className="flex items-center py-1">
+                    <div className="inline-flex">
+                      <DonutSpinnerLoader />
+                    </div>
+                    <span className="inline ml-1">checking availability</span>
                   </div>
                 </div>
-              </div>
-            </OpacityModifier>
-          </div>
-          <div className="absolute inset-0">
-            <OpacityModifier condition={usernameStatusNotAvailable}>
-              <div {...div3}>
-                <div className="pt-1">
-                  <div className="px-2 rounded invalid-feedback text-sm bg-red-700 truncate">
-                    {username} is not available
+              </OpacityModifier>
+            </div>
+            <div className="absolute inset-0">
+              <OpacityModifier condition={usernameStatusAvailable} duration={1}>
+                <div {...div2}>
+                  <div className="py-1">
+                    <div className="px-2 rounded valid-feedback  bg-green-700 break-all ">
+                      {username} is available
+                    </div>
                   </div>
                 </div>
-              </div>
-            </OpacityModifier>
+              </OpacityModifier>
+            </div>
+            <div className="absolute inset-0">
+              <OpacityModifier
+                condition={usernameStatusNotAvailable}
+                duration={1}
+              >
+                <div {...div3}>
+                  <div className="py-1">
+                    <div className="px-2 rounded invalid-feedback  bg-red-700 break-all ">
+                      {username} is not available
+                    </div>
+                  </div>
+                </div>
+              </OpacityModifier>
+            </div>
           </div>
-        </div>
-      </FadeInOut>
+        </HeightModifier>
+      </div>
     );
   };
 
@@ -410,9 +435,18 @@ const LoginRegisterPage = ({ location }) => {
 
   function getAlert() {
     return (
-      <FadeInOut condition={alertVisible}>
-        <Alert {...alertProps} />
-      </FadeInOut>
+      <div>
+        <Spring
+          from={{ height: alertVisible ? 0 : 'auto' }}
+          to={{ height: alertVisible ? 'auto' : 0 }}
+        >
+          {props => (
+            <animated.div style={props} className="overflow-hidden">
+              <Alert {...alertProps} />
+            </animated.div>
+          )}
+        </Spring>
+      </div>
     );
   }
 
