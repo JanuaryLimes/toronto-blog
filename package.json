@@ -36,7 +36,7 @@
     "toronto-utils": "./packages/toronto-utils"
   },
   "devDependencies": {
-    "autoprefixer": "^9.6.0",
+    "autoprefixer": "^9.6.1",
     "postcss-cli": "^6.1.2",
     "tailwindcss": "^1.0.4",
     "typescript": "^3.5.2"
