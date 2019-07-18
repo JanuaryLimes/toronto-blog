@@ -20,23 +20,24 @@ const Alert = ({ text, type, onClose }) => {
 
   function render() {
     return (
-      <div
-        className={[
-          getTypeClassNames(),
-          'mb-2 mt-2 mt-4 p-2 pr-10 relative rounded'
-        ].join(' ')}
-        role="alert"
-      >
-        {text}
-        <button
-          type="button"
-          data-dismiss={getDataDismiss()}
-          className="close absolute close pt-1 px-3 right-0 text-xl top-0"
-          onClick={onClose}
-          aria-label="Close"
+      <div className="pb-2 pt-2 pt-4">
+        <div
+          className={[getTypeClassNames(), 'p-2 pr-10 relative rounded'].join(
+            ' '
+          )}
+          role="alert"
         >
-          <span aria-hidden="true">&times;</span>
-        </button>
+          {text}
+          <button
+            type="button"
+            data-dismiss={getDataDismiss()}
+            className="close absolute close pt-1 px-3 right-0 text-xl top-0"
+            onClick={onClose}
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
       </div>
     );
   }

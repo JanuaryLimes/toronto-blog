@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { useLoggedUser } from '../hooks/useLoggedUser';
 import Tippy from '@tippy.js/react';
+import { getColorFromClassName } from '../utils';
 
 const TorontoTippy = withRouter(
   ({ location, appendTarget, tooltipColor = 'bg-gray-700' }) => {
@@ -12,14 +13,8 @@ const TorontoTippy = withRouter(
     const tippyInstance = useRef();
 
     useEffect(() => {
-      var dummy = document.createElement('div');
-      dummy.classList.add(tooltipColor);
-      document.body.appendChild(dummy);
-      var color = getComputedStyle(dummy, null).getPropertyValue(
-        'background-color'
-      );
+      var color = getColorFromClassName(tooltipColor);
       console.log('dummy set', color);
-      document.body.removeChild(dummy);
       document.documentElement.style.setProperty('--toronto-color', color);
     }, [tooltipColor]);
 
@@ -30,9 +25,9 @@ const TorontoTippy = withRouter(
     function getItem(linkTo, text) {
       return (
         <li onClick={hideTippy} className="text-left">
-          <div className="py-1 px-2 rounded hover:bg-gray-600">
-            <Link to={linkTo}>{text}</Link>
-          </div>
+          <Link to={linkTo}>
+            <div className="py-1 px-2 rounded hover:bg-gray-600">{text}</div>
+          </Link>
         </li>
       );
     }

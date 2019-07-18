@@ -16,18 +16,23 @@ const RouterPage = () => {
             <Header />
           </div>
           <div className="flex-1 overflow-auto flex flex-col">
-            <div className="flex-1 shadow-lg p-2">
-              <Switch>
-                <Route exact path="/" component={MainPage} />
-                <Route path="/login" component={LoginRegisterPage} />
-                <Route path="/logout" component={LogoutComponent} />
-                <Route path="/register" component={LoginRegisterPage} />
-                <PrivateRoute path="/dashboard" component={DashboardPage} />
-                <Route path="/:blogName" component={BlogPage} />
-              </Switch>
+            <div
+              className="flex-1 py-4 m-auto w-full 
+              sm:max-w-xl md:max-w-2xl lg:max-w-4xl flex"
+            >
+              <div className="flex-1 p-4 rounded bg-gray-700 shadow-lg ">
+                <Switch>
+                  <Route exact path="/" component={MainPage} />
+                  <Route path="/login" component={LoginRegisterPage} />
+                  <Route path="/logout" component={LogoutComponent} />
+                  <Route path="/register" component={LoginRegisterPage} />
+                  <PrivateRoute path="/dashboard" component={DashboardPage} />
+                  <Route path="/:blogName" component={BlogPage} />
+                </Switch>
+              </div>
             </div>
             <footer
-              className="p-2 bg-gray-700 relative"
+              className="p-2 py-4 bg-gray-700 relative text-center"
               style={{ zIndex: '-1' }}
             >
               footer?
