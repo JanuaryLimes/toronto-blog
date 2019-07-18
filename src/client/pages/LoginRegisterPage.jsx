@@ -9,35 +9,17 @@ import { Input } from '../components/Input';
 import Alert from '../components/Alert';
 import lodash from 'lodash';
 import { BouncingLoader, DonutSpinnerLoader } from '../components/Loaders';
-import { FadeInOut, PosedLi } from '../components/Posed';
-import { PoseGroup } from 'react-pose';
 import { useMeasure } from '../hooks/useMeasure';
-import { Spring } from 'react-spring/renderprops';
-import { useSpring, animated } from 'react-spring';
+import {
+  SlideInOut,
+  FadeInOut,
+  HeightModifier,
+  OpacityModifier,
+  AnimatePresence,
+  motion
+} from '../components/Animate';
 
 let debounceCheck;
-
-function HeightModifier({ height, children, duration }) {
-  const props = useSpring({
-    height: height,
-    config: { duration: duration }
-  });
-
-  return (
-    <animated.div style={{ ...props, overflow: 'hidden' }}>
-      {children}
-    </animated.div>
-  );
-}
-
-function OpacityModifier({ condition, children, duration }) {
-  const props = useSpring({
-    opacity: condition ? 1 : 0,
-    config: { duration: duration }
-  });
-
-  return <animated.div style={props}>{children}</animated.div>;
-}
 
 export const LogoutComponent = () => {
   const dispatch = useDispatch();
@@ -141,25 +123,35 @@ const LoginRegisterPage = ({ location }) => {
   }, [isLoginPage, password]);
 
   const checkPasswordStrength = () => {
-    if (!passwordStrengthCheck) {
-      return null;
+    let arr = [];
+
+    if (!passwordStrengthCheck || passwordStrengthCheck.valid) {
+      arr = [];
+    } else {
+      arr = passwordStrengthCheck.msg;
     }
 
-    if (passwordStrengthCheck.valid) {
-      return null;
-    } else {
-      return (
+    return (
+      <FadeInOut condition={arr.length > 0}>
         <div className="invalid-feedback text-sm bg-red-700 mt-1 px-2 py-1 rounded">
           <ul className="list-disc m-0 mt-1 pl-2 pl-4 ">
-            <PoseGroup>
-              {passwordStrengthCheck.msg.map(m => (
-                <PosedLi key={m}>{m}</PosedLi>
+            <AnimatePresence>
+              {arr.map(m => (
+                <motion.li
+                  transition={{ duration: 0.5, type: 'tween' }}
+                  key={m}
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 50 }}
+                >
+                  {m}
+                </motion.li>
               ))}
-            </PoseGroup>
+            </AnimatePresence>
           </ul>
         </div>
-      );
-    }
+      </FadeInOut>
+    );
   };
 
   const debounceCallback = username => {
@@ -230,7 +222,7 @@ const LoginRegisterPage = ({ location }) => {
     }
 
     return (
-      <div>
+      <div className="overflow-hidden">
         <HeightModifier height={containerHeight}>
           <div className="relative">
             <div className="absolute inset-0 z-10">
@@ -435,18 +427,9 @@ const LoginRegisterPage = ({ location }) => {
 
   function getAlert() {
     return (
-      <div>
-        <Spring
-          from={{ height: alertVisible ? 0 : 'auto' }}
-          to={{ height: alertVisible ? 'auto' : 0 }}
-        >
-          {props => (
-            <animated.div style={props} className="overflow-hidden">
-              <Alert {...alertProps} />
-            </animated.div>
-          )}
-        </Spring>
-      </div>
+      <SlideInOut condition={alertVisible}>
+        <Alert {...alertProps} />
+      </SlideInOut>
     );
   }
 

@@ -25,9 +25,9 @@ const TorontoTippy = withRouter(
     function getItem(linkTo, text) {
       return (
         <li onClick={hideTippy} className="text-left">
-          <div className="py-1 px-2 rounded hover:bg-gray-600">
-            <Link to={linkTo}>{text}</Link>
-          </div>
+          <Link to={linkTo}>
+            <div className="py-1 px-2 rounded hover:bg-gray-600">{text}</div>
+          </Link>
         </li>
       );
     }
