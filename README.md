@@ -1,4 +1,4 @@
-## toronto-blog
+## [WIP] toronto-blog
 
 A blog engine
 - Allow to login and add posts
