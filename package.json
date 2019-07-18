@@ -15,6 +15,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
+    "framer-motion": "^1.2.4",
     "husky": "^2.4.1",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.11",
@@ -32,6 +33,7 @@
     "react-scripts": "^3.0.0",
     "redux": "^4.0.1",
     "redux-starter-kit": "^0.5.1",
+    "resize-observer-polyfill": "^1.5.1",
     "secure-random": "^1.1.1",
     "toronto-utils": "./packages/toronto-utils"
   },

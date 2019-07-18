@@ -47,7 +47,9 @@ const BlogPage = ({ match }) => {
             <li key={blogPost._id} className="pt-2">
               <div style={{ border: '1px solid black', padding: '1rem' }}>
                 <div style={{ fontWeight: 'bold' }}>{blogPost.title}</div>
-                <div>{blogPost.content}</div>
+                <pre className="whitespace-pre-wrap font-sans">
+                  {blogPost.content}
+                </pre>
               </div>
             </li>
           );
