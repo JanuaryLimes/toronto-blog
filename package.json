@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@babel/cli": "^7.4.3",
-    "@babel/core": "^7.4.3",
+    "@babel/core": "^7.5.5",
     "@babel/node": "^7.4.5",
     "@babel/polyfill": "^7.4.3",
     "@babel/preset-env": "^7.4.3",
