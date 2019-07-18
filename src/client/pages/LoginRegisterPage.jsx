@@ -5,9 +5,19 @@ import { login, logout } from '../actions';
 import { useCookies } from 'react-cookie';
 import { isUsernameValid, isPasswordValid } from 'toronto-utils/lib/validation';
 import axios from 'axios';
-import Input from '../components/Input';
+import { Input } from '../components/Input';
 import Alert from '../components/Alert';
 import lodash from 'lodash';
+import { BouncingLoader, DonutSpinnerLoader } from '../components/Loaders';
+import { useMeasure } from '../hooks/useMeasure';
+import {
+  SlideInOut,
+  FadeInOut,
+  HeightModifier,
+  OpacityModifier,
+  AnimatePresence,
+  motion
+} from '../components/Animate';
 
 let debounceCheck;
 
@@ -113,23 +123,35 @@ const LoginRegisterPage = ({ location }) => {
   }, [isLoginPage, password]);
 
   const checkPasswordStrength = () => {
-    if (!passwordStrengthCheck) {
-      return null;
+    let arr = [];
+
+    if (!passwordStrengthCheck || passwordStrengthCheck.valid) {
+      arr = [];
+    } else {
+      arr = passwordStrengthCheck.msg;
     }
 
-    if (passwordStrengthCheck.valid) {
-      return null;
-    } else {
-      return (
-        <div className="invalid-feedback text-sm text-red-600">
-          <ul className="list-disc m-0 mt-1 pl-2 pl-4">
-            {passwordStrengthCheck.msg.map(m => (
-              <li key={m}>{m}</li>
-            ))}
+    return (
+      <FadeInOut condition={arr.length > 0}>
+        <div className="invalid-feedback text-sm bg-red-700 mt-1 px-2 py-1 rounded">
+          <ul className="list-disc m-0 mt-1 pl-2 pl-4 ">
+            <AnimatePresence>
+              {arr.map(m => (
+                <motion.li
+                  transition={{ duration: 0.5, type: 'tween' }}
+                  key={m}
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 50 }}
+                >
+                  {m}
+                </motion.li>
+              ))}
+            </AnimatePresence>
           </ul>
         </div>
-      );
-    }
+      </FadeInOut>
+    );
   };
 
   const debounceCallback = username => {
@@ -172,35 +194,78 @@ const LoginRegisterPage = ({ location }) => {
     }
   }, [username]);
 
+  const [div1, { height: viewHeight1 }] = useMeasure();
+  const [div2, { height: viewHeight2 }] = useMeasure();
+  const [div3, { height: viewHeight3 }] = useMeasure();
+
   const checkUsernameAvailability = () => {
-    if (isLoginPage || username === '') {
-      return null;
+    var checkingAvailability = false,
+      usernameStatusAvailable = false,
+      usernameStatusNotAvailable = false,
+      containerHeight = 0;
+
+    if (!(isLoginPage || username === '')) {
+      if (usernameIsChecking) {
+        checkingAvailability = true;
+        containerHeight = viewHeight1;
+      } else {
+        if (usernameIsAvailable) {
+          usernameStatusAvailable = true;
+          containerHeight = viewHeight2;
+        } else {
+          usernameStatusNotAvailable = true;
+          containerHeight = viewHeight3;
+        }
+      }
+    } else {
+      containerHeight = 0;
     }
 
-    if (usernameIsChecking) {
-      return (
-        <div>
-          <div className="spinner-border inline" role="status">
-            TODO loader...
+    return (
+      <div className="overflow-hidden">
+        <HeightModifier height={containerHeight}>
+          <div className="relative">
+            <div className="absolute inset-0 z-10">
+              <OpacityModifier condition={checkingAvailability} duration={250}>
+                <div {...div1}>
+                  <div className="flex items-center py-1">
+                    <div className="inline-flex">
+                      <DonutSpinnerLoader />
+                    </div>
+                    <span className="inline ml-1">checking availability</span>
+                  </div>
+                </div>
+              </OpacityModifier>
+            </div>
+            <div className="absolute inset-0">
+              <OpacityModifier condition={usernameStatusAvailable} duration={1}>
+                <div {...div2}>
+                  <div className="py-1">
+                    <div className="px-2 rounded valid-feedback  bg-green-700 break-all ">
+                      {username} is available
+                    </div>
+                  </div>
+                </div>
+              </OpacityModifier>
+            </div>
+            <div className="absolute inset-0">
+              <OpacityModifier
+                condition={usernameStatusNotAvailable}
+                duration={1}
+              >
+                <div {...div3}>
+                  <div className="py-1">
+                    <div className="px-2 rounded invalid-feedback  bg-red-700 break-all ">
+                      {username} is not available
+                    </div>
+                  </div>
+                </div>
+              </OpacityModifier>
+            </div>
           </div>
-          <span className="inline ml-1">checking availability</span>
-        </div>
-      );
-    } else {
-      if (usernameIsAvailable) {
-        return (
-          <div className="valid-feedback text-sm text-green-500">
-            {username} is available
-          </div>
-        );
-      } else {
-        return (
-          <div className="invalid-feedback text-sm text-red-600">
-            {username} is not available
-          </div>
-        );
-      }
-    }
+        </HeightModifier>
+      </div>
+    );
   };
 
   const getPasswordValidationStatus = () => {
@@ -231,15 +296,20 @@ const LoginRegisterPage = ({ location }) => {
   };
 
   const getRepeatPasswordValidationStatus = () => {
+    var result = { className: '', showRepeatPasswordErrorMessage: false };
+
     if (repeatPassword === '') {
-      return '';
+      return result;
+    } else {
+      if (password === repeatPassword) {
+        result.className = 'is-valid';
+      } else {
+        result.showRepeatPasswordErrorMessage = true;
+        result.className = 'is-invalid';
+      }
     }
 
-    if (password === repeatPassword) {
-      return 'is-valid';
-    } else {
-      return 'is-invalid';
-    }
+    return result;
   };
 
   const canClick = () => {
@@ -352,23 +422,54 @@ const LoginRegisterPage = ({ location }) => {
     value: repeatPassword,
     onChange: setRepeatPassword,
     type: 'password',
-    validationStatus: getRepeatPasswordValidationStatus()
+    validationStatus: getRepeatPasswordValidationStatus().className
   };
+
+  function getAlert() {
+    return (
+      <SlideInOut condition={alertVisible}>
+        <Alert {...alertProps} />
+      </SlideInOut>
+    );
+  }
+
+  function getRepeatPasswordSection() {
+    if (isLoginPage) {
+      return '';
+    }
+
+    return (
+      <>
+        <Input {...repeatPasswordProps} />
+        <FadeInOut
+          condition={
+            getRepeatPasswordValidationStatus().showRepeatPasswordErrorMessage
+          }
+        >
+          <div className="pt-1">
+            <div className="px-2 rounded invalid-feedback text-sm bg-red-700 truncate">
+              Passwords do not match
+            </div>
+          </div>
+        </FadeInOut>
+      </>
+    );
+  }
 
   function render() {
     return (
       <div className="px-4 py-12 ">
-        <div className="bg-gray-700 m-auto max-w-sm rounded">
+        <div className="bg-gray-800 m-auto max-w-sm rounded">
           <div className="relative">
-            <form className="py-2 px-4">
+            <form className="px-4 py-2 shadow-lg">
               <Input {...usernameProps} />
               {checkUsernameAvailability()}
               <Input {...passwordProps} />
               {checkPasswordStrength()}
-              {!isLoginPage && <Input {...repeatPasswordProps} />}
-              {alertVisible && <Alert {...alertProps} />}
+              {getRepeatPasswordSection()}
+              {getAlert()}
               <button
-                className="bg-green-500 hover:bg-green-600 my-2 px-2 px-4 py-1 rounded"
+                className="bg-green-700 hover:bg-green-600 my-2 px-2 px-4 py-1 rounded shadow"
                 type="submit"
                 disabled={isLoginPage ? !canLogin : !canRegister}
                 onClick={onClickHandler}
@@ -376,11 +477,7 @@ const LoginRegisterPage = ({ location }) => {
                 {isLoginPage ? 'Login' : 'Register'}
               </button>
             </form>
-            {isLoading && (
-              <div className="loader bg-gray-400 absolute inset-0 flex items-center justify-center  ">
-                TODO loading...
-              </div>
-            )}
+            {isLoading && <BouncingLoader />}
           </div>
         </div>
       </div>
