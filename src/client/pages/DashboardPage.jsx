@@ -3,7 +3,8 @@ import { withRouter, Link } from 'react-router-dom';
 import { usePost } from '../hooks/useAxios';
 import { useLoggedUser } from '../hooks/useLoggedUser';
 import PrivateRoute from '../components/PrivateRoute';
-import { Input, TextArea } from '../components/Input';
+import { Input } from '../components/Input';
+import MarkdownEditor from '../components/MarkdownEditor';
 
 const CreateNewBlogPost = () => {
   const loggedUser = useLoggedUser();
@@ -33,17 +34,19 @@ const CreateNewBlogPost = () => {
     });
   }
 
-  return (
-    <div style={{ border: '1px solid white', padding: '1rem' }}>
-      <label>Title</label> <Input value={title} onChange={setTitle} />
-      <br />
-      <label>Content</label>
-      <br />
-      <TextArea value={content} onChange={setContent} />
-      <br />
-      <button onClick={addPost}>Add post</button>
-    </div>
-  );
+  function render() {
+    return (
+      <div style={{ border: '1px solid white', padding: '1rem' }}>
+        <label>Title</label> <Input value={title} onChange={setTitle} />
+        <br />
+        <MarkdownEditor value={content} onChange={setContent} />
+        <br />
+        <button onClick={addPost}>Add post</button>
+      </div>
+    );
+  }
+
+  return render();
 };
 
 export default withRouter(function DashboardPage({ match, location }) {

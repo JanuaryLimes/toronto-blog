@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { useGet } from '../hooks/useAxios';
 import { setBlogPosts } from '../actions';
 import { getBlogPosts } from '../selectors/blogPosts.selector';
-
+import ReactMarkdown from 'react-markdown';
 import { useSelector, useDispatch } from 'react-redux';
 
 const BlogPage = ({ match }) => {
@@ -47,9 +47,9 @@ const BlogPage = ({ match }) => {
             <li key={blogPost._id} className="pt-2">
               <div style={{ border: '1px solid black', padding: '1rem' }}>
                 <div style={{ fontWeight: 'bold' }}>{blogPost.title}</div>
-                <pre className="whitespace-pre-wrap font-sans">
-                  {blogPost.content}
-                </pre>
+                <div>
+                  <ReactMarkdown source={blogPost.content} />
+                </div>
               </div>
             </li>
           );

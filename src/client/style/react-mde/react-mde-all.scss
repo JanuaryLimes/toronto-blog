@@ -1,0 +1,36 @@
+.markdown-editor .react-mde {
+  button {
+    line-height: 1.15;
+    font-size: 13.3333px;
+  }
+
+  .mde-header {
+    background: transparent;
+
+    .mde-tabs {
+      button {
+        padding-left: 4px;
+        padding-right: 4px;
+      }
+    }
+
+    ul.mde-header-group li.mde-header-item button {
+      color: white;
+    }
+
+    ul.mde-header-group ul.react-mde-dropdown li.mde-header-item button {
+      color: black;
+    }
+  }
+
+  .mde-text {
+    background: transparent;
+  }
+
+  .grip {
+    background: transparent;
+    color: white;
+    display: flex;
+    justify-content: center;
+  }
+}
