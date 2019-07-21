@@ -6,7 +6,7 @@ import { useCookies } from 'react-cookie';
 import { isUsernameValid, isPasswordValid } from 'toronto-utils/lib/validation';
 import axios from 'axios';
 import { Input } from '../components/Input';
-import Alert from '../components/Alert';
+import { Alert } from '../components/Alert';
 import lodash from 'lodash';
 import { BouncingLoader, DonutSpinnerLoader } from '../components/Loaders';
 import { useMeasure } from '../hooks/useMeasure';

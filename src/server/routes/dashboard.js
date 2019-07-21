@@ -32,7 +32,7 @@ router.post('/create-new-blog-post', (req, res) => {
 
   BlogPost.create({ title, content, blogName, postDate }, (err, blogPost) => {
     if (err) {
-      return res.status(400).send({ err });
+      return res.status(400).send({ error: err });
     }
 
     console.log('Blog post created: ', blogPost);
