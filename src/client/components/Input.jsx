@@ -25,7 +25,8 @@ function render(type, props) {
     ].join(' '),
     value: props.value,
     type: props.type,
-    onChange: e => props.onChange(e.target.value)
+    onChange: e => props.onChange(e.target.value),
+    placeholder: props.placeholder
   };
 
   function getInput() {
@@ -47,13 +48,21 @@ function render(type, props) {
   );
 }
 
-const Input = ({ type, caption, value, onChange, validationStatus }) => {
+const Input = ({
+  type,
+  caption,
+  value,
+  onChange,
+  validationStatus,
+  placeholder
+}) => {
   return render(INPUT_TYPE.Input, {
     type,
     caption,
     value,
     onChange,
-    validationStatus
+    validationStatus,
+    placeholder
   });
 };
 

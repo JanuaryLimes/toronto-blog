@@ -31,7 +31,7 @@ function useGet({ path, onSuccess }) {
   return { isLoading, error };
 }
 
-function usePost({ path, body, onSuccess }) {
+function usePost({ path, body, onSuccess, onError }) {
   const [data, setData] = useState(undefined);
   const [error, setError] = useState(undefined);
   const [isLoading, setIsLoading] = useState(false);
@@ -52,18 +52,25 @@ function usePost({ path, body, onSuccess }) {
         })
         .catch(error => {
           console.log('usePost error', error, error.response);
+
+          let errorMessage = '';
+
           setData(undefined);
           if (error.response) {
             var errorData = error.response.data;
             if (errorData) {
-              setError(
-                errorData.error || errorData.message || 'error: no message'
-              );
+              errorMessage =
+                errorData.error || errorData.message || 'error: no message';
             } else {
-              setError('error: no error data');
+              errorMessage = 'error: no error data';
             }
           } else {
-            setError('error: no error response');
+            errorMessage = 'error: no error response';
+          }
+
+          setError(errorMessage);
+          if (onError) {
+            onError(errorMessage);
           }
         })
         .then(() => {
@@ -72,7 +79,7 @@ function usePost({ path, body, onSuccess }) {
     } else {
       setData(undefined);
     }
-  }, [body, onSuccess, path]);
+  }, [body, onSuccess, onError, path]);
 
   return { data, isLoading, error };
 }
