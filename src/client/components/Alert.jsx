@@ -1,56 +1,47 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { SlideInOut } from './Animate';
 
 function useAlertProps() {
-  const [alertText, setAlertText] = useState('');
-  const [alertVisible, setAlertVisible] = useState(false);
+  const [_alertText, _setAlertText] = useState('');
+  const [alertVisible, _setAlertVisible] = useState(false);
 
-  function set(text) {
-    setAlertText(text);
-    setAlertVisible(true);
+  function show(text) {
+    _setAlertText(text);
+    _setAlertVisible(true);
   }
 
-  function clear() {
-    setAlertText('');
-    setAlertVisible(false);
+  function hide() {
+    _setAlertText('');
+    _setAlertVisible(false);
   }
 
   return {
     alertVisible,
-    setAlertVisible,
-    alertText,
-    setAlertText,
-    set,
-    clear
+    show,
+    hide,
+    _setAlertVisible,
+    _alertText,
+    _setAlertText
   };
 }
 
 function BaseErrorAlert({
   alertVisible,
-  setAlertVisible,
-  alertText,
-  setAlertText,
-  set,
-  clear,
+  show,
+  hide,
+  _setAlertVisible,
+  _alertText,
+  _setAlertText,
   getType,
   ...rest
 }) {
-  const [alertProps, setAlertProps] = useState({});
-
-  useEffect(() => {
-    if (alertText) {
-      setAlertProps({
-        text: alertText,
-        type: getType(),
-        onClose: () => {
-          setAlertVisible(false);
-        }
-      });
-      setAlertVisible(true);
-    } else {
-      setAlertVisible(false);
+  const alertProps = {
+    text: _alertText,
+    type: getType(),
+    onClose: () => {
+      _setAlertVisible(false);
     }
-  }, [setAlertVisible, alertText, getType]);
+  };
 
   function render() {
     return (

@@ -17,8 +17,22 @@ export default withRouter(function DashboardPage({ match, location }) {
   const [content, setContent] = useState('');
   const successAlertProps = useAlertProps();
   const errorAlertProps = useAlertProps();
+  const [addPostDisabled, setAddPostDisabled] = useState(true);
+
+  React.useEffect(() => {
+    if (!title || !content) {
+      setAddPostDisabled(true);
+    } else {
+      setAddPostDisabled(false);
+    }
+  }, [content, title]);
 
   function addPost() {
+    if (addPostDisabled) {
+      errorAlertProps.show('Can not add empty blog post');
+      return;
+    }
+
     setPostArgs({
       path: '/api/secure/dashboard/create-new-blog-post',
       body: {
@@ -30,14 +44,14 @@ export default withRouter(function DashboardPage({ match, location }) {
       onSuccess: data => {
         console.log('post success', data);
 
-        errorAlertProps.clear();
-        successAlertProps.set('Blog post sucessfully added');
+        errorAlertProps.hide();
+        successAlertProps.show('Blog post successfully added');
       },
       onError: error => {
         console.log('post error', error);
 
-        errorAlertProps.set(error);
-        successAlertProps.clear();
+        errorAlertProps.show(error);
+        successAlertProps.hide();
       }
     });
   }
@@ -56,7 +70,9 @@ export default withRouter(function DashboardPage({ match, location }) {
   function getActionButtons() {
     return (
       <div className="pt-4 flex">
-        <DefaultButton onClick={addPost}>Add post</DefaultButton>
+        <DefaultButton disabled={addPostDisabled} onClick={addPost}>
+          Add post
+        </DefaultButton>
         <div className="flex-1" />
         <Link to={'/' + loggedUser}>
           <DefaultButton>Go to your blog</DefaultButton>
@@ -67,14 +83,16 @@ export default withRouter(function DashboardPage({ match, location }) {
 
   function getAlertContainer() {
     return (
-      <SlideInOut
-        condition={
-          errorAlertProps.alertVisible || successAlertProps.alertVisible
-        }
-      >
-        <SuccessAlert className="pt-4" {...successAlertProps} />
-        <ErrorAlert className="pt-4" {...errorAlertProps} />
-      </SlideInOut>
+      <div className="overflow-hidden">
+        <SlideInOut
+          condition={
+            errorAlertProps.alertVisible || successAlertProps.alertVisible
+          }
+        >
+          <SuccessAlert className="pt-4" {...successAlertProps} />
+          <ErrorAlert className="pt-4" {...errorAlertProps} />
+        </SlideInOut>
+      </div>
     );
   }
 
