@@ -1,23 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { usePost } from '../hooks/useAxios';
 import { useLoggedUser } from '../hooks/useLoggedUser';
-import PrivateRoute from '../components/PrivateRoute';
 import { Input } from '../components/Input';
 import MarkdownEditor from '../components/MarkdownEditor';
+import { DefaultButton } from '../components/Button';
+import { LoadableDiv } from '../components/LoadableDiv';
+import { SlideInOut } from '../components/Animate';
+import { SuccessAlert, useAlertProps, ErrorAlert } from '../components/Alert';
 
-const CreateNewBlogPost = () => {
+export default withRouter(function DashboardPage({ match, location }) {
   const loggedUser = useLoggedUser();
   const [postArgs, setPostArgs] = useState({});
-  const { isLoading, error } = usePost(postArgs);
-  const [title, setTitle] = useState('Title');
-  const [content, setContent] = useState('Content');
-
-  useEffect(() => {
-    var c = isLoading + error; // todo make post in progress indicator, display error if any
-    c = '';
-    console.log(c);
-  }, [isLoading, error]);
+  const { isLoading } = usePost(postArgs);
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const successAlertProps = useAlertProps();
+  const errorAlertProps = useAlertProps();
 
   function addPost() {
     setPostArgs({
@@ -28,47 +27,68 @@ const CreateNewBlogPost = () => {
         blogName: loggedUser,
         postDate: Date.now()
       },
-      onSuccess: () => {
-        console.log('post success');
+      onSuccess: data => {
+        console.log('post success', data);
+
+        errorAlertProps.clear();
+        successAlertProps.set('Blog post sucessfully added');
+      },
+      onError: error => {
+        console.log('post error', error);
+
+        errorAlertProps.set(error);
+        successAlertProps.clear();
       }
     });
   }
 
-  function render() {
+  function getMarkdownEditor() {
     return (
-      <div style={{ border: '1px solid white', padding: '1rem' }}>
-        <label>Title</label> <Input value={title} onChange={setTitle} />
-        <br />
+      <>
+        <div className="pb-4">
+          <Input placeholder="Title" value={title} onChange={setTitle} />
+        </div>
         <MarkdownEditor value={content} onChange={setContent} />
-        <br />
-        <button onClick={addPost}>Add post</button>
+      </>
+    );
+  }
+
+  function getActionButtons() {
+    return (
+      <div className="pt-4 flex">
+        <DefaultButton onClick={addPost}>Add post</DefaultButton>
+        <div className="flex-1" />
+        <Link to={'/' + loggedUser}>
+          <DefaultButton>Go to your blog</DefaultButton>
+        </Link>
       </div>
     );
   }
 
-  return render();
-};
-
-export default withRouter(function DashboardPage({ match, location }) {
-  const loggedUser = useLoggedUser();
+  function getAlertContainer() {
+    return (
+      <SlideInOut
+        condition={
+          errorAlertProps.alertVisible || successAlertProps.alertVisible
+        }
+      >
+        <SuccessAlert className="pt-4" {...successAlertProps} />
+        <ErrorAlert className="pt-4" {...errorAlertProps} />
+      </SlideInOut>
+    );
+  }
 
   function render() {
     return (
       <div className="dashboard-page">
-        <div>
-          <Link to={'/' + loggedUser}>
-            <button>go to your blog -></button>
-          </Link>
-          {location.pathname !== match.url + '/create-new-blog-post' && (
-            <Link to={match.url + '/create-new-blog-post'}>
-              <button className="btn bg-primary">Create new blog post</button>
-            </Link>
-          )}
-          <PrivateRoute
-            path={match.url + '/create-new-blog-post'}
-            component={CreateNewBlogPost}
-          />
-        </div>
+        <LoadableDiv isLoading={isLoading}>
+          <p className="font-semibold text-lg">Create new blog post</p>
+          <div>
+            {getMarkdownEditor()}
+            {getActionButtons()}
+            {getAlertContainer()}
+          </div>
+        </LoadableDiv>
       </div>
     );
   }

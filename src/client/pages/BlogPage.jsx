@@ -45,10 +45,14 @@ const BlogPage = ({ match }) => {
         {userBlogPosts.map(blogPost => {
           return (
             <li key={blogPost._id} className="pt-2">
-              <div style={{ border: '1px solid black', padding: '1rem' }}>
-                <div style={{ fontWeight: 'bold' }}>{blogPost.title}</div>
-                <div>
-                  <ReactMarkdown source={blogPost.content} />
+              <div className="blog-item border-2 p-4 rounded">
+                <div className="font-bold text-2xl pb-6 underline">
+                  {blogPost.title}
+                </div>
+                <div className="mde-preview">
+                  <div className="mde-preview-content">
+                    <ReactMarkdown source={blogPost.content} />
+                  </div>
                 </div>
               </div>
             </li>

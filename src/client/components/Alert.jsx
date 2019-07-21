@@ -1,4 +1,85 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { SlideInOut } from './Animate';
+
+function useAlertProps() {
+  const [alertText, setAlertText] = useState('');
+  const [alertVisible, setAlertVisible] = useState(false);
+
+  function set(text) {
+    setAlertText(text);
+    setAlertVisible(true);
+  }
+
+  function clear() {
+    setAlertText('');
+    setAlertVisible(false);
+  }
+
+  return {
+    alertVisible,
+    setAlertVisible,
+    alertText,
+    setAlertText,
+    set,
+    clear
+  };
+}
+
+function BaseErrorAlert({
+  alertVisible,
+  setAlertVisible,
+  alertText,
+  setAlertText,
+  set,
+  clear,
+  getType,
+  ...rest
+}) {
+  const [alertProps, setAlertProps] = useState({});
+
+  useEffect(() => {
+    if (alertText) {
+      setAlertProps({
+        text: alertText,
+        type: getType(),
+        onClose: () => {
+          setAlertVisible(false);
+        }
+      });
+      setAlertVisible(true);
+    } else {
+      setAlertVisible(false);
+    }
+  }, [setAlertVisible, alertText, getType]);
+
+  function render() {
+    return (
+      <SlideInOut condition={alertVisible}>
+        <div {...rest}>
+          <Alert {...alertProps} />
+        </div>
+      </SlideInOut>
+    );
+  }
+
+  return render();
+}
+
+function ErrorAlert(props) {
+  function getType() {
+    return 'alert-danger';
+  }
+
+  return BaseErrorAlert({ ...props, getType });
+}
+
+function SuccessAlert(props) {
+  function getType() {
+    return 'alert-success';
+  }
+
+  return BaseErrorAlert({ ...props, getType });
+}
 
 const Alert = ({ text, type, onClose }) => {
   const getDataDismiss = () => {
@@ -50,4 +131,4 @@ Alert.defaultProps = {
   type: 'alert-success'
 };
 
-export default Alert;
+export { Alert, SuccessAlert, ErrorAlert, useAlertProps };
