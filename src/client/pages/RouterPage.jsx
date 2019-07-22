@@ -6,18 +6,24 @@ import MainPage from './MainPage';
 import LoginRegisterPage, { LogoutComponent } from './LoginRegisterPage';
 import DashboardPage from './DashboardPage';
 import BlogPage from './BlogPage';
+import { StickyContainer, Sticky } from 'react-sticky';
 
 const RouterPage = () => {
   function render() {
     return (
       <Router>
-        <div className="h-full flex flex-col">
-          <div className="fixed left-0 right-0">
-            <Header />
-          </div>
+        <StickyContainer className="min-h-full flex flex-col">
+          <Sticky>
+            {({ style }) => (
+              <div style={{ ...style, width: '100%' }}>
+                <Header />
+              </div>
+            )}
+          </Sticky>
+
           <div
             className="flex-1 py-4 m-auto w-full 
-              sm:max-w-xl md:max-w-2xl lg:max-w-4xl"
+            sm:max-w-xl md:max-w-2xl lg:max-w-4xl"
           >
             <div className=" p-4 rounded bg-gray-700 shadow-lg ">
               <Switch>
@@ -37,7 +43,7 @@ const RouterPage = () => {
           >
             footer...
           </footer>
-        </div>
+        </StickyContainer>
       </Router>
     );
   }
