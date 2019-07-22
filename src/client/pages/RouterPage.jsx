@@ -15,7 +15,7 @@ const RouterPage = () => {
         <StickyContainer className="min-h-full flex flex-col">
           <Sticky>
             {({ style }) => (
-              <div style={{ ...style, width: '100%' }}>
+              <div style={{ ...style, width: '100%' }} className="z-10">
                 <Header />
               </div>
             )}
