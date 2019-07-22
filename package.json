@@ -42,7 +42,7 @@
   "devDependencies": {
     "autoprefixer": "^9.6.1",
     "postcss-cli": "^6.1.2",
-    "tailwindcss": "^1.0.4",
+    "tailwindcss": "^1.0.5",
     "typescript": "^3.5.3"
   },
   "scripts": {
