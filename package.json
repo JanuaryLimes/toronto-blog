@@ -33,6 +33,7 @@
     "react-redux": "^7.1.0",
     "react-router-dom": "^5.0.0",
     "react-scripts": "^3.0.0",
+    "react-sticky": "^6.0.3",
     "redux": "^4.0.4",
     "redux-starter-kit": "^0.5.1",
     "resize-observer-polyfill": "^1.5.1",
@@ -57,7 +58,8 @@
     "build:css": "postcss src/client/style/tailwind/index.tailwind.css -o src/client/style/tailwind/index.css",
     "watch:css": "postcss src/client/style/tailwind/index.tailwind.css -o src/client/style/tailwind/index.css -w",
     "start-dev-react": "npm run update-utils && (npm run watch:css & react-scripts start)",
-    "start-dev-server": "nodemon --inspect=9230 --exec babel-node src/server/server.js"
+    "start-dev-server": "nodemon --inspect=9230 --exec babel-node src/server/server.js",
+    "start-dev": "npm run start-dev-react & npm run start-dev-server"
   },
   "proxy": "http://localhost:5000/",
   "eslintConfig": {
