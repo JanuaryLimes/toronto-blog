@@ -35,7 +35,7 @@
     "react-scripts": "^3.0.0",
     "react-sticky": "^6.0.3",
     "redux": "^4.0.4",
-    "redux-starter-kit": "^0.5.1",
+    "redux-starter-kit": "^0.6.1",
     "resize-observer-polyfill": "^1.5.1",
     "secure-random": "^1.1.1",
     "toronto-utils": "./packages/toronto-utils"
