@@ -46,16 +46,17 @@ router.get(
 router.get('/:blogName', (req, res) => {
   const { blogName: user } = req.params;
 
-  // todo sort
-
-  BlogPost.find({ blogName: user }, (err, result) => {
-    if (err) {
-      return res.status(400).send({ err });
-    } else {
+  BlogPost.find({ blogName: user })
+    .sort('-postDate')
+    .exec()
+    .then(result => {
       console.log('log result of blog name find: ', [...result]);
       return res.status(200).send({ user, userBlogPosts: [...result] });
-    }
-  });
+    })
+    .catch(err => {
+      console.log('error: ', err);
+      return res.status(400).send({ error: err });
+    });
 });
 
 export default router;
