@@ -13,14 +13,14 @@ function useGet({ path, onSuccess }) {
       axios
         .get(path)
         .then(response => {
-          console.log('useGet success', response.data);
+          console.log('useGet success ', response.data);
           if (onSuccess) {
             onSuccess(response.data);
           }
         })
         .catch(error => {
           console.log('useGet error', error);
-          setError('useGet error', error);
+          setError('useGet error: ' + error);
         })
         .then(() => {
           setIsLoading(false);

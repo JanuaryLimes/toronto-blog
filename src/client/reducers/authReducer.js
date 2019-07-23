@@ -8,12 +8,7 @@ export const authReducer = createReducer(
   {},
   {
     [login_type]: (state, action) => {
-      console.log('p: ', { ...state });
-      console.log('pp: ', { ...state, loggedUser: action.payload.loggedUser });
-
       state.loggedUser = action.payload.loggedUser;
-
-      //return { ...state, loggedUser: action.payload.loggedUser };
     },
     [logout_type]: (state, _action) => {
       return { ...state, loggedUser: undefined };

@@ -4,6 +4,7 @@ import { setBlogPosts } from '../actions';
 import { getBlogPosts } from '../selectors/blogPosts.selector';
 import ReactMarkdown from 'react-markdown';
 import { useSelector, useDispatch } from 'react-redux';
+import * as moment from 'moment';
 
 const BlogPage = ({ match }) => {
   const { blogName } = match.params;
@@ -25,7 +26,7 @@ const BlogPage = ({ match }) => {
   );
   const mOnSuccess = useMemo(
     () => data => {
-      console.log('data: ', data);
+      console.log('data:', data);
       dispatch(setBlogPosts({ ...data }));
     },
     [dispatch]
@@ -36,6 +37,25 @@ const BlogPage = ({ match }) => {
     onSuccess: mOnSuccess
   });
 
+  function getBlogPostTemplate(blogPost) {
+    let date = new Date(blogPost.postDate);
+    let createdFromNow = moment(date).fromNow();
+
+    return (
+      <div className="blog-item border-2 p-4 rounded">
+        <p>Created: {createdFromNow}</p>
+        <div className="font-bold text-2xl pb-6 underline">
+          {blogPost.title}
+        </div>
+        <div className="mde-preview">
+          <div className="mde-preview-content">
+            <ReactMarkdown source={blogPost.content} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   function displayUserBlogPosts() {
     if (isBlogPostDataLoading || !userBlogPosts) {
       return '';
@@ -45,16 +65,7 @@ const BlogPage = ({ match }) => {
         {userBlogPosts.map(blogPost => {
           return (
             <li key={blogPost._id} className="pt-2">
-              <div className="blog-item border-2 p-4 rounded">
-                <div className="font-bold text-2xl pb-6 underline">
-                  {blogPost.title}
-                </div>
-                <div className="mde-preview">
-                  <div className="mde-preview-content">
-                    <ReactMarkdown source={blogPost.content} />
-                  </div>
-                </div>
-              </div>
+              {getBlogPostTemplate(blogPost)}
             </li>
           );
         })}
