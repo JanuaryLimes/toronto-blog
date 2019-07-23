@@ -25,7 +25,7 @@ const BlogPage = ({ match }) => {
   );
   const mOnSuccess = useMemo(
     () => data => {
-      console.log('data: ', data);
+      console.log('data:', data);
       dispatch(setBlogPosts({ ...data }));
     },
     [dispatch]
