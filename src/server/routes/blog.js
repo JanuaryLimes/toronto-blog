@@ -46,6 +46,8 @@ router.get(
 router.get('/:blogName', (req, res) => {
   const { blogName: user } = req.params;
 
+  // todo sort
+
   BlogPost.find({ blogName: user }, (err, result) => {
     if (err) {
       return res.status(400).send({ err });
