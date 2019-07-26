@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
-import { useGet } from '../hooks/useAxios';
-import { setBlogPosts } from '../actions';
-import { getBlogPosts } from '../selectors/blogPosts.selector';
 import ReactMarkdown from 'react-markdown';
 import { useSelector, useDispatch } from 'react-redux';
 import * as moment from 'moment';
+import { setBlogPosts } from 'client/actions';
+import { getBlogPosts } from 'client/selectors/blogPosts.selector';
+import { useGet } from 'client/hooks/useAxios';
 
 const BlogPage = ({ match }) => {
   const { blogName } = match.params;
@@ -24,6 +24,7 @@ const BlogPage = ({ match }) => {
     },
     [blogName]
   );
+
   const mOnSuccess = useMemo(
     () => data => {
       console.log('data:', data);
