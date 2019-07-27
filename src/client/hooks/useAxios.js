@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 
-function onFulfilled({ response, setData, setError, onSuccess }) {
+function onResolved({ response, setData, setError, onSuccess }) {
   setData(response.data);
   setError(undefined);
   if (onSuccess) {
@@ -31,80 +31,79 @@ function onException({ error, setData, setError, onError }) {
   }
 }
 
-function useAxiosProps() {
+function useBaseHttp({ methodResponse, onSuccess, onError }) {
   const [data, setData] = useState(undefined);
   const [error, setError] = useState(undefined);
   const [isLoading, setIsLoading] = useState(false);
 
-  //todo fix
+  useEffect(() => {
+    (async () => {
+      if (methodResponse.isValid) {
+        try {
+          setIsLoading(true);
+          onResolved({
+            response: await methodResponse.promise,
+            setData,
+            setError,
+            onSuccess
+          });
+        } catch (error) {
+          onException({
+            error,
+            setData,
+            setError,
+            onError
+          });
+        } finally {
+          setIsLoading(false);
+        }
+      } else {
+        setData(undefined);
+      }
+    })();
+  }, [methodResponse, onError, onSuccess]);
 
-  return { data, setData, error, setError, isLoading, setIsLoading };
+  return { isLoading, data, error };
 }
 
 function useGet({ path, onSuccess, onError }) {
-  const props = useAxiosProps();
+  const canExecute = path != null;
+  const methodResponse = useMemo(() => {
+    if (canExecute) {
+      return {
+        isValid: true,
+        promise: axios.get(path)
+      };
+    } else {
+      return { isValid: false, promise: null };
+    }
+  }, [canExecute, path]);
 
-  useEffect(() => {
-    (async () => {
-      if (path) {
-        try {
-          props.setIsLoading(true);
-          onFulfilled({
-            response: await axios.get(path),
-            setData: props.setData,
-            setError: props.setError,
-            onSuccess
-          });
-        } catch (error) {
-          onException({
-            error,
-            setData: props.setData,
-            setError: props.setError,
-            onError
-          });
-        } finally {
-          props.setIsLoading(false);
-        }
-      } else {
-        props.setData(undefined);
-      }
-    })();
-  }, [onError, onSuccess, path, props]);
-
-  return { isLoading: props.isLoading, data: props.data, error: props.error };
+  return useBaseHttp({
+    methodResponse,
+    onSuccess,
+    onError
+  });
 }
 
 function usePost({ path, body, onSuccess, onError }) {
-  const props = useAxiosProps();
+  const canExecute = path != null && body != null;
+  const methodResponse = useMemo(() => {
+    if (canExecute) {
+      return {
+        isValid: true,
+        promise: axios.post(path, body)
+      };
+    } else {
+      return { isValid: false, promise: null };
+    }
+  }, [canExecute, path, body]);
 
-  useEffect(() => {
-    (async () => {
-      if (path && body) {
-        try {
-          props.setIsLoading(true);
-          onFulfilled({
-            response: await axios.post(path, body),
-            setData: props.setData,
-            setError: props.setError,
-            onSuccess
-          });
-        } catch (error) {
-          onException({
-            error,
-            setData: props.setData,
-            setError: props.setError,
-            onError
-          });
-        } finally {
-          props.setIsLoading(false);
-        }
-      } else {
-        props.setData(undefined);
-      }
-    })();
-  }, [body, onError, onSuccess, path, props]);
-
-  return { isLoading: props.isLoading, data: props.data, error: props.error };
+  return useBaseHttp({
+    methodResponse,
+    onSuccess,
+    onError
+  });
 }
 
 export { useGet, usePost };

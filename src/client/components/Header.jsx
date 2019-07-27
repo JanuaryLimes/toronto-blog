@@ -9,12 +9,10 @@ const TorontoTippy = withRouter(
     const { pathname } = location;
     const loggedUser = useLoggedUser();
     const [ariaExpanded, setAriaExpanded] = useState('false');
-    // const [selectedReaction, setSelectedReaction] = useState(null);
     const tippyInstance = useRef();
 
     useEffect(() => {
-      var color = getColorFromClassName(tooltipColor);
-      console.log('dummy set', color);
+      const color = getColorFromClassName(tooltipColor);
       document.documentElement.style.setProperty('--toronto-color', color);
     }, [tooltipColor]);
 
