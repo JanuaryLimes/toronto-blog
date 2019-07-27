@@ -39,8 +39,8 @@ const BlogPage = ({ match }) => {
   });
 
   function getBlogPostTemplate(blogPost) {
-    let date = new Date(blogPost.postDate);
-    let createdFromNow = moment(date).fromNow();
+    const date = new Date(blogPost.postDate);
+    const createdFromNow = moment(date).fromNow();
 
     return (
       <div className="blog-item border-2 p-4 rounded">
