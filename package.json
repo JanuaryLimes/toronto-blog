@@ -64,7 +64,11 @@
   },
   "proxy": "http://localhost:5000/",
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "rules": {
+      "no-var": 1,
+      "prefer-const": 1
+    }
   },
   "browserslist": [
     ">0.2%",
