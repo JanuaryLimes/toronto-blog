@@ -8,6 +8,7 @@ import { DefaultButton } from '../components/Button';
 import { LoadableDiv } from '../components/LoadableDiv';
 import { SlideInOut } from '../components/Animate';
 import { SuccessAlert, useAlertProps, ErrorAlert } from '../components/Alert';
+import faker from 'faker';
 
 export default withRouter(function DashboardPage({ match, location }) {
   const loggedUser = useLoggedUser();
@@ -70,7 +71,14 @@ export default withRouter(function DashboardPage({ match, location }) {
   function getActionButtons() {
     return (
       <div className="pt-4 flex">
-        <DefaultButton disabled={addPostDisabled} onClick={addPost}>
+        <DefaultButton
+          onClick={addPost}
+          onContextMenu={e => {
+            e.preventDefault();
+            setTitle(faker.lorem.sentence());
+            setContent(faker.lorem.paragraphs(3));
+          }}
+        >
           Add post
         </DefaultButton>
         <div className="flex-1" />
