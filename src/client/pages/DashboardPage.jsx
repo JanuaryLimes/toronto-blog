@@ -76,7 +76,7 @@ export default withRouter(function DashboardPage({ match, location }) {
           onContextMenu={e => {
             e.preventDefault();
             setTitle(faker.lorem.sentence());
-            setContent(faker.lorem.paragraphs(3));
+            setContent(faker.lorem.paragraphs());
           }}
         >
           Add post

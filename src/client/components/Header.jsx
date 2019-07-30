@@ -24,17 +24,23 @@ const TorontoTippy = withRouter(
       return (
         <li onClick={hideTippy} className="text-left">
           <Link to={linkTo}>
-            <div className="py-1 px-2 rounded hover:bg-gray-600">{text}</div>
+            <div className="py-1 px-2 pr-3 text-base rounded hover:bg-gray-600">
+              {text}
+            </div>
           </Link>
         </li>
       );
     }
 
     function render() {
+      const yourBlogUrl = '/' + loggedUser;
+
       return (
         <Tippy
           content={
             <ul className="p-1">
+              {pathname !== yourBlogUrl &&
+                getItem(yourBlogUrl, 'Go to your blog')}
               {pathname !== '/dashboard' && getItem('/dashboard', 'Dashboard')}
               {getItem('/logout', 'Logout')}
             </ul>

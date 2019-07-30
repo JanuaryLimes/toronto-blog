@@ -3,6 +3,7 @@ import { Blog } from '../model/blog.model';
 import passport from 'passport';
 import { BlogPost } from '../model/blog-post.model';
 
+// /api/public/blogs
 const router = express.Router();
 
 router.get('/allblogs', (req, res) => {
@@ -15,6 +16,19 @@ router.get('/allblogs', (req, res) => {
       console.log('error getting blogs', err);
       res.status(500).json(err);
     });
+});
+
+router.get('/id/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await BlogPost.findById(id).exec();
+    console.log('result by id', result);
+    return res.status(200).send({ blogPost: result });
+  } catch (error) {
+    console.log('error by id', error);
+    return res.status(400).send({ error });
+  }
 });
 
 router.post('/blog', (req, res) => {
