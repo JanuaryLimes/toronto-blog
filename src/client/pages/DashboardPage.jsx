@@ -43,14 +43,10 @@ export default withRouter(function DashboardPage({ match, location }) {
         postDate: Date.now()
       },
       onSuccess: data => {
-        console.log('post success', data);
-
         errorAlertProps.hide();
         successAlertProps.show('Blog post successfully added');
       },
       onError: error => {
-        console.log('post error', error);
-
         errorAlertProps.show(error);
         successAlertProps.hide();
       }

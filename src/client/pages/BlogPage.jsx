@@ -35,6 +35,7 @@ const BlogPostPage = withRouter(function({ blogId, history }) {
   const onError = useMemo(
     () => error => {
       console.log('error', error);
+      // todo: alert?
     },
     []
   );
