@@ -5,7 +5,7 @@ import PrivateRoute from '../components/PrivateRoute';
 import MainPage from './MainPage';
 import LoginRegisterPage, { LogoutComponent } from './LoginRegisterPage';
 import DashboardPage from './DashboardPage';
-import BlogPage from './BlogPage';
+import { BlogPageHandler } from './BlogPageHandler';
 import { StickyContainer, Sticky } from 'react-sticky';
 
 const RouterPage = () => {
@@ -32,7 +32,7 @@ const RouterPage = () => {
                 <Route path="/logout" component={LogoutComponent} />
                 <Route path="/register" component={LoginRegisterPage} />
                 <PrivateRoute path="/dashboard" component={DashboardPage} />
-                <Route path="/:blogName/:blogId?" component={BlogPage} />
+                <Route path="/:blogName/:blogId?" component={BlogPageHandler} />
               </Switch>
             </div>
           </div>
