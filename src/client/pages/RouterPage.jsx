@@ -25,7 +25,12 @@ const RouterPage = () => {
             className="flex-1 py-4 m-auto w-full 
             sm:max-w-xl md:max-w-2xl lg:max-w-4xl"
           >
-            <div className=" p-4 rounded bg-gray-700 shadow-lg ">
+            <div
+              className="mx-2 p-4 rounded shadow-lg "
+              style={{
+                background: 'rgb(21, 21, 21)'
+              }}
+            >
               <Switch>
                 <Route exact path="/" component={MainPage} />
                 <Route path="/login" component={LoginRegisterPage} />
@@ -39,7 +44,7 @@ const RouterPage = () => {
 
           <footer
             className="p-2 py-4 bg-gray-700 relative text-center"
-            style={{ zIndex: '-1' }}
+            style={{ zIndex: '-1', background: 'rgb(21, 21, 21)' }}
           >
             footer...
           </footer>

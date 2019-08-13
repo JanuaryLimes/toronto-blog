@@ -14,13 +14,14 @@ function getValidationStatusClassName(status) {
       return 'border-red-600';
     }
   }
-  return 'border-gray-600';
+  return 'border-gray-800';
 }
 
 function render(type, props) {
-  var inputProps = {
+  const inputProps = {
     className: [
-      'bg-white text-gray-900 py-1 px-2 rounded border-2 outline-none',
+      'text-white py-1 px-2 rounded border-2 outline-none',
+      'focus:border-purple-700',
       getValidationStatusClassName(props.validationClass)
     ].join(' '),
     value: props.value,
@@ -32,9 +33,23 @@ function render(type, props) {
   function getInput() {
     switch (type) {
       case INPUT_TYPE.Input:
-        return <input {...inputProps} />;
+        return (
+          <input
+            {...inputProps}
+            style={{ backgroundColor: 'rgb(17, 17, 17)' }}
+          />
+        );
       case INPUT_TYPE.TextArea:
-        return <textarea {...inputProps} style={{ height: '200px' }} />;
+        return (
+          <textarea
+            {...inputProps}
+            style={{
+              height: '200px',
+              backgroundColor: 'rgb(17, 17, 17)',
+              ...props.style
+            }}
+          />
+        );
       default:
         return '';
     }
@@ -79,13 +94,14 @@ Input.defaultProps = {
   validationStatus: ''
 };
 
-function TextArea({ type, caption, value, onChange, validationStatus }) {
+function TextArea({ type, caption, value, onChange, validationStatus, style }) {
   return render(INPUT_TYPE.TextArea, {
     type,
     caption,
     value,
     onChange,
-    validationStatus
+    validationStatus,
+    style
   });
 }
 

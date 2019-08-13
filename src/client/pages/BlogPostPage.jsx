@@ -4,6 +4,7 @@ import { useGet } from 'client/hooks/useAxios';
 import { withRouter } from 'react-router-dom';
 import { DefaultButton } from 'client/components/Button';
 import { LoadableDiv } from 'client/components/LoadableDiv';
+import { TextArea } from 'client/components/Input';
 
 const BlogPostPage = withRouter(function({ blogId, history }) {
   const [blogPost, setBlogPost] = useState({});
@@ -51,11 +52,29 @@ const BlogPostPage = withRouter(function({ blogId, history }) {
       </div>
     );
   }
-  function getComments() {
+  const [comment, setComment] = React.useState('');
+
+  function addCommentSection() {
     return (
       <div>
-        <hr className="bg-purple-700 h-1 rounded" />
-        <div>TODO: komentarze</div>
+        <TextArea
+          value={comment}
+          onChange={setComment}
+          caption={'Comment:'}
+          style={{ height: '100px' }}
+        />
+      </div>
+    );
+  }
+  function displayComments() {
+    return <div>comments</div>;
+  }
+  function getCommentsContent() {
+    return (
+      <div>
+        <hr class="bg-purple-700 my-6 p-1 rounded" />
+        {addCommentSection()}
+        {displayComments()}
       </div>
     );
   }
@@ -64,7 +83,7 @@ const BlogPostPage = withRouter(function({ blogId, history }) {
       <LoadableDiv isLoading={isLoading}>
         {getSectionHeader()}
         {getBlogContent()}
-        {getComments()}
+        {getCommentsContent()}
       </LoadableDiv>
     );
   }

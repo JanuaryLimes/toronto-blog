@@ -139,7 +139,11 @@ const Header = ({ location }) => {
   const header = useRef();
 
   return (
-    <header ref={header} className="bg-dark bg-gray-700 p-2 shadow-md">
+    <header
+      ref={header}
+      className="bg-dark  p-2 shadow-md"
+      style={{ background: 'rgb(21, 21, 21)' }}
+    >
       <div className="flex flex-wrap">
         {homeLink()}
         <div className="flex-auto" />

@@ -51,7 +51,7 @@ const BlogPage = withRouter(function({ blogName, match }) {
     }
 
     return (
-      <div className="blog-item border-2 p-4 rounded">
+      <div className="blog-item">
         <p>Created: {createdFromNow}</p>
         <div className="font-bold text-2xl pb-6 underline">
           <Link to={getBlogPostLink()}>{blogPost.title}</Link>
@@ -61,6 +61,7 @@ const BlogPage = withRouter(function({ blogName, match }) {
             <ReactMarkdown source={blogPost.content} />
           </div>
         </div>
+        <hr class="bg-purple-700 my-6 p-1 rounded" />
       </div>
     );
   }
@@ -73,7 +74,7 @@ const BlogPage = withRouter(function({ blogName, match }) {
       <ul>
         {userBlogPosts.map(blogPost => {
           return (
-            <li key={blogPost._id} className="pt-2">
+            <li key={blogPost._id} className="">
               {getBlogPostTemplate(blogPost)}
             </li>
           );
@@ -82,19 +83,7 @@ const BlogPage = withRouter(function({ blogName, match }) {
     );
   }
   function render() {
-    return (
-      <>
-        <div>{blogName}</div>
-        <div>
-          <hr />
-          <div>
-            <p>is data loading: {isBlogPostDataLoading.toString()}</p>
-            Downloaded user blog posts:
-            {displayUserBlogPosts()}
-          </div>
-        </div>
-      </>
-    );
+    return <div>{displayUserBlogPosts()}</div>;
   }
 
   return render();
