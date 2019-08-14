@@ -22,7 +22,7 @@ function render(type, props) {
     className: [
       'text-white py-1 px-2 rounded border-2 outline-none',
       'focus:border-purple-700',
-      getValidationStatusClassName(props.validationClass)
+      getValidationStatusClassName(props.validationStatus)
     ].join(' '),
     value: props.value,
     type: props.type,

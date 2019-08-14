@@ -6,6 +6,7 @@ import { setBlogPosts } from 'client/actions';
 import { getBlogPosts } from 'client/selectors/blogPosts.selector';
 import { useGet } from 'client/hooks/useAxios';
 import { Link, withRouter } from 'react-router-dom';
+import Separator from 'client/components/Separator';
 
 const BlogPage = withRouter(function({ blogName, match }) {
   const dispatch = useDispatch();
@@ -61,7 +62,7 @@ const BlogPage = withRouter(function({ blogName, match }) {
             <ReactMarkdown source={blogPost.content} />
           </div>
         </div>
-        <hr class="bg-purple-700 my-6 p-1 rounded" />
+        <Separator />
       </div>
     );
   }

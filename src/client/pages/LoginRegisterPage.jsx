@@ -8,7 +8,7 @@ import axios from 'axios';
 import { Input } from '../components/Input';
 import { Alert } from '../components/Alert';
 import lodash from 'lodash';
-import { BouncingLoader, DonutSpinnerLoader } from '../components/Loaders';
+import { DonutSpinnerLoader } from '../components/Loaders';
 import { useMeasure } from '../hooks/useMeasure';
 import {
   SlideInOut,
@@ -18,6 +18,7 @@ import {
   AnimatePresence,
   motion
 } from '../components/Animate';
+import { LoadableDiv } from 'client/components/LoadableDiv';
 
 let debounceCheck;
 
@@ -199,7 +200,7 @@ const LoginRegisterPage = ({ location }) => {
   const [div3, { height: viewHeight3 }] = useMeasure();
 
   const checkUsernameAvailability = () => {
-    var checkingAvailability = false,
+    let checkingAvailability = false,
       usernameStatusAvailable = false,
       usernameStatusNotAvailable = false,
       containerHeight = 0;
@@ -296,7 +297,7 @@ const LoginRegisterPage = ({ location }) => {
   };
 
   const getRepeatPasswordValidationStatus = () => {
-    var result = { className: '', showRepeatPasswordErrorMessage: false };
+    const result = { className: '', showRepeatPasswordErrorMessage: false };
 
     if (repeatPassword === '') {
       return result;
@@ -459,8 +460,8 @@ const LoginRegisterPage = ({ location }) => {
   function render() {
     return (
       <div className="px-4 py-12 ">
-        <div className="bg-gray-800 m-auto max-w-sm rounded">
-          <div className="relative">
+        <div className="m-auto max-w-sm rounded">
+          <LoadableDiv isLoading={isLoading}>
             <form className="px-4 py-2 shadow-lg">
               <Input {...usernameProps} />
               {checkUsernameAvailability()}
@@ -477,8 +478,7 @@ const LoginRegisterPage = ({ location }) => {
                 {isLoginPage ? 'Login' : 'Register'}
               </button>
             </form>
-            {isLoading && <BouncingLoader />}
-          </div>
+          </LoadableDiv>
         </div>
       </div>
     );

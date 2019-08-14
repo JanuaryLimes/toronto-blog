@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { DefaultButton } from 'client/components/Button';
 import { LoadableDiv } from 'client/components/LoadableDiv';
 import { TextArea } from 'client/components/Input';
+import Separator from 'client/components/Separator';
 
 const BlogPostPage = withRouter(function({ blogId, history }) {
   const [blogPost, setBlogPost] = useState({});
@@ -52,7 +53,7 @@ const BlogPostPage = withRouter(function({ blogId, history }) {
       </div>
     );
   }
-  const [comment, setComment] = React.useState('');
+  const [comment, setComment] = useState('');
 
   function addCommentSection() {
     return (
@@ -69,21 +70,14 @@ const BlogPostPage = withRouter(function({ blogId, history }) {
   function displayComments() {
     return <div>comments</div>;
   }
-  function getCommentsContent() {
-    return (
-      <div>
-        <hr class="bg-purple-700 my-6 p-1 rounded" />
-        {addCommentSection()}
-        {displayComments()}
-      </div>
-    );
-  }
   function render() {
     return (
       <LoadableDiv isLoading={isLoading}>
         {getSectionHeader()}
         {getBlogContent()}
-        {getCommentsContent()}
+        <Separator />
+        {addCommentSection()}
+        {displayComments()}
       </LoadableDiv>
     );
   }

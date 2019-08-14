@@ -5,7 +5,7 @@ import Tippy from '@tippy.js/react';
 import { getColorFromClassName } from '../utils';
 
 const TorontoTippy = withRouter(
-  ({ location, appendTarget, tooltipColor = 'bg-gray-700' }) => {
+  ({ location, appendTarget, tooltipColor = 'bg-gray-800' }) => {
     const { pathname } = location;
     const loggedUser = useLoggedUser();
     const [ariaExpanded, setAriaExpanded] = useState('false');
@@ -24,7 +24,7 @@ const TorontoTippy = withRouter(
       return (
         <li onClick={hideTippy} className="text-left">
           <Link to={linkTo}>
-            <div className="py-1 px-2 pr-3 text-base rounded hover:bg-gray-600">
+            <div className="py-1 px-2 pr-3 text-base rounded hover:bg-gray-700">
               {text}
             </div>
           </Link>
@@ -62,7 +62,7 @@ const TorontoTippy = withRouter(
         >
           <button
             aria-expanded={ariaExpanded}
-            className="hover:bg-gray-600 px-2 py-1 relative rounded"
+            className="hover:bg-gray-800 px-2 py-1 relative rounded"
           >
             <span>
               <i className="fas fa-user" />
@@ -93,7 +93,11 @@ const Header = ({ location }) => {
     return (
       <span className="link">
         <Link to="/">
-          <button className="btn btn-secondary focus:outline-none font-medium hover:bg-gray-600 px-2 py-1 rounded">
+          <button
+            className="focus:outline-none 
+            font-medium hover:bg-gray-800 
+            px-2 py-1 rounded"
+          >
             Home
           </button>
         </Link>
@@ -141,7 +145,7 @@ const Header = ({ location }) => {
   return (
     <header
       ref={header}
-      className="bg-dark  p-2 shadow-md"
+      className="p-2 shadow-md"
       style={{ background: 'rgb(21, 21, 21)' }}
     >
       <div className="flex flex-wrap">
