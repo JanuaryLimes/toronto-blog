@@ -94,12 +94,21 @@ Input.defaultProps = {
   validationStatus: ''
 };
 
-function TextArea({ type, caption, value, onChange, validationStatus, style }) {
+function TextArea({
+  type,
+  caption,
+  value,
+  onChange,
+  validationStatus,
+  style,
+  placeholder
+}) {
   return render(INPUT_TYPE.TextArea, {
     type,
     caption,
     value,
     onChange,
+    placeholder,
     validationStatus,
     style
   });
