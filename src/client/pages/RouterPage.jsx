@@ -37,7 +37,10 @@ const RouterPage = () => {
                 <Route path="/logout" component={LogoutComponent} />
                 <Route path="/register" component={LoginRegisterPage} />
                 <PrivateRoute path="/dashboard" component={DashboardPage} />
-                <Route path="/:blogName/:blogId?" component={BlogPageHandler} />
+                <Route
+                  path="/:blogName/:blogPostId?"
+                  component={BlogPageHandler}
+                />
               </Switch>
             </div>
           </div>

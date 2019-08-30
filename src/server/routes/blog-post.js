@@ -17,4 +17,29 @@ router.get('/id/:id', async (req, res) => {
   }
 });
 
+router.post('/comment/:blogPostId', (req, res) => {
+  //const { title, content, blogName, postDate } = req.body;
+
+  console.log('req.params', req.params, '\n\n req.body', req.body);
+
+  const ret = {
+    'req.params': { ...req.params },
+    'req.body': { ...req.body }
+  };
+  console.log('ret', ret);
+
+  return res.status(200).send(ret);
+
+  // Todo handle req.body validation
+  /*
+  BlogPost.create({ title, content, blogName, postDate }, (err, blogPost) => {
+    if (err) {
+      return res.status(400).send({ error: err });
+    }
+
+    console.log('Blog post created: ', blogPost);
+    return res.status(200).send({ blogPost });
+  });*/
+});
+
 export default router;

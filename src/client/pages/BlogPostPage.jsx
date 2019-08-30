@@ -1,14 +1,14 @@
 import React, { useMemo, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { useGet } from 'client/hooks/useAxios';
+import { useGet, usePost } from 'client/hooks/useAxios';
 import { withRouter } from 'react-router-dom';
 import { DefaultButton } from 'client/components/Button';
 import { LoadableDiv } from 'client/components/LoadableDiv';
-import { TextArea, Input } from 'client/components/Input';
+import { TextArea, Input, CheckBox } from 'client/components/Input';
 import Separator from 'client/components/Separator';
 import { useLoggedUser } from 'client/hooks/useLoggedUser';
 
-const BlogPostPage = withRouter(function({ blogId, history }) {
+const BlogPostPage = withRouter(function({ blogPostId, history }) {
   const [blogPost, setBlogPost] = useState({});
   const onSuccess = useMemo(
     () => result => {
@@ -25,7 +25,7 @@ const BlogPostPage = withRouter(function({ blogId, history }) {
     []
   );
   const { isLoading } = useGet({
-    path: '/api/public/blog-post/id/' + blogId,
+    path: '/api/public/blog-post/id/' + blogPostId,
     onSuccess,
     onError
   });
@@ -65,29 +65,92 @@ const BlogPostPage = withRouter(function({ blogId, history }) {
     }
   }, [comment]);
 
+  const [postCommentBody, setPostCommentBody] = useState();
+
+  const { isLoading: postCommentIsLoading } = usePost({
+    path: '/api/public/blog-post/comment/' + blogPostId,
+    body: postCommentBody,
+    onSuccess: useMemo(
+      () => result => {
+        console.log('post comment success', result);
+      },
+      []
+    ),
+    onError: useMemo(
+      () => error => {
+        console.log('post comment error', error);
+      },
+      []
+    )
+  });
+
   function addCommentClick() {
-    console.log('add coment');
+    console.log('add comment');
+    setPostCommentBody({
+      commentText: comment,
+      commentUsername
+    });
   }
 
   const loggedUser = useLoggedUser();
+  const [commentUsername, setCommentUsername] = useState('');
+  const [commentAsGuest, setCommentAsGuest] = useState(false);
+
+  function getCommenter() {
+    let showCustomCommenter = commentAsGuest;
+    if (!loggedUser) {
+      showCustomCommenter = true;
+    }
+
+    function commentAsGuestCheckbox() {
+      if (loggedUser) {
+        return (
+          <div className="pb-2">
+            <CheckBox
+              label="Comment as guest"
+              checked={commentAsGuest}
+              onChange={setCommentAsGuest}
+            />
+          </div>
+        );
+      }
+      return '';
+    }
+
+    return (
+      <div className="">
+        {commentAsGuestCheckbox()}
+        {showCustomCommenter && (
+          <div className="pb-2">
+            <Input
+              placeholder="Name..."
+              value={commentUsername}
+              onChange={setCommentUsername}
+            />
+          </div>
+        )}
+      </div>
+    );
+  }
 
   function addCommentSection() {
     return (
-      <div>
-        <TextArea
-          value={comment}
-          placeholder={'Comment...'}
-          onChange={setComment}
-          style={{ height: '100px' }}
-        />
-        <div className="py-2">
-          <Input />
-
-          <DefaultButton onClick={addCommentClick} disabled={!canAddComment}>
-            Comment
-          </DefaultButton>
+      <LoadableDiv isLoading={postCommentIsLoading}>
+        <div className="addCommentSection">
+          <TextArea
+            value={comment}
+            placeholder={'Comment...'}
+            onChange={setComment}
+            style={{ height: '100px' }}
+          />
+          <div className="py-2">
+            {getCommenter()}
+            <DefaultButton onClick={addCommentClick} disabled={!canAddComment}>
+              Comment
+            </DefaultButton>
+          </div>
         </div>
-      </div>
+      </LoadableDiv>
     );
   }
   function displayComments() {

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import uuidv1 from 'uuid/v1';
 
 const INPUT_TYPE = {
   Input: 0,
@@ -55,9 +56,16 @@ function render(type, props) {
     }
   }
 
+  function getLabel() {
+    if (props.caption) {
+      return <label className="mt-2">{props.caption}</label>;
+    }
+    return '';
+  }
+
   return (
     <div className="flex flex-col">
-      <label className="mt-2">{props.caption}</label>
+      {getLabel()}
       {getInput()}
     </div>
   );
@@ -114,4 +122,32 @@ function TextArea({
   });
 }
 
-export { Input, TextArea };
+function CheckBox({ label = 'label', checked = false, onChange }) {
+  const id = React.useMemo(() => uuidv1(), []);
+
+  function render() {
+    return (
+      <div className="flex items-center checkbox-container">
+        <input
+          className="rounded text-white  border-gray-800 p-2
+          border-2 outline-none focus:border-purple-700"
+          id={id}
+          type="checkbox"
+          checked={checked}
+          onChange={e => {
+            if (onChange) {
+              onChange(e.target.checked);
+            }
+          }}
+        />
+        <label className="select-none pl-1 leading-tight" htmlFor={id}>
+          {label}
+        </label>
+      </div>
+    );
+  }
+
+  return render();
+}
+
+export { Input, TextArea, CheckBox };
