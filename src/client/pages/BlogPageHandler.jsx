@@ -1,6 +1,6 @@
 import React from 'react';
-import { BlogPostPage } from 'client/pages/BlogPostPage';
-import { BlogPage } from 'client/pages/BlogPage';
+import { BlogPostPage } from '../pages/BlogPostPage';
+import { BlogPage } from '../pages/BlogPage';
 
 export function BlogPageHandler({ match }) {
   const { blogName, blogPostId } = match.params;

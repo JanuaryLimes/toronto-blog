@@ -2,11 +2,11 @@ import React, { useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useSelector, useDispatch } from 'react-redux';
 import * as moment from 'moment';
-import { setBlogPosts } from 'client/actions';
-import { getBlogPosts } from 'client/selectors/blogPosts.selector';
-import { useGet } from 'client/hooks/useAxios';
+import { setBlogPosts } from '../actions';
+import { getBlogPosts } from '../selectors/blogPosts.selector';
+import { useGet } from '../hooks/useAxios';
 import { Link, withRouter } from 'react-router-dom';
-import Separator from 'client/components/Separator';
+import Separator from '../components/Separator';
 
 const BlogPage = withRouter(function({ blogName, match }) {
   const dispatch = useDispatch();

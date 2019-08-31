@@ -18,7 +18,7 @@ import {
   AnimatePresence,
   motion
 } from '../components/Animate';
-import { LoadableDiv } from 'client/components/LoadableDiv';
+import { LoadableDiv } from '../components/LoadableDiv';
 
 let debounceCheck;
 

@@ -1,12 +1,12 @@
 import React, { useMemo, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { useGet, usePost } from 'client/hooks/useAxios';
+import { useGet, usePost } from '../hooks/useAxios';
 import { withRouter } from 'react-router-dom';
-import { DefaultButton } from 'client/components/Button';
-import { LoadableDiv } from 'client/components/LoadableDiv';
-import { TextArea, Input, CheckBox } from 'client/components/Input';
-import Separator from 'client/components/Separator';
-import { useLoggedUser } from 'client/hooks/useLoggedUser';
+import { DefaultButton } from '../components/Button';
+import { LoadableDiv } from '../components/LoadableDiv';
+import { TextArea, Input, CheckBox } from '../components/Input';
+import Separator from '../components/Separator';
+import { useLoggedUser } from '../hooks/useLoggedUser';
 
 const BlogPostPage = withRouter(function({ blogPostId, history }) {
   const [blogPost, setBlogPost] = useState({});
@@ -72,13 +72,13 @@ const BlogPostPage = withRouter(function({ blogPostId, history }) {
     body: postCommentBody,
     onSuccess: useMemo(
       () => result => {
-        console.log('post comment success', result);
+        console.log('post comment success: ', result);
       },
       []
     ),
     onError: useMemo(
       () => error => {
-        console.log('post comment error', error);
+        console.log('post comment error: ', error);
       },
       []
     )
@@ -88,7 +88,7 @@ const BlogPostPage = withRouter(function({ blogPostId, history }) {
     console.log('add comment');
     setPostCommentBody({
       commentText: comment,
-      commentUsername
+      commentUsername: commentUsername || loggedUser
     });
   }
 

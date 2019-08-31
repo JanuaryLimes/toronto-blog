@@ -1,5 +1,7 @@
 import express from 'express';
 import { BlogPost } from '../model/blog-post.model';
+import { getUserFromRequestJwt } from '../auth/utils';
+import { mConnection } from '../mongoose';
 
 // /api/public/blog-post
 const router = express.Router();
@@ -17,29 +19,35 @@ router.get('/id/:id', async (req, res) => {
   }
 });
 
-router.post('/comment/:blogPostId', (req, res) => {
-  //const { title, content, blogName, postDate } = req.body;
+router.post('/comment/:blogPostId', async (req, res) => {
+  const { commentText, commentUsername } = req.body;
+  const { blogPostId } = req.params;
+  const user = getUserFromRequestJwt(req);
+  const loggedUser = !!user && user === commentUsername;
 
-  console.log('req.params', req.params, '\n\n req.body', req.body);
+  if (!commentText || !commentUsername || !blogPostId) {
+    return res.status(400).send({ error: 'Unable to post comment' });
+  }
 
-  const ret = {
-    'req.params': { ...req.params },
-    'req.body': { ...req.body }
+  const newComment = {
+    _id: mConnection.Types.ObjectId(),
+    blogPostId,
+    commentUsername,
+    commentText,
+    commentDate: Date.now(),
+    asGuest: !loggedUser
   };
-  console.log('ret', ret);
 
-  return res.status(200).send(ret);
-
-  // Todo handle req.body validation
-  /*
-  BlogPost.create({ title, content, blogName, postDate }, (err, blogPost) => {
-    if (err) {
-      return res.status(400).send({ error: err });
-    }
-
-    console.log('Blog post created: ', blogPost);
-    return res.status(200).send({ blogPost });
-  });*/
+  try {
+    const query = { _id: blogPostId };
+    const update = { $push: { comments: newComment } };
+    await BlogPost.findOneAndUpdate(query, update).exec();
+    console.log('new comment added: ', newComment);
+    return res.status(201).send({ comment: newComment });
+  } catch (error) {
+    console.log('error posting comment: ', error);
+    return res.status(400).send({ error });
+  }
 });
 
 export default router;
