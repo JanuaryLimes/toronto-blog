@@ -8,23 +8,39 @@ import { TextArea, Input, CheckBox } from '../components/Input';
 import Separator from '../components/Separator';
 import { useLoggedUser } from '../hooks/useLoggedUser';
 import * as moment from 'moment';
+import { useSuccessErrorAlert } from '../components/Alert';
 
 const BlogPostPage = withRouter(function({ blogPostId, history }) {
   const [blogPost, setBlogPost] = useState({});
   const [comment, setComment] = useState('');
   const [canAddComment, setCanAddComment] = useState(false);
-  const [postCommentBody, setPostCommentBody] = useState();
   const loggedUser = useLoggedUser();
-  const [commentUsername, setCommentUsername] = useState('');
+  const [commentGuestUsername, setCommentGuestUsername] = useState('');
   const [commentAsGuest, setCommentAsGuest] = useState(false);
+  const {
+    showSuccessAlert,
+    showErrorAlert,
+    renderAlertsContainer
+  } = useSuccessErrorAlert();
+
+  const getCommentUsername = React.useMemo(
+    () => () => {
+      if (commentAsGuest) {
+        return commentGuestUsername;
+      } else {
+        return loggedUser;
+      }
+    },
+    [commentAsGuest, commentGuestUsername, loggedUser]
+  );
 
   React.useEffect(() => {
-    if (comment) {
+    if (comment && getCommentUsername()) {
       setCanAddComment(true);
     } else {
       setCanAddComment(false);
     }
-  }, [comment]);
+  }, [comment, getCommentUsername]);
 
   const { isLoading } = useGet({
     path: '/api/public/blog-post/id/' + blogPostId,
@@ -38,30 +54,14 @@ const BlogPostPage = withRouter(function({ blogPostId, history }) {
     onError: useMemo(
       () => error => {
         console.log('error', error);
-        // todo: alert?
+        alert('Error, reload and try again (' + error + ')');
       },
       []
     )
   });
 
-  const { isLoading: postCommentIsLoading } = usePost({
-    path: '/api/public/blog-post/comment/' + blogPostId,
-    body: postCommentBody,
-    onSuccess: useMemo(
-      () => result => {
-        console.log('post comment success: ', result);
-        // TODO alert
-      },
-      []
-    ),
-    onError: useMemo(
-      () => error => {
-        console.log('post comment error: ', error);
-        // TODO alert
-      },
-      []
-    )
-  });
+  const [postArgs, setPostArgs] = useState({});
+  const { isLoading: postCommentIsLoading } = usePost(postArgs);
 
   function getSectionHeader() {
     return (
@@ -119,8 +119,8 @@ const BlogPostPage = withRouter(function({ blogPostId, history }) {
             <div className="pb-2">
               <Input
                 placeholder="Name..."
-                value={commentUsername}
-                onChange={setCommentUsername}
+                value={commentGuestUsername}
+                onChange={setCommentGuestUsername}
               />
             </div>
           )}
@@ -129,10 +129,25 @@ const BlogPostPage = withRouter(function({ blogPostId, history }) {
     }
 
     function addCommentClick() {
-      console.log('add comment');
-      setPostCommentBody({
-        commentText: comment,
-        commentUsername: commentUsername || loggedUser
+      setPostArgs({
+        path: '/api/public/blog-post/comment/' + blogPostId,
+        body: {
+          commentText: comment,
+          commentUsername: getCommentUsername()
+        },
+        onSuccess: result => {
+          showSuccessAlert('Comment successfully added');
+
+          if (blogPost && result.comment) {
+            if (blogPost.comments == null) {
+              blogPost.comments = [];
+            }
+            blogPost.comments.push(result.comment);
+          }
+        },
+        onError: error => {
+          showErrorAlert(error);
+        }
       });
     }
 
@@ -152,6 +167,7 @@ const BlogPostPage = withRouter(function({ blogPostId, history }) {
             </DefaultButton>
           </div>
         </div>
+        {renderAlertsContainer()}
       </LoadableDiv>
     );
   }
