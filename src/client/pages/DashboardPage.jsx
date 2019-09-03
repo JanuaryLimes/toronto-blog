@@ -6,8 +6,8 @@ import { Input } from '../components/Input';
 import MarkdownEditor from '../components/MarkdownEditor';
 import { DefaultButton } from '../components/Button';
 import { LoadableDiv } from '../components/LoadableDiv';
-import { SlideInOut } from '../components/Animate';
-import { SuccessAlert, useAlertProps, ErrorAlert } from '../components/Alert';
+import { useSuccessErrorAlert } from '../components/Alert';
+import faker from 'faker';
 
 export default withRouter(function DashboardPage({ match, location }) {
   const loggedUser = useLoggedUser();
@@ -15,9 +15,12 @@ export default withRouter(function DashboardPage({ match, location }) {
   const { isLoading } = usePost(postArgs);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const successAlertProps = useAlertProps();
-  const errorAlertProps = useAlertProps();
   const [addPostDisabled, setAddPostDisabled] = useState(true);
+  const {
+    showSuccessAlert,
+    showErrorAlert,
+    renderAlertsContainer
+  } = useSuccessErrorAlert();
 
   React.useEffect(() => {
     if (!title || !content) {
@@ -29,7 +32,7 @@ export default withRouter(function DashboardPage({ match, location }) {
 
   function addPost() {
     if (addPostDisabled) {
-      errorAlertProps.show('Can not add empty blog post');
+      showErrorAlert('Can not add empty blog post');
       return;
     }
 
@@ -42,16 +45,10 @@ export default withRouter(function DashboardPage({ match, location }) {
         postDate: Date.now()
       },
       onSuccess: data => {
-        console.log('post success', data);
-
-        errorAlertProps.hide();
-        successAlertProps.show('Blog post successfully added');
+        showSuccessAlert('Blog post successfully added');
       },
       onError: error => {
-        console.log('post error', error);
-
-        errorAlertProps.show(error);
-        successAlertProps.hide();
+        showErrorAlert(error);
       }
     });
   }
@@ -70,7 +67,14 @@ export default withRouter(function DashboardPage({ match, location }) {
   function getActionButtons() {
     return (
       <div className="pt-4 flex">
-        <DefaultButton disabled={addPostDisabled} onClick={addPost}>
+        <DefaultButton
+          onClick={addPost}
+          onContextMenu={e => {
+            e.preventDefault();
+            setTitle(faker.lorem.sentence());
+            setContent(faker.lorem.paragraphs());
+          }}
+        >
           Add post
         </DefaultButton>
         <div className="flex-1" />
@@ -82,18 +86,7 @@ export default withRouter(function DashboardPage({ match, location }) {
   }
 
   function getAlertContainer() {
-    return (
-      <div className="overflow-hidden">
-        <SlideInOut
-          condition={
-            errorAlertProps.alertVisible || successAlertProps.alertVisible
-          }
-        >
-          <SuccessAlert className="pt-4" {...successAlertProps} />
-          <ErrorAlert className="pt-4" {...errorAlertProps} />
-        </SlideInOut>
-      </div>
-    );
+    return <div className="pt-4">{renderAlertsContainer()}</div>;
   }
 
   function render() {

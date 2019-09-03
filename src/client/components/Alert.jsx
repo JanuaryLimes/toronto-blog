@@ -92,24 +92,22 @@ const Alert = ({ text, type, onClose }) => {
 
   function render() {
     return (
-      <div className="pb-2 pt-2 pt-4">
-        <div
-          className={[getTypeClassNames(), 'p-2 pr-10 relative rounded'].join(
-            ' '
-          )}
-          role="alert"
+      <div
+        className={[getTypeClassNames(), 'p-2 pr-10 relative rounded'].join(
+          ' '
+        )}
+        role="alert"
+      >
+        {text}
+        <button
+          type="button"
+          data-dismiss={getDataDismiss()}
+          className="close absolute close pt-1 px-3 right-0 text-xl top-0"
+          onClick={onClose}
+          aria-label="Close"
         >
-          {text}
-          <button
-            type="button"
-            data-dismiss={getDataDismiss()}
-            className="close absolute close pt-1 px-3 right-0 text-xl top-0"
-            onClick={onClose}
-            aria-label="Close"
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
     );
   }
@@ -122,4 +120,42 @@ Alert.defaultProps = {
   type: 'alert-success'
 };
 
-export { Alert, SuccessAlert, ErrorAlert, useAlertProps };
+function useSuccessErrorAlert() {
+  const successAlertProps = useAlertProps();
+  const errorAlertProps = useAlertProps();
+
+  function renderAlertsContainer() {
+    return (
+      <div className="overflow-hidden">
+        <SlideInOut
+          condition={
+            errorAlertProps.alertVisible || successAlertProps.alertVisible
+          }
+        >
+          <SuccessAlert {...successAlertProps} />
+          <ErrorAlert {...errorAlertProps} />
+        </SlideInOut>
+      </div>
+    );
+  }
+
+  const showSuccessAlert = React.useMemo(
+    () => message => {
+      errorAlertProps.hide();
+      successAlertProps.show(message);
+    },
+    [errorAlertProps, successAlertProps]
+  );
+
+  const showErrorAlert = React.useMemo(
+    () => error => {
+      errorAlertProps.show(error);
+      successAlertProps.hide();
+    },
+    [errorAlertProps, successAlertProps]
+  );
+
+  return { showSuccessAlert, showErrorAlert, renderAlertsContainer };
+}
+
+export { Alert, SuccessAlert, ErrorAlert, useAlertProps, useSuccessErrorAlert };

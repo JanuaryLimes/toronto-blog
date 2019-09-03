@@ -1,6 +1,6 @@
 import React from 'react';
 
-function DefaultButton({ children, onClick = () => {}, disabled = false }) {
+function DefaultButton({ children, onClick, onContextMenu, disabled = false }) {
   function getDisabledClassName() {
     if (disabled) {
       return 'cursor-not-allowed';
@@ -12,7 +12,12 @@ function DefaultButton({ children, onClick = () => {}, disabled = false }) {
   function render() {
     return (
       <button
-        onClick={e => onClick(e)}
+        onClick={e => {
+          if (onClick) onClick(e);
+        }}
+        onContextMenu={e => {
+          if (onContextMenu) onContextMenu(e);
+        }}
         disabled={disabled}
         className={[
           'bg-purple-700 ',
