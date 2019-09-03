@@ -5,7 +5,7 @@ import Tippy from '@tippy.js/react';
 import { getColorFromClassName } from '../utils';
 
 const TorontoTippy = withRouter(
-  ({ location, appendTarget, tooltipColor = 'bg-gray-700' }) => {
+  ({ location, appendTarget, tooltipColor = 'bg-gray-800' }) => {
     const { pathname } = location;
     const loggedUser = useLoggedUser();
     const [ariaExpanded, setAriaExpanded] = useState('false');
@@ -24,17 +24,23 @@ const TorontoTippy = withRouter(
       return (
         <li onClick={hideTippy} className="text-left">
           <Link to={linkTo}>
-            <div className="py-1 px-2 rounded hover:bg-gray-600">{text}</div>
+            <div className="py-1 px-2 pr-3 text-base rounded hover:bg-gray-700">
+              {text}
+            </div>
           </Link>
         </li>
       );
     }
 
     function render() {
+      const yourBlogUrl = '/' + loggedUser;
+
       return (
         <Tippy
           content={
             <ul className="p-1">
+              {pathname !== yourBlogUrl &&
+                getItem(yourBlogUrl, 'Go to your blog')}
               {pathname !== '/dashboard' && getItem('/dashboard', 'Dashboard')}
               {getItem('/logout', 'Logout')}
             </ul>
@@ -56,7 +62,7 @@ const TorontoTippy = withRouter(
         >
           <button
             aria-expanded={ariaExpanded}
-            className="hover:bg-gray-600 px-2 py-1 relative rounded"
+            className="hover:bg-gray-800 px-2 py-1 relative rounded"
           >
             <span>
               <i className="fas fa-user" />
@@ -87,7 +93,11 @@ const Header = ({ location }) => {
     return (
       <span className="link">
         <Link to="/">
-          <button className="btn btn-secondary focus:outline-none font-medium hover:bg-gray-600 px-2 py-1 rounded">
+          <button
+            className="focus:outline-none 
+            font-medium hover:bg-gray-800 
+            px-2 py-1 rounded"
+          >
             Home
           </button>
         </Link>
@@ -133,7 +143,11 @@ const Header = ({ location }) => {
   const header = useRef();
 
   return (
-    <header ref={header} className="bg-dark bg-gray-700 p-2 shadow-md">
+    <header
+      ref={header}
+      className="p-2 shadow-md"
+      style={{ background: 'rgb(21, 21, 21)' }}
+    >
       <div className="flex flex-wrap">
         {homeLink()}
         <div className="flex-auto" />

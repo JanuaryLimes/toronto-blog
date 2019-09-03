@@ -3,6 +3,7 @@ import { Blog } from '../model/blog.model';
 import passport from 'passport';
 import { BlogPost } from '../model/blog-post.model';
 
+// /api/public/blogs
 const router = express.Router();
 
 router.get('/allblogs', (req, res) => {
