@@ -41,8 +41,7 @@ export default withRouter(function DashboardPage({ match, location }) {
       body: {
         title: title,
         content: content,
-        blogName: loggedUser,
-        postDate: Date.now()
+        blogName: loggedUser
       },
       onSuccess: data => {
         showSuccessAlert('Blog post successfully added');

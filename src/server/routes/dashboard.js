@@ -3,41 +3,30 @@ import { BlogPost } from '../model/blog-post.model';
 
 const router = express.Router();
 
-router.get('/user-blog-posts', (req, res) => {
-  const { user } = req;
+router.post('/create-new-blog-post', async (req, res) => {
+  const { title, content, blogName } = req.body;
 
-  // todo: return real data, move to public api
+  if (!title || !content || !blogName) {
+    return res.status(400).send({
+      error: 'Unable to create blog post'
+    });
+  }
 
-  res.status(200).send({ user, userBlogPosts: ['aaa', 'bbb', 'ddd'] });
-});
-
-router.post('/create-new-blog-post', (req, res) => {
-  const { title, content, blogName, postDate } = req.body;
-
-  console.log(
-    '\n\n',
-    'create new blog post',
-    '\ntitle: ',
+  const newBlogPost = {
     title,
-    '\ncontent: ',
     content,
-    '\nblogName: ',
     blogName,
-    '\npostDate: ',
-    postDate,
-    '\n\n'
-  );
+    postDate: Date.now()
+  };
 
-  // Todo handle req.body validation
-
-  BlogPost.create({ title, content, blogName, postDate }, (err, blogPost) => {
-    if (err) {
-      return res.status(400).send({ error: err });
-    }
-
-    console.log('Blog post created: ', blogPost);
-    return res.status(200).send({ blogPost });
-  });
+  try {
+    const result = await BlogPost.create(newBlogPost);
+    console.log('Blog post created: ', result);
+    return res.status(201).send({ blogPost: result });
+  } catch (error) {
+    console.log('error creating blog post: ', error);
+    return res.status(400).send({ error });
+  }
 });
 
 export default router;
