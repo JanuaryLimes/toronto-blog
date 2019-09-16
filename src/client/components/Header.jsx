@@ -33,7 +33,7 @@ const TorontoTippy = withRouter(
     }
 
     function render() {
-      const yourBlogUrl = '/' + loggedUser;
+      const yourBlogUrl = '/blog/' + loggedUser;
 
       return (
         <Tippy

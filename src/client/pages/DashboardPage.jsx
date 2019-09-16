@@ -77,7 +77,7 @@ export default withRouter(function DashboardPage({ match, location }) {
           Add post
         </DefaultButton>
         <div className="flex-1" />
-        <Link to={'/' + loggedUser}>
+        <Link to={'/blog/' + loggedUser}>
           <DefaultButton>Go to your blog</DefaultButton>
         </Link>
       </div>
