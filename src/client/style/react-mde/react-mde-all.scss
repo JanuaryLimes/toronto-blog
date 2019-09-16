@@ -1,5 +1,6 @@
 $focus-color: #6b46c1;
 $border-color: #2d3748;
+$item-hover: #4a5568;
 
 .markdown-editor .react-mde {
   border-radius: 0.25rem;
@@ -30,8 +31,34 @@ $border-color: #2d3748;
       }
     }
 
-    ul.mde-header-group li.mde-header-item button {
-      color: white;
+    ul.mde-header-group li.mde-header-item {
+      ul.react-mde-dropdown {
+        background-color: var(--toronto-color);
+        border: none;
+        border-radius: 0.25rem;
+
+        li button {
+          border-radius: 0.25rem;
+          color: white;
+          width: 100%;
+          padding-left: 0.5rem;
+          padding-right: 0.5rem;
+
+          &:hover,
+          p:hover {
+            color: white;
+            background-color: $item-hover;
+          }
+        }
+
+        &::after {
+          border-bottom-color: var(--toronto-color);
+        }
+      }
+
+      button {
+        color: white;
+      }
     }
 
     ul.mde-header-group ul.react-mde-dropdown li.mde-header-item button {

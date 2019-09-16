@@ -92,7 +92,7 @@ export default withRouter(function DashboardPage({ match, location }) {
     return (
       <div className="dashboard-page">
         <LoadableDiv isLoading={isLoading}>
-          <p className="font-semibold text-lg">Create new blog post</p>
+          <p className="font-semibold text-lg pb-2">Create new blog post</p>
           <div>
             {getMarkdownEditor()}
             {getActionButtons()}
