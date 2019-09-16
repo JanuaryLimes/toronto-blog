@@ -6,12 +6,11 @@ import { useCookies } from 'react-cookie';
 import { isUsernameValid, isPasswordValid } from 'toronto-utils/lib/validation';
 import axios from 'axios';
 import { Input } from '../components/Input';
-import { Alert } from '../components/Alert';
+import { useSuccessErrorAlert } from '../components/Alert';
 import lodash from 'lodash';
 import { DonutSpinnerLoader } from '../components/Loaders';
 import { useMeasure } from '../hooks/useMeasure';
 import {
-  SlideInOut,
   FadeInOut,
   HeightModifier,
   OpacityModifier,
@@ -56,13 +55,16 @@ const LoginRegisterPage = ({ location }) => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [canLogin, setCanLogin] = useState(false);
-  const [alertVisible, setAlertVisible] = useState(false);
-  const [alertProps, setAlertProps] = useState({});
   const [repeatPassword, setRepeatPassword] = useState('');
   const [canRegister, setCanRegister] = useState(false);
   const [usernameIsChecking, setUsernameIsChecking] = useState(false);
   const [usernameIsAvailable, setUsernameIsAvailable] = useState(undefined);
   const [passwordStrengthCheck, setPasswordStrengthCheck] = useState();
+  const {
+    showSuccessAlert,
+    showErrorAlert,
+    renderAlertsContainer
+  } = useSuccessErrorAlert();
 
   useEffect(() => {
     if (pathname === '/login') {
@@ -356,12 +358,7 @@ const LoginRegisterPage = ({ location }) => {
   const onSuccess = user => {
     clearInputs();
     dispatchLogin(user);
-    setAlertVisible(true);
-    setAlertProps({
-      text: successText(user),
-      type: 'alert-success',
-      onClose: () => setAlertVisible(false)
-    });
+    showSuccessAlert(successText(user));
   };
 
   const errorText = error => {
@@ -378,12 +375,7 @@ const LoginRegisterPage = ({ location }) => {
   };
 
   const onError = error => {
-    setAlertVisible(true);
-    setAlertProps({
-      text: errorText(error),
-      type: 'alert-danger',
-      onClose: () => setAlertVisible(false)
-    });
+    showErrorAlert(errorText(error));
   };
 
   const onClickHandler = e => {
@@ -427,11 +419,7 @@ const LoginRegisterPage = ({ location }) => {
   };
 
   function getAlert() {
-    return (
-      <SlideInOut condition={alertVisible}>
-        <Alert {...alertProps} />
-      </SlideInOut>
-    );
+    return <div className="pt-2">{renderAlertsContainer()}</div>;
   }
 
   function getRepeatPasswordSection() {
@@ -462,7 +450,7 @@ const LoginRegisterPage = ({ location }) => {
       <div className="px-4 py-12 ">
         <div className="m-auto max-w-sm rounded">
           <LoadableDiv isLoading={isLoading}>
-            <form className="px-4 py-2 shadow-lg">
+            <form className="px-4 py-2">
               <Input {...usernameProps} />
               {checkUsernameAvailability()}
               <Input {...passwordProps} />
