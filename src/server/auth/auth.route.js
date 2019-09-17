@@ -128,4 +128,17 @@ router.get('/is-user-available', (req, res) => {
   }
 });
 
+router.post('/logout', (req, res) => {
+  console.log('logout success');
+
+  let options = { expires: new Date(Date.now() - 300000) };
+  if (isProduction()) {
+    options = { ...options, httpOnly: true, secure: true };
+  }
+  res.cookie('jwt', '', options);
+  res.cookie('u', '', options);
+
+  return res.status(200).send();
+});
+
 export default router;

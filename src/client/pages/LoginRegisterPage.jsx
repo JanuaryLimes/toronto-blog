@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { withRouter, Redirect } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { login, logout } from '../actions';
-import { useCookies } from 'react-cookie';
 import { isUsernameValid, isPasswordValid } from 'toronto-utils/lib/validation';
 import axios from 'axios';
 import { Input } from '../components/Input';
@@ -18,29 +17,52 @@ import {
   motion
 } from '../components/Animate';
 import { LoadableDiv } from '../components/LoadableDiv';
+import { usePost } from '../hooks/useAxios';
 
 let debounceCheck;
 
-export const LogoutComponent = () => {
+export const LogoutComponent = withRouter(({ history }) => {
   const dispatch = useDispatch();
   const dispatchLogout = useCallback(() => dispatch(logout()), [dispatch]);
-  const cookies = useCookies();
+  const [hasError, setHasError] = useState(false);
+  const { showErrorAlert, renderAlertsContainer } = useSuccessErrorAlert();
 
-  const handleLogout = () => {
-    console.log('logout');
-    cookies[2]('jwt');
-    cookies[2]('u');
-    dispatchLogout();
+  const [logoutArgs] = useState({
+    path: '/api/auth/logout',
+    body: {},
+    onSuccess: () => {
+      dispatchLogout();
+      setTimeout(() => {
+        history.push('/');
+      }, 1000);
+    },
+    onError: () => {
+      setTimeout(() => {
+        setHasError(true);
+        showErrorAlert('Error logging out, try refreshing the page');
+      }, 500);
+    }
+  });
 
-    return <Redirect to="/" />;
-  };
+  usePost(logoutArgs);
 
   function render() {
-    return handleLogout();
+    return (
+      <div className="p-2">
+        {hasError ? (
+          <div className="h-40">{renderAlertsContainer()}</div>
+        ) : (
+          <div className="h-40 flex items-center justify-center">
+            <DonutSpinnerLoader />
+            <div className="pl-2">Logging out...</div>
+          </div>
+        )}
+      </div>
+    );
   }
 
   return render();
-};
+});
 
 const LoginRegisterPage = ({ location }) => {
   const dispatch = useDispatch();
