@@ -74,6 +74,7 @@ const BlogPostPage = withRouter(function({ blogPostId, history }) {
           <span className="px-1">{'<'}</span>
         </DefaultButton>
         <span className="text-lg font-semibold pl-2">{blogPost.title}</span>
+        {/* TODO edit post button */}
       </div>
     );
   }
