@@ -229,7 +229,7 @@ const BlogPostPage = withRouter(function({ blogPostId, history }) {
 
   function render() {
     return (
-      <LoadableDiv isLoading={isLoading}>
+      <LoadableDiv className="blog-post-page-element" isLoading={isLoading}>
         {getSectionHeader()}
         {getBlogContent()}
         <Separator />
