@@ -1,5 +1,11 @@
+@import '~tippy.js/dist/tippy.css';
+
 :root {
   --toronto-color: darkgray;
+}
+
+.tippy-content {
+  padding: 0;
 }
 
 .tippy-tooltip.toronto-theme {
