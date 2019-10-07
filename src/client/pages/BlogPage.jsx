@@ -78,9 +78,27 @@ const BlogPostTemplate = withRouter(function({ blogPost, match, ...rest }) {
     return url + '/' + blogPost._id;
   }
 
+  function BlogPostHeader() {
+    return (
+      <div className="flex">
+        <span>Created: {createdFromNow}</span>
+        <span className="flex-auto"></span>
+        <span className="pl-2">
+          <button
+            onClick={() => {
+              console.warn('edit blog post');
+            }}
+          >
+            edit{/* TODO edit icon */}
+          </button>
+        </span>
+      </div>
+    );
+  }
+
   return (
     <div className="BlogPostTemplate">
-      <p>Created: {createdFromNow}</p>
+      <BlogPostHeader />
       <div className="font-bold text-2xl pb-6 underline">
         <Link to={getBlogPostLink()}>{blogPost.title}</Link>
       </div>
