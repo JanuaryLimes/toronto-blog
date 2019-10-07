@@ -3,6 +3,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { useLoggedUser } from '../hooks/useLoggedUser';
 import Tippy from '@tippy.js/react';
 import { getColorFromClassName } from '../utils';
+import { roundArrow } from 'tippy.js';
 
 const TorontoTippy = withRouter(
   ({ location, appendTarget, tooltipColor = 'bg-gray-800' }) => {
@@ -52,9 +53,8 @@ const TorontoTippy = withRouter(
           aria={null}
           theme="toronto"
           appendTo={() => appendTarget.current}
-          arrow={true}
+          arrow={roundArrow}
           inertia={true}
-          arrowType="round"
           interactive={true}
           duration={[300, 120]}
           onMount={() => setAriaExpanded('true')}
