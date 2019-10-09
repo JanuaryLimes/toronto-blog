@@ -8,6 +8,7 @@ import { useGet } from '../hooks/useAxios';
 import { Link, withRouter } from 'react-router-dom';
 import Separator from '../components/Separator';
 import { useLoggedUser } from '../hooks/useLoggedUser';
+import { BlogEditor } from '../components/BlogEditor';
 
 const BlogPage = function({ blogName }) {
   const dispatch = useDispatch();
@@ -65,6 +66,9 @@ const BlogPostTemplate = withRouter(function({ blogPost, match, ...rest }) {
   const date = new Date(blogPost.postDate);
   const createdFromNow = moment(date).fromNow();
   const [blogOwner] = React.useState(blogPost.blogName === useLoggedUser());
+  const [editMode, setEditMode] = React.useState(false);
+  const [title, setTitle] = React.useState(blogPost.title);
+  const [content, setContent] = React.useState(blogPost.content);
 
   console.log('is blog owner', blogOwner);
 
@@ -78,7 +82,7 @@ const BlogPostTemplate = withRouter(function({ blogPost, match, ...rest }) {
     return url + '/' + blogPost._id;
   }
 
-  function BlogPostHeader() {
+  function blogPostHeader() {
     return (
       <div className="flex">
         <span>Created: {createdFromNow}</span>
@@ -87,6 +91,7 @@ const BlogPostTemplate = withRouter(function({ blogPost, match, ...rest }) {
           <button
             onClick={() => {
               console.warn('edit blog post');
+              setEditMode(!editMode);
             }}
           >
             edit{/* TODO edit icon */}
@@ -96,17 +101,42 @@ const BlogPostTemplate = withRouter(function({ blogPost, match, ...rest }) {
     );
   }
 
+  function blogPostEditState() {
+    return (
+      <div>
+        <BlogEditor
+          title={title}
+          setTitle={setTitle}
+          content={content}
+          setContent={setContent}
+        />
+      </div>
+    );
+  }
+
+  function blogPostPreviewState() {
+    return (
+      <>
+        <div className="font-bold text-2xl pb-6 underline">
+          <Link to={getBlogPostLink()}>{blogPost.title}</Link>
+        </div>
+        <div className="mde-preview">
+          <div className="mde-preview-content">
+            <ReactMarkdown source={blogPost.content} />
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  function blogPostContent() {
+    return editMode ? blogPostEditState() : blogPostPreviewState();
+  }
+
   return (
     <div className="BlogPostTemplate blog-post-preview">
-      <BlogPostHeader />
-      <div className="font-bold text-2xl pb-6 underline">
-        <Link to={getBlogPostLink()}>{blogPost.title}</Link>
-      </div>
-      <div className="mde-preview">
-        <div className="mde-preview-content">
-          <ReactMarkdown source={blogPost.content} />
-        </div>
-      </div>
+      {blogPostHeader()}
+      {blogPostContent()}
       <Separator />
     </div>
   );
