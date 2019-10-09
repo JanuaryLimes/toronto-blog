@@ -97,7 +97,7 @@ const BlogPostTemplate = withRouter(function({ blogPost, match, ...rest }) {
   }
 
   return (
-    <div className="BlogPostTemplate">
+    <div className="BlogPostTemplate blog-post-preview">
       <BlogPostHeader />
       <div className="font-bold text-2xl pb-6 underline">
         <Link to={getBlogPostLink()}>{blogPost.title}</Link>

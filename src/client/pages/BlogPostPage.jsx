@@ -81,7 +81,7 @@ const BlogPostPage = withRouter(function({ blogPostId, history }) {
 
   function getBlogContent() {
     return (
-      <div className="pt-2 blog-item">
+      <div className="pt-2 blog-post-preview">
         <div className="mde-preview">
           <div className="mde-preview-content">
             <ReactMarkdown source={blogPost.content} />
