@@ -13,7 +13,7 @@ const loadDevEnv = () => {
 };
 
 const generateSecret = () => {
-  var secret = secureRandom(256, { type: 'Buffer' }); // Create a highly random byte array of 256 bytes
+  const secret = secureRandom(256, { type: 'Buffer' }); // Create a highly random byte array of 256 bytes
   return secret.toString('base64');
 };
 

@@ -1,4 +1,4 @@
-import { createReducer } from 'redux-starter-kit';
+import { createReducer } from '@reduxjs/toolkit';
 import { setBlogs } from '../actions';
 
 const setBlogs_type = setBlogs.type;

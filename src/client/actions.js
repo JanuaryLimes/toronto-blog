@@ -1,4 +1,4 @@
-import { createAction } from 'redux-starter-kit';
+import { createAction } from '@reduxjs/toolkit';
 
 const setBlogs = createAction('SET_BLOGS');
 const login = createAction('LOGIN');
