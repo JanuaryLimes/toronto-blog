@@ -8,7 +8,6 @@ import { useGet } from '../hooks/useAxios';
 import { Link, withRouter } from 'react-router-dom';
 import Separator from '../components/Separator';
 import { useLoggedUser } from '../hooks/useLoggedUser';
-import { BlogEditor } from '../components/BlogEditor';
 
 const BlogPage = function({ blogName }) {
   const dispatch = useDispatch();
@@ -66,9 +65,6 @@ const BlogPostTemplate = withRouter(function({ blogPost, match, ...rest }) {
   const date = new Date(blogPost.postDate);
   const createdFromNow = moment(date).fromNow();
   const [blogOwner] = React.useState(blogPost.blogName === useLoggedUser());
-  const [editMode, setEditMode] = React.useState(false);
-  const [title, setTitle] = React.useState(blogPost.title);
-  const [content, setContent] = React.useState(blogPost.content);
 
   console.log('is blog owner', blogOwner);
 
@@ -87,34 +83,11 @@ const BlogPostTemplate = withRouter(function({ blogPost, match, ...rest }) {
       <div className="flex">
         <span>Created: {createdFromNow}</span>
         <span className="flex-auto"></span>
-        <span className="pl-2">
-          <button
-            onClick={() => {
-              console.warn('edit blog post');
-              setEditMode(!editMode);
-            }}
-          >
-            edit{/* TODO edit icon */}
-          </button>
-        </span>
       </div>
     );
   }
 
-  function blogPostEditState() {
-    return (
-      <div>
-        <BlogEditor
-          title={title}
-          setTitle={setTitle}
-          content={content}
-          setContent={setContent}
-        />
-      </div>
-    );
-  }
-
-  function blogPostPreviewState() {
+  function blogPostContent() {
     return (
       <>
         <div className="font-bold text-2xl pb-6 underline">
@@ -127,10 +100,6 @@ const BlogPostTemplate = withRouter(function({ blogPost, match, ...rest }) {
         </div>
       </>
     );
-  }
-
-  function blogPostContent() {
-    return editMode ? blogPostEditState() : blogPostPreviewState();
   }
 
   return (

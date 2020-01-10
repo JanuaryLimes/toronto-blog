@@ -9,6 +9,9 @@ import Separator from '../components/Separator';
 import { useLoggedUser } from '../hooks/useLoggedUser';
 import * as moment from 'moment';
 import { useSuccessErrorAlert } from '../components/Alert';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { BlogEditor } from '../components/BlogEditor';
 
 const BlogPostPage = withRouter(function({ blogPostId, history }) {
   const [blogPost, setBlogPost] = useState({});
@@ -22,7 +25,7 @@ const BlogPostPage = withRouter(function({ blogPostId, history }) {
     showErrorAlert,
     renderAlertsContainer
   } = useSuccessErrorAlert();
-
+  const [editMode, setEditMode] = React.useState(false);
   const getCommentUsername = React.useMemo(
     () => () => {
       if (commentAsGuest) {
@@ -33,6 +36,13 @@ const BlogPostPage = withRouter(function({ blogPostId, history }) {
     },
     [commentAsGuest, commentGuestUsername, loggedUser]
   );
+  const [title, setTitle] = React.useState(blogPost.title);
+  const [content, setContent] = React.useState(blogPost.content);
+
+  React.useEffect(() => {
+    setTitle(blogPost.title);
+    setContent(blogPost.content);
+  }, [blogPost.content, blogPost.title]);
 
   React.useEffect(() => {
     if (comment && getCommentUsername()) {
@@ -65,7 +75,7 @@ const BlogPostPage = withRouter(function({ blogPostId, history }) {
 
   function getSectionHeader() {
     return (
-      <div>
+      <div className="flex items-center">
         <DefaultButton
           onClick={() => {
             history.goBack();
@@ -73,13 +83,43 @@ const BlogPostPage = withRouter(function({ blogPostId, history }) {
         >
           <span className="px-1">{'<'}</span>
         </DefaultButton>
-        <span className="text-lg font-semibold pl-2">{blogPost.title}</span>
-        {/* TODO edit post button */}
+        <span className="text-lg font-semibold pl-2 flex-auto">
+          {blogPost.title}
+        </span>
+        <span className="pl-2">
+          <button
+            className="px-2 py-1"
+            title="Edit post"
+            onClick={() => {
+              console.warn('edit blog post');
+              setEditMode(!editMode);
+            }}
+          >
+            <FontAwesomeIcon icon={faPen} />
+          </button>
+        </span>
       </div>
     );
   }
 
   function getBlogContent() {
+    return editMode ? blogPostEditState() : blogPostPreviewState();
+  }
+
+  function blogPostEditState() {
+    return (
+      <div className="pt-2">
+        <BlogEditor
+          title={title}
+          setTitle={setTitle}
+          content={content}
+          setContent={setContent}
+        />
+      </div>
+    );
+  }
+
+  function blogPostPreviewState() {
     return (
       <div className="pt-2 blog-post-preview">
         <div className="mde-preview">
