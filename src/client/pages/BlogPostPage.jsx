@@ -10,7 +10,7 @@ import { useLoggedUser } from '../hooks/useLoggedUser';
 import * as moment from 'moment';
 import { useSuccessErrorAlert } from '../components/Alert';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTimes, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { BlogEditor } from '../components/BlogEditor';
 
 const BlogPostPage = withRouter(function({ blogPostId, history }) {
@@ -86,16 +86,29 @@ const BlogPostPage = withRouter(function({ blogPostId, history }) {
         <span className="text-lg font-semibold pl-2 flex-auto">
           {blogPost.title}
         </span>
+
+        {editMode && (
+          <span className="pl-2">
+            <button
+              className="px-2 py-1 w-8 hover:bg-green-700 rounded"
+              title={'Save changes'}
+              onClick={() => {}}
+            >
+              <FontAwesomeIcon icon={faCheck} />
+            </button>
+          </span>
+        )}
+
         <span className="pl-2">
           <button
-            className="px-2 py-1"
-            title="Edit post"
+            className="px-2 py-1 w-8 hover:bg-purple-700 rounded"
+            title={editMode ? 'Cancel' : 'Edit post'}
             onClick={() => {
               console.warn('edit blog post');
               setEditMode(!editMode);
             }}
           >
-            <FontAwesomeIcon icon={faPen} />
+            <FontAwesomeIcon icon={editMode ? faTimes : faPen} />
           </button>
         </span>
       </div>
