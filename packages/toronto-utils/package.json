@@ -11,11 +11,11 @@
     "lib"
   ],
   "dependencies": {
-    "@babel/cli": "^7.4.4",
-    "@babel/core": "^7.4.5",
-    "@babel/preset-env": "^7.4.5",
-    "babel-jest": "^24.8.0",
-    "dotenv": "^8.0.0",
+    "@babel/cli": "^7.7.7",
+    "@babel/core": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
+    "babel-jest": "^24.9.0",
+    "dotenv": "^8.2.0",
     "secure-random": "^1.1.2"
   },
   "scripts": {

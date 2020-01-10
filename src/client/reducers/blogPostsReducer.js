@@ -1,4 +1,4 @@
-import { createReducer } from 'redux-starter-kit';
+import { createReducer } from '@reduxjs/toolkit';
 import { setBlogPosts } from '../actions';
 
 const setBlogPosts_type = setBlogPosts.type;
@@ -10,11 +10,11 @@ const blogPostsReducer = createReducer([], {
     if (user) {
       const currentUserData = state.find(userData => userData.user === user);
       if (currentUserData) {
-        var existingIds = currentUserData.userBlogPosts.map(a => a._id);
-        var newIds = userBlogPosts
+        const existingIds = currentUserData.userBlogPosts.map(a => a._id);
+        const newIds = userBlogPosts
           .map(a => a._id)
           .filter(b => !existingIds.includes(b));
-        var newPosts = userBlogPosts.filter(a => newIds.includes(a._id));
+        const newPosts = userBlogPosts.filter(a => newIds.includes(a._id));
         newPosts.sort((a, b) => {
           if (a.postDate && b.postDate) {
             if (a.postDate < b.postDate) {
@@ -27,7 +27,7 @@ const blogPostsReducer = createReducer([], {
           return 0;
         });
 
-        var result = [...newPosts, ...currentUserData.userBlogPosts];
+        const result = [...newPosts, ...currentUserData.userBlogPosts];
         currentUserData.userBlogPosts = result;
       } else {
         state.push({ user, userBlogPosts });
