@@ -22,7 +22,7 @@ const RouterPage = () => {
           </Sticky>
 
           <div
-            className="flex-1 py-4 m-auto w-full 
+            className="flex-1 py-4 mx-auto w-full 
             sm:max-w-xl md:max-w-2xl lg:max-w-4xl"
           >
             <div

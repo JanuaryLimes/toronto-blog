@@ -35,18 +35,15 @@ const BlogPage = function({ blogName }) {
     [dispatch]
   );
 
-  const { isLoading: isBlogPostDataLoading } = useGet({
+  /* const { isLoading: isBlogPostDataLoading } = */ useGet({
     path: '/api/public/blogs/' + blogName,
     onSuccess: mOnSuccess
   });
 
   function displayUserBlogPosts() {
-    if (isBlogPostDataLoading || !userBlogPosts) {
-      return '';
-    }
     return (
       <ul>
-        {userBlogPosts.map(blogPost => {
+        {userBlogPosts?.map(blogPost => {
           return (
             <li key={blogPost._id} className="">
               <BlogPostTemplate blogPost={blogPost} />

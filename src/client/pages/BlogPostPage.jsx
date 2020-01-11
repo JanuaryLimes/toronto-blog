@@ -12,15 +12,24 @@ import { useSuccessErrorAlert } from '../components/Alert';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faTimes, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { BlogEditor } from '../components/BlogEditor';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setBlogPostById } from '../actions';
 
 const BlogPostPage = withRouter(function({ blogPostId, history }) {
   const dispatch = useDispatch();
-  const [blogPost, setBlogPost] = useState({});
+  const loggedUser = useLoggedUser();
+  const blogPostFromStore = useSelector(state => {
+    if (loggedUser) {
+      const userBlogPosts = state?.blogPosts?.find(
+        blogPost => blogPost.user === loggedUser
+      )?.userBlogPosts;
+      return userBlogPosts?.find(post => post._id === blogPostId);
+    }
+    return null;
+  });
+  const [blogPost, setBlogPost] = useState(blogPostFromStore ?? {});
   const [comment, setComment] = useState('');
   const [canAddComment, setCanAddComment] = useState(false);
-  const loggedUser = useLoggedUser();
   const isPostAuthor =
     !blogPost || !loggedUser ? false : blogPost?.blogName === loggedUser;
   const [commentGuestUsername, setCommentGuestUsername] = useState('');
@@ -320,7 +329,10 @@ const BlogPostPage = withRouter(function({ blogPostId, history }) {
 
   function render() {
     return (
-      <LoadableDiv className="blog-post-page-element" isLoading={isLoading}>
+      <LoadableDiv
+        className="blog-post-page-element"
+        isLoading={blogPostFromStore != null ? false : isLoading}
+      >
         {getSectionHeader()}
         {getBlogContent()}
         <Separator />
