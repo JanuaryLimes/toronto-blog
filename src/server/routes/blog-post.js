@@ -24,10 +24,17 @@ router.put('/id/:id', async (req, res) => {
   const { title, content } = req.body;
   try {
     const result = await BlogPost.findById(id).exec();
+
+    const user = getUserFromRequestJwt(req);
+    if (!user || user !== result.blogName) {
+      return res
+        .status(401)
+        .send({ error: 'only blog author can edit this post' });
+    }
+
     console.log('\n\n\nfind result\n\n\n', result);
     if (!title || !content) {
-      // eslint-disable-next-line no-throw-literal
-      throw 'empty title or content';
+      return res.status(400).send({ error: 'empty title or content' });
     }
     result.title = title;
     result.content = content;
