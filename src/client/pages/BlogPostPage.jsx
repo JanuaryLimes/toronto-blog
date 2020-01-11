@@ -21,6 +21,8 @@ const BlogPostPage = withRouter(function({ blogPostId, history }) {
   const [comment, setComment] = useState('');
   const [canAddComment, setCanAddComment] = useState(false);
   const loggedUser = useLoggedUser();
+  const isPostAuthor =
+    !blogPost || !loggedUser ? false : blogPost?.blogName === loggedUser;
   const [commentGuestUsername, setCommentGuestUsername] = useState('');
   const [commentAsGuest, setCommentAsGuest] = useState(false);
   const {
@@ -77,7 +79,7 @@ const BlogPostPage = withRouter(function({ blogPostId, history }) {
   const { isLoading: postCommentIsLoading } = usePost(postArgs);
 
   const [putArgs, setPutArgs] = useState({});
-  const { isLoading: putIsLoading, data: putData, error: putError } = usePut(
+  /*const { isLoading: putIsLoading, data: putData, error: putError } = */ usePut(
     putArgs
   );
   // TODO implement put parameters
@@ -96,53 +98,57 @@ const BlogPostPage = withRouter(function({ blogPostId, history }) {
           {blogPost.title}
         </span>
 
-        {editMode && (
-          <span className="pl-2">
-            <button
-              className="px-2 py-1 w-8 hover:bg-green-700 rounded"
-              title={'Save changes'}
-              onClick={() => {
-                console.log('save click');
-                setPutArgs({
-                  path: '/api/public/blog-post/id/' + blogPostId,
-                  body: {
-                    title,
-                    content
-                  },
-                  onSuccess: result => {
-                    console.log('put success', result);
-                    dispatch(
-                      setBlogPostById({
-                        id: blogPostId,
-                        blogPost: result.blogPost
-                      })
-                    );
-                    setBlogPost(result.blogPost);
-                    setEditMode(false);
-                  },
-                  onError: error => {
-                    console.error('put error:\n\n', error);
-                  }
-                });
-              }}
-            >
-              <FontAwesomeIcon icon={faCheck} />
-            </button>
-          </span>
-        )}
+        {isPostAuthor && (
+          <>
+            {editMode && (
+              <span className="pl-2">
+                <button
+                  className="px-2 py-1 w-8 hover:bg-green-700 rounded"
+                  title={'Save changes'}
+                  onClick={() => {
+                    console.log('save click');
+                    setPutArgs({
+                      path: '/api/public/blog-post/id/' + blogPostId,
+                      body: {
+                        title,
+                        content
+                      },
+                      onSuccess: result => {
+                        console.log('put success', result);
+                        dispatch(
+                          setBlogPostById({
+                            id: blogPostId,
+                            blogPost: result.blogPost
+                          })
+                        );
+                        setBlogPost(result.blogPost);
+                        setEditMode(false);
+                      },
+                      onError: error => {
+                        console.error('put error:\n\n', error);
+                      }
+                    });
+                  }}
+                >
+                  <FontAwesomeIcon icon={faCheck} />
+                </button>
+              </span>
+            )}
 
-        <span className="pl-2">
-          <button
-            className="px-2 py-1 w-8 hover:bg-purple-700 rounded"
-            title={editMode ? 'Cancel' : 'Edit post'}
-            onClick={() => {
-              console.warn('edit blog post');
-              setEditMode(!editMode);
-            }}
-          >
-            <FontAwesomeIcon icon={editMode ? faTimes : faPen} />
-          </button>
-        </span>
+            <span className="pl-2">
+              <button
+                className="px-2 py-1 w-8 hover:bg-purple-700 rounded"
+                title={editMode ? 'Cancel' : 'Edit post'}
+                onClick={() => {
+                  console.warn('edit blog post');
+                  setEditMode(!editMode);
+                }}
+              >
+                <FontAwesomeIcon icon={editMode ? faTimes : faPen} />
+              </button>
+            </span>
+          </>
+        )}
       </div>
     );
   }

@@ -37,30 +37,43 @@ function useBaseHttp({ methodResponse, onSuccess, onError }) {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    let isCancelled = false;
+
     (async () => {
       if (methodResponse.isValid) {
         try {
           setIsLoading(true);
-          onResolved({
-            response: await methodResponse.promise,
-            setData,
-            setError,
-            onSuccess
-          });
+          const response = await methodResponse.promise;
+          if (!isCancelled) {
+            onResolved({
+              response,
+              setData,
+              setError,
+              onSuccess
+            });
+          }
         } catch (error) {
-          onException({
-            error,
-            setData,
-            setError,
-            onError
-          });
+          if (!isCancelled) {
+            onException({
+              error,
+              setData,
+              setError,
+              onError
+            });
+          }
         } finally {
-          setIsLoading(false);
+          if (!isCancelled) {
+            setIsLoading(false);
+          }
         }
       } else {
         setData(undefined);
       }
     })();
+
+    return function cleanUp() {
+      isCancelled = true;
+    };
   }, [methodResponse, onError, onSuccess]);
 
   return { isLoading, data, error };
@@ -126,4 +139,24 @@ function usePut({ path, body, onSuccess, onError }) {
   });
 }
 
-export { useGet, usePost, usePut };
+function useDelete({ path, onSuccess, onError }) {
+  const canExecute = path != null;
+  const methodResponse = useMemo(() => {
+    if (canExecute) {
+      return {
+        isValid: true,
+        promise: axios.delete(path)
+      };
+    } else {
+      return { isValid: false, promise: null };
+    }
+  }, [canExecute, path]);
+
+  return useBaseHttp({
+    methodResponse,
+    onSuccess,
+    onError
+  });
+}
+
+export { useGet, usePost, usePut, useDelete };
