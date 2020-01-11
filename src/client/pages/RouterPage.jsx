@@ -6,22 +6,22 @@ import MainPage from './MainPage';
 import LoginRegisterPage, { LogoutComponent } from './LoginRegisterPage';
 import DashboardPage from './DashboardPage';
 import { BlogPageHandler } from './BlogPageHandler';
-import { StickyContainer, Sticky } from 'react-sticky';
+
+const headerHeight = '50px';
 
 const RouterPage = () => {
   function render() {
     return (
       <Router>
-        <StickyContainer className="min-h-full flex flex-col">
-          <Sticky>
-            {({ style }) => (
-              <div style={{ ...style, width: '100%' }} className="z-10">
-                <Header />
-              </div>
-            )}
-          </Sticky>
-
+        <div
+          className="h-full"
+          style={{ display: 'grid', gridTemplateRows: '1fr auto' }}
+        >
+          <div className="z-10 fixed w-full" style={{ height: headerHeight }}>
+            <Header />
+          </div>
           <div
+            style={{ marginTop: headerHeight }}
             className="flex-1 py-4 mx-auto w-full 
             sm:max-w-xl md:max-w-2xl lg:max-w-4xl"
           >
@@ -44,14 +44,13 @@ const RouterPage = () => {
               </Switch>
             </div>
           </div>
-
           <footer
             className="p-2 py-4 bg-gray-700 relative text-center"
             style={{ zIndex: '-1', background: 'rgb(21, 21, 21)' }}
           >
             footer...
           </footer>
-        </StickyContainer>
+        </div>
       </Router>
     );
   }
