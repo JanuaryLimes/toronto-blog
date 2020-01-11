@@ -1,11 +1,14 @@
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
+import { getDefaultMiddleware } from '@reduxjs/toolkit';
 import { rootReducer } from './reducers/rootReducer';
+import { autoRehydrate } from 'redux-phoenix';
+import { createStore, compose, applyMiddleware } from 'redux';
 
-export const configureAppStore = cookies => {
-  const store = configureStore({
-    reducer: rootReducer,
-    middleware: [...getDefaultMiddleware()]
-  });
+export const configureAppStore = () => {
+  const store = createStore(
+    rootReducer,
+    {},
+    compose(applyMiddleware(...getDefaultMiddleware()), autoRehydrate)
+  );
 
   if (process.env.NODE_ENV !== 'production') {
     /*const unsubscribe =*/ store.subscribe(() =>

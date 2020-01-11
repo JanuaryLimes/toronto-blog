@@ -1,10 +1,22 @@
 import './client/style/style.scss';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom';
 import App from './client/App';
 import * as serviceWorker from './serviceWorker';
+import persistStore from 'redux-phoenix';
+import { configureAppStore } from './client/store';
+import { Provider } from 'react-redux';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const store = configureAppStore();
+
+persistStore(store).then(persistedStore => {
+  render(
+    <Provider store={persistedStore}>
+      <App />
+    </Provider>,
+    document.getElementById('root')
+  );
+});
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

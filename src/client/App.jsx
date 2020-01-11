@@ -1,27 +1,19 @@
 import React, { useEffect } from 'react';
-import { configureAppStore } from './store';
-import { Provider } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import { login } from './actions';
 import RouterPage from './pages/RouterPage';
-
-const store = configureAppStore();
+import { useDispatch } from 'react-redux';
 
 const App = _props => {
   const cookies = useCookies();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const user = cookies[0].u;
-    if (store) {
-      store.dispatch(login({ loggedUser: user }));
-    }
-  }, [cookies]);
+    dispatch(login({ loggedUser: user }));
+  }, [cookies, dispatch]);
 
-  return (
-    <Provider store={store}>
-      <RouterPage />
-    </Provider>
-  );
+  return <RouterPage />;
 };
 
 export default App;
