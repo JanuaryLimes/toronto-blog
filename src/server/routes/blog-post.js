@@ -19,6 +19,27 @@ router.get('/id/:id', async (req, res) => {
   }
 });
 
+router.put('/id/:id', async (req, res) => {
+  const { id } = req.params;
+  const { title, content } = req.body;
+  try {
+    const result = await BlogPost.findById(id).exec();
+    console.log('\n\n\nfind result\n\n\n', result);
+    if (!title || !content) {
+      // eslint-disable-next-line no-throw-literal
+      throw 'empty title or content';
+    }
+    result.title = title;
+    result.content = content;
+    const saveResult = await result.save();
+    console.log('\n\n\nsave result\n\n\n', saveResult);
+    return res.status(200).send({ blogPost: saveResult });
+  } catch (error) {
+    console.log('error put by id', error);
+    return res.status(400).send({ error });
+  }
+});
+
 router.post('/comment/:blogPostId', async (req, res) => {
   const { commentText, commentUsername } = req.body;
   const { blogPostId } = req.params;

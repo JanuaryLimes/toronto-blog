@@ -4,6 +4,8 @@ import { useLoggedUser } from '../hooks/useLoggedUser';
 import Tippy from '@tippy.js/react';
 import { getColorFromClassName } from '../utils';
 import { roundArrow } from 'tippy.js';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 const TorontoTippy = withRouter(
   ({ location, appendTarget, tooltipColor = 'bg-gray-800' }) => {
@@ -65,7 +67,7 @@ const TorontoTippy = withRouter(
             className="hover:bg-gray-800 px-2 py-1 relative rounded"
           >
             <span>
-              <i className="fas fa-user" />
+              <FontAwesomeIcon icon={faUser} />
               {' ' + loggedUser}
             </span>
           </button>

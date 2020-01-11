@@ -2,12 +2,11 @@ import React, { useState } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { usePost } from '../hooks/useAxios';
 import { useLoggedUser } from '../hooks/useLoggedUser';
-import { Input } from '../components/Input';
-import MarkdownEditor from '../components/MarkdownEditor';
 import { DefaultButton } from '../components/Button';
 import { LoadableDiv } from '../components/LoadableDiv';
 import { useSuccessErrorAlert } from '../components/Alert';
 import faker from 'faker';
+import { BlogEditor } from '../components/BlogEditor';
 
 export default withRouter(function DashboardPage({ match, location }) {
   const loggedUser = useLoggedUser();
@@ -54,12 +53,12 @@ export default withRouter(function DashboardPage({ match, location }) {
 
   function getMarkdownEditor() {
     return (
-      <>
-        <div className="pb-4">
-          <Input placeholder="Title" value={title} onChange={setTitle} />
-        </div>
-        <MarkdownEditor value={content} onChange={setContent} />
-      </>
+      <BlogEditor
+        title={title}
+        setTitle={setTitle}
+        content={content}
+        setContent={setContent}
+      />
     );
   }
 
