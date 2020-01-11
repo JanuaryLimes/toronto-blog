@@ -1,13 +1,15 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useSelector, useDispatch } from 'react-redux';
 import * as moment from 'moment';
-import { setBlogPosts } from '../actions';
+import { setBlogPosts, deleteBlogPostById } from '../actions';
 import { getBlogPosts } from '../selectors/blogPosts.selector';
-import { useGet } from '../hooks/useAxios';
+import { useGet, useDelete } from '../hooks/useAxios';
 import { Link, withRouter } from 'react-router-dom';
 import Separator from '../components/Separator';
 import { useLoggedUser } from '../hooks/useLoggedUser';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const BlogPage = function({ blogName }) {
   const dispatch = useDispatch();
@@ -64,9 +66,13 @@ const BlogPage = function({ blogName }) {
 const BlogPostTemplate = withRouter(function({ blogPost, match, ...rest }) {
   const date = new Date(blogPost.postDate);
   const createdFromNow = moment(date).fromNow();
-  const [blogOwner] = React.useState(blogPost.blogName === useLoggedUser());
+  const dispatch = useDispatch();
+  const loggedUser = useLoggedUser();
+  const blogOwner =
+    !blogPost || !loggedUser ? false : blogPost?.blogName === loggedUser;
 
-  console.log('is blog owner', blogOwner);
+  const [deleteArgs, setDeleteArgs] = useState({});
+  /* const { isLoading, data, error } = */ useDelete(deleteArgs); // TODO
 
   function getBlogPostLink() {
     let url = match.url;
@@ -83,6 +89,34 @@ const BlogPostTemplate = withRouter(function({ blogPost, match, ...rest }) {
       <div className="flex">
         <span>Created: {createdFromNow}</span>
         <span className="flex-auto"></span>
+        {blogOwner && (
+          <span className="pl-2">
+            <button
+              className="px-2 py-1 w-8 hover:bg-red-700 rounded"
+              onClick={() => {
+                if (window.confirm('Are you sure to delete this item?')) {
+                  setDeleteArgs({
+                    path: '/api/public/blog-post/id/' + blogPost._id,
+                    onSuccess: result => {
+                      console.log('delete success', result);
+                      dispatch(
+                        deleteBlogPostById({
+                          id: blogPost._id,
+                          blogName: blogPost.blogName
+                        })
+                      );
+                    },
+                    onError: error => {
+                      console.error('delete error:\n\n', error);
+                    }
+                  });
+                }
+              }}
+            >
+              <FontAwesomeIcon icon={faTrash} />
+            </button>
+          </span>
+        )}
       </div>
     );
   }

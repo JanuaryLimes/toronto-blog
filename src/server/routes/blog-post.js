@@ -47,6 +47,24 @@ router.put('/id/:id', async (req, res) => {
   }
 });
 
+router.delete('/id/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const itemToDelete = await BlogPost.findById(id).exec();
+    const user = getUserFromRequestJwt(req);
+    if (!user || user !== itemToDelete.blogName) {
+      return res
+        .status(401)
+        .send({ error: 'only blog author can delete this post' });
+    }
+    const result = await BlogPost.findByIdAndDelete(id).exec();
+    return res.status(200).send({ result });
+  } catch (error) {
+    console.log('error delete by id', error);
+    return res.status(400).send({ error });
+  }
+});
+
 router.post('/comment/:blogPostId', async (req, res) => {
   const { commentText, commentUsername } = req.body;
   const { blogPostId } = req.params;

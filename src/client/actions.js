@@ -5,5 +5,13 @@ const login = createAction('LOGIN');
 const logout = createAction('LOGOUT');
 const setBlogPosts = createAction('SET_BLOG_POSTS');
 const setBlogPostById = createAction('SET_BLOG_POST_BY_ID');
+const deleteBlogPostById = createAction('DELETE_BLOG_POST_BY_ID');
 
-export { setBlogs, login, logout, setBlogPosts, setBlogPostById };
+export {
+  setBlogs,
+  login,
+  logout,
+  setBlogPosts,
+  setBlogPostById,
+  deleteBlogPostById
+};
