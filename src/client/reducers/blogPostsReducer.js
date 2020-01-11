@@ -1,7 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { setBlogPosts } from '../actions';
+import { setBlogPosts, setBlogPostById } from '../actions';
 
 const setBlogPosts_type = setBlogPosts.type;
+const setBlogPostById_type = setBlogPostById.type;
 
 const blogPostsReducer = createReducer([], {
   [setBlogPosts_type]: (state, action) => {
@@ -31,6 +32,20 @@ const blogPostsReducer = createReducer([], {
         currentUserData.userBlogPosts = result;
       } else {
         state.push({ user, userBlogPosts });
+      }
+    }
+  },
+  [setBlogPostById_type]: (state, action) => {
+    const { id, blogPost } = action.payload;
+    const currentUserData = state.find(
+      userData => userData.user === blogPost.blogName
+    );
+    if (currentUserData && currentUserData.userBlogPosts) {
+      const idIndex = currentUserData.userBlogPosts.findIndex(
+        post => post._id === id
+      );
+      if (idIndex >= 0) {
+        currentUserData.userBlogPosts[idIndex] = blogPost;
       }
     }
   }

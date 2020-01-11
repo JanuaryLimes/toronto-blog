@@ -106,4 +106,24 @@ function usePost({ path, body, onSuccess, onError }) {
   });
 }
 
-export { useGet, usePost };
+function usePut({ path, body, onSuccess, onError }) {
+  const canExecute = path != null && body != null;
+  const methodResponse = useMemo(() => {
+    if (canExecute) {
+      return {
+        isValid: true,
+        promise: axios.put(path, body)
+      };
+    } else {
+      return { isValid: false, promise: null };
+    }
+  }, [canExecute, path, body]);
+
+  return useBaseHttp({
+    methodResponse,
+    onSuccess,
+    onError
+  });
+}
+
+export { useGet, usePost, usePut };
