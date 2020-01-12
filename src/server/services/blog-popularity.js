@@ -8,6 +8,8 @@ async function incrementViewCounter(blogName) {
     blogName
   }).exec();
 
+  // TODO increment only for existing blogs
+
   if (!blogPopularityItem) {
     await BlogPopularity.create({ blogName, viewCount: 1 });
   } else {
