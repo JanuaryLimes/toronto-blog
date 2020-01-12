@@ -15,13 +15,13 @@ import { BlogEditor } from '../components/BlogEditor';
 import { useDispatch, useSelector } from 'react-redux';
 import { setBlogPostById } from '../actions';
 
-const BlogPostPage = withRouter(function({ blogPostId, history }) {
+const BlogPostPage = withRouter(function({ blogName, blogPostId, history }) {
   const dispatch = useDispatch();
   const loggedUser = useLoggedUser();
   const blogPostFromStore = useSelector(state => {
     if (loggedUser) {
       const userBlogPosts = state?.blogPosts?.find(
-        blogPost => blogPost.user === loggedUser
+        blogPost => blogPost.user === blogName
       )?.userBlogPosts;
       return userBlogPosts?.find(post => post._id === blogPostId);
     }

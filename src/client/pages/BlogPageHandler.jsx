@@ -6,7 +6,7 @@ export function BlogPageHandler({ match }) {
   const { blogName, blogPostId } = match.params;
   function render() {
     if (blogPostId) {
-      return <BlogPostPage blogPostId={blogPostId} />;
+      return <BlogPostPage blogPostId={blogPostId} blogName={blogName} />;
     } else {
       return <BlogPage blogName={blogName} />;
     }
