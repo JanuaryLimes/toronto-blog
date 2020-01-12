@@ -5,6 +5,7 @@ import blogRouter from './blog';
 import blogPostRouter from './blog-post';
 import authRouter from '../auth/auth.route';
 import dashboardRouter from './dashboard';
+import { topBlogsRouter } from './top-blogs.route';
 
 const passportJwtAuthentication = passport.authenticate('jwt', {
   session: false
@@ -24,5 +25,6 @@ secureRouter.use('/dashboard', dashboardRouter);
 
 publicRouter.use('/blogs', blogRouter);
 publicRouter.use('/blog-post', blogPostRouter);
+publicRouter.use('/top-blogs', topBlogsRouter);
 
 export default apiRouter;

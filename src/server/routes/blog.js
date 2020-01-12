@@ -2,6 +2,7 @@ import express from 'express';
 import { Blog } from '../model/blog.model';
 import passport from 'passport';
 import { BlogPost } from '../model/blog-post.model';
+import { incrementViewCounter } from '../services/blog-popularity';
 
 // /api/public/blogs
 const router = express.Router();
@@ -46,6 +47,8 @@ router.get(
 
 router.get('/:blogName', (req, res) => {
   const { blogName: user } = req.params;
+
+  incrementViewCounter(user);
 
   BlogPost.find({ blogName: user })
     .sort('-postDate')

@@ -1,17 +1,9 @@
 import { createAction } from '@reduxjs/toolkit';
 
-const setBlogs = createAction('SET_BLOGS');
-const login = createAction('LOGIN');
-const logout = createAction('LOGOUT');
-const setBlogPosts = createAction('SET_BLOG_POSTS');
-const setBlogPostById = createAction('SET_BLOG_POST_BY_ID');
-const deleteBlogPostById = createAction('DELETE_BLOG_POST_BY_ID');
-
-export {
-  setBlogs,
-  login,
-  logout,
-  setBlogPosts,
-  setBlogPostById,
-  deleteBlogPostById
-};
+export const setBlogs = createAction('SET_BLOGS');
+export const login = createAction('LOGIN');
+export const logout = createAction('LOGOUT');
+export const setBlogPosts = createAction('SET_BLOG_POSTS');
+export const setBlogPostById = createAction('SET_BLOG_POST_BY_ID');
+export const deleteBlogPostById = createAction('DELETE_BLOG_POST_BY_ID');
+export const setTopBlogs = createAction('SET_TOP_BLOGS');
