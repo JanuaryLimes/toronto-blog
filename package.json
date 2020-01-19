@@ -1,5 +1,5 @@
 {
-  "name": "toronto-blog",
+  "name": "@toronto-blog/core",
   "private": true,
   "workspaces": [
     "packages/*"
