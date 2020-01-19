@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { multiply } from '@toronto-blog/utils';
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -12,6 +13,8 @@ const App: React.FC = () => {
       .catch(error => {
         console.log('error', error);
       });
+
+    console.log('multiply test: ', multiply(2, 6));
 
     return () => {
       //   cleanup

@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "lerna run dev --stream",
     "start": "node packages/server/build/server.js",
+    "start:prod": "NODE_ENV=production node packages/server/build/server.js",
     "build": "lerna run build"
   },
   "devDependencies": {

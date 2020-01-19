@@ -1,0 +1,13 @@
+{
+  "name": "@toronto-blog/utils",
+  "version": "0.1.0",
+  "main": "lib/index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev2": "tsc -w -p .",
+    "build": "tsc -p ."
+  },
+  "dependencies": {
+    "lodash": "~4.17.5"
+  }
+}
