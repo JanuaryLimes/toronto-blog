@@ -8,6 +8,9 @@ const App: React.FC = () => {
       .then(res => res.json())
       .then(value => {
         console.log('from api: ', value);
+      })
+      .catch(error => {
+        console.log('error', error);
       });
 
     return () => {
