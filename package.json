@@ -5,7 +5,7 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "lerna run dev --stream",
+    "dev": "lerna run --parallel dev",
     "start": "node packages/server/build/server.js",
     "start:prod": "NODE_ENV=production node packages/server/build/server.js",
     "build": "lerna run build"

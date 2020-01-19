@@ -4,7 +4,7 @@
   "main": "lib/index.js",
   "license": "MIT",
   "scripts": {
-    "dev2": "tsc -w -p .",
+    "dev": "tsc -w -p .",
     "build": "tsc -p ."
   },
   "dependencies": {
