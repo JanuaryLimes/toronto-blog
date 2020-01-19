@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
 const App: React.FC = () => {
+  useEffect(() => {
+    fetch('/api/home')
+      .then(res => res.json())
+      .then(value => {
+        console.log('from api: ', value);
+      });
+
+    return () => {
+      //   cleanup
+    };
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
@@ -21,6 +33,6 @@ const App: React.FC = () => {
       </header>
     </div>
   );
-}
+};
 
 export default App;
