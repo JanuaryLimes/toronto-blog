@@ -10,11 +10,11 @@ export class App {
     this.app = express();
     this.port = appInit.port;
 
-    this.react();
     this.middlewares(appInit.middleWares);
     this.routes(appInit.controllers);
     this.assets();
     this.template();
+    this.react();
   }
 
   private react() {
