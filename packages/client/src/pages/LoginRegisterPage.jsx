@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { withRouter } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { login, logout } from '../actions';
-import { isUsernameValid, isPasswordValid } from 'toronto-utils/lib/validation';
+import { isUsernameValid, isPasswordValid } from '@toronto-blog/utils';
 import axios from 'axios';
 import { Input } from '../components/Input';
 import { useSuccessErrorAlert } from '../components/Alert';
@@ -101,7 +101,7 @@ const LoginRegisterPage = ({ location }) => {
     if (
       password === repeatPassword &&
       password !== '' &&
-      (passwordStrengthCheck && passwordStrengthCheck.valid)
+      passwordStrengthCheck && passwordStrengthCheck.valid
     ) {
       return true;
     } else {
