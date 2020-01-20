@@ -6,11 +6,15 @@
     "dev": "PORT=5001 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predev": "yarn build:styles",
+    "prebuild": "yarn build:styles",
+    "build:styles": "postcss src/style/tailwind/index.tailwind.css -o src/style/tailwind/index.css"
   },
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^5.12.0",
     "@fortawesome/react-fontawesome": "^0.1.8",
+    "@fullhuman/postcss-purgecss": "^2.0.4",
     "@reduxjs/toolkit": "^1.2.3",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -22,11 +26,13 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/react-redux": "^7.1.6",
+    "autoprefixer": "^9.7.4",
     "axios": "^0.19.1",
     "framer-motion": "^1.7.2",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "node-sass": "^4.13.1",
+    "postcss-cli": "^7.1.0",
     "react": "^16.12.0",
     "react-cookie": "^4.0.3",
     "react-dom": "^16.12.0",
@@ -38,6 +44,7 @@
     "redux": "^4.0.5",
     "redux-phoenix": "^1.3.0",
     "resize-observer-polyfill": "^1.5.1",
+    "tailwindcss": "^1.1.4",
     "typescript": "~3.7.2"
   },
   "proxy": "http://localhost:5002",
