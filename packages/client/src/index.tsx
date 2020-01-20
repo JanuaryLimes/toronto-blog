@@ -9,8 +9,6 @@ const persistStore = require('redux-phoenix');
 
 const store = configureAppStore();
 
-// TODO index.html
-
 persistStore.default(store).then((persistedStore: any) => {
   render(
     <Provider store={persistedStore}>
