@@ -9,6 +9,14 @@ const App = _props => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    fetch('/api/home')
+      .then(a => a.json())
+      .then(v => {
+        console.warn('v: ', v);
+      });
+  }, []);
+
+  useEffect(() => {
     const user = cookies[0].u;
     dispatch(login({ loggedUser: user }));
   }, [cookies, dispatch]);
