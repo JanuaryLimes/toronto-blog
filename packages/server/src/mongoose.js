@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { loadDevEnv } from 'toronto-utils';
+import { loadDevEnv } from '@toronto-blog/utils';
 
 loadDevEnv();
 mongoose.connect(process.env.MONGO_CS, {

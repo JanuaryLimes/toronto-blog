@@ -1,6 +1,7 @@
 import express from 'express';
 import { Application } from 'express';
 import { join } from 'path';
+import apiRouter from './routes/api-router';
 
 export class App {
   public app: Application;
@@ -42,6 +43,7 @@ export class App {
     controllers.forEach(controller => {
       this.app.use('/api', controller.router);
     });
+    this.app.use('/api', apiRouter);
   }
 
   private assets() {

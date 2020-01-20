@@ -3,8 +3,7 @@ import bcrypt from 'bcrypt';
 import { User } from './auth.model';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
-import { loadDevEnv, isProduction } from 'toronto-utils';
-import { isPasswordValid } from 'toronto-utils/lib/validation';
+import { loadDevEnv, isProduction, isPasswordValid } from '@toronto-blog/utils';
 
 loadDevEnv();
 const secret = process.env.SECRET;

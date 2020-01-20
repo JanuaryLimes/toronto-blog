@@ -3,7 +3,7 @@ import passportLocal from 'passport-local';
 import passportJwt from 'passport-jwt';
 import { User } from './auth.model';
 import bcrypt from 'bcrypt';
-import { loadDevEnv } from 'toronto-utils';
+import { loadDevEnv } from '@toronto-blog/utils';
 
 loadDevEnv();
 const secret = process.env.SECRET;

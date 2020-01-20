@@ -19,13 +19,10 @@ const BlogPostPage = withRouter(function({ blogName, blogPostId, history }) {
   const dispatch = useDispatch();
   const loggedUser = useLoggedUser();
   const blogPostFromStore = useSelector(state => {
-    if (loggedUser) {
-      const userBlogPosts = state?.blogPosts?.find(
-        blogPost => blogPost.user === blogName
-      )?.userBlogPosts;
-      return userBlogPosts?.find(post => post._id === blogPostId);
-    }
-    return null;
+    const userBlogPosts = state?.blogPosts?.find(
+      blogPost => blogPost.user === blogName
+    )?.userBlogPosts;
+    return userBlogPosts?.find(post => post._id === blogPostId);
   });
   const [blogPost, setBlogPost] = useState(blogPostFromStore ?? {});
   const [comment, setComment] = useState('');

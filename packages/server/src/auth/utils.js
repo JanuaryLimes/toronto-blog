@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { loadDevEnv } from 'toronto-utils';
+import { loadDevEnv } from '@toronto-blog/utils';
 
 loadDevEnv();
 const secret = process.env.SECRET;

@@ -27,6 +27,10 @@ export class HomeController implements IControllerBase {
       {
         id: 3,
         name: 'Ahmet'
+      },
+      {
+        id: 4,
+        name: 'elo000'
       }
     ];
 

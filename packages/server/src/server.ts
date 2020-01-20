@@ -6,6 +6,7 @@ import { loadDevEnv } from '@toronto-blog/utils';
 import https from './https';
 import cookieParser = require('cookie-parser');
 import cors from 'cors';
+import './auth/passportSetup';
 
 loadDevEnv();
 
