@@ -1,0 +1,38 @@
+.checkbox-container {
+  position: relative;
+
+  input {
+    outline: none;
+    width: 14px;
+    height: 14px;
+    appearance: none;
+    background-color: rgb(17, 17, 17);
+  }
+
+  label {
+    cursor: pointer;
+
+    &:after {
+      content: '';
+      width: 10px;
+      height: 5px;
+      position: absolute;
+      top: 7px;
+      left: 5.1px;
+      border: 3px solid white;
+      border-top: none;
+      border-right: none;
+      background: transparent;
+      opacity: 0;
+      transform: rotate(-45deg);
+    }
+    &:hover::after {
+      opacity: 0.1;
+    }
+  }
+  input[type='checkbox'] {
+    &:checked + label:after {
+      opacity: 1;
+    }
+  }
+}

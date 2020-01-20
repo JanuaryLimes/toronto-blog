@@ -1,0 +1,86 @@
+$focus-color: #6b46c1;
+$border-color: #2d3748;
+$item-hover: #4a5568;
+
+.markdown-editor .react-mde {
+  border-radius: 0.25rem;
+  border-width: 2px;
+  border-color: $border-color;
+
+  button {
+    line-height: 1.15;
+    font-size: 13.3333px;
+  }
+
+  .mde-header {
+    background: transparent;
+    border-bottom-width: 2px;
+    border-bottom-color: #2d3748;
+
+    .mde-tabs {
+      button {
+        padding-left: 4px;
+        padding-right: 4px;
+        outline: 0;
+
+        &.selected {
+          border-radius: 0.25rem;
+          border-width: 2px;
+          border-color: #6b46c1;
+        }
+      }
+    }
+
+    ul.mde-header-group li.mde-header-item {
+      ul.react-mde-dropdown {
+        background-color: var(--toronto-color);
+        border: none;
+        border-radius: 0.25rem;
+
+        li button {
+          border-radius: 0.25rem;
+          color: white;
+          width: 100%;
+          padding-left: 0.5rem;
+          padding-right: 0.5rem;
+
+          &:hover,
+          p:hover {
+            color: white;
+            background-color: $item-hover;
+          }
+        }
+
+        &::after {
+          border-bottom-color: var(--toronto-color);
+        }
+      }
+
+      button {
+        color: white;
+      }
+    }
+
+    ul.mde-header-group ul.react-mde-dropdown li.mde-header-item button {
+      color: black;
+    }
+  }
+
+  .mde-text {
+    background: transparent;
+    outline-color: $focus-color;
+  }
+
+  .grip {
+    border-top-width: 2px;
+    border-top-color: $border-color;
+    background: transparent;
+    color: white;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.blog-post-preview .mde-preview .mde-preview-content {
+  padding: 0;
+}
