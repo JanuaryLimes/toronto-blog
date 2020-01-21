@@ -4,17 +4,9 @@ import { login } from './actions';
 import RouterPage from './pages/RouterPage';
 import { useDispatch } from 'react-redux';
 
-const App = _props => {
+const App = (_props: any) => {
   const cookies = useCookies();
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    fetch('/api/home')
-      .then(a => a.json())
-      .then(v => {
-        console.warn('v: ', v);
-      });
-  }, []);
 
   useEffect(() => {
     const user = cookies[0].u;

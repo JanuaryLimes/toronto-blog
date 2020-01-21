@@ -1,6 +1,6 @@
-var colorCache = {};
+var colorCache: { [index: string]: string } = {};
 
-export function getColorFromClassName(className) {
+export function getColorFromClassName(className: string) {
   var color;
 
   if (colorCache[className]) {
