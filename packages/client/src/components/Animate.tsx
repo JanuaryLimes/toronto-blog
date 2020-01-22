@@ -1,7 +1,15 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import {
+  AnimationComponentProps,
+  HeightAnimationComponentProps
+} from '../types';
 
-function SlideInOut({ condition, children, duration = 250 }) {
+const SlideInOut: React.FC<AnimationComponentProps> = function({
+  condition,
+  children,
+  duration = 250
+}) {
   return (
     <AnimatePresence>
       {condition && (
@@ -17,9 +25,13 @@ function SlideInOut({ condition, children, duration = 250 }) {
       )}
     </AnimatePresence>
   );
-}
+};
 
-function FadeInOut({ condition, children, duration = 250 }) {
+const FadeInOut: React.FC<AnimationComponentProps> = function({
+  condition,
+  children,
+  duration = 250
+}) {
   return (
     <AnimatePresence>
       {condition && (
@@ -35,9 +47,13 @@ function FadeInOut({ condition, children, duration = 250 }) {
       )}
     </AnimatePresence>
   );
-}
+};
 
-function HeightModifier({ height, children, duration = 250 }) {
+const HeightModifier: React.FC<HeightAnimationComponentProps> = function({
+  height,
+  children,
+  duration = 250
+}) {
   return (
     <motion.div
       transition={{ duration: duration / 1000, type: 'tween' }}
@@ -46,9 +62,13 @@ function HeightModifier({ height, children, duration = 250 }) {
       {children}
     </motion.div>
   );
-}
+};
 
-function OpacityModifier({ condition, children, duration = 250 }) {
+const OpacityModifier: React.FC<AnimationComponentProps> = function({
+  condition,
+  children,
+  duration = 250
+}) {
   return (
     <motion.div
       transition={{ duration: duration / 1000, type: 'tween' }}
@@ -57,7 +77,7 @@ function OpacityModifier({ condition, children, duration = 250 }) {
       {children}
     </motion.div>
   );
-}
+};
 
 export {
   motion,

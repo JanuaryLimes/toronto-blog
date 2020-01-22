@@ -52,3 +52,13 @@ export type TopBlogsState = TopBlogItem[];
 export type SetTopBlogsPayload = {
   topBlogs: TopBlogItem[];
 };
+
+export type AnimationComponentProps = {
+  condition: boolean;
+  duration: number;
+};
+
+export type HeightAnimationComponentProps = {
+  height: number;
+  duration: number;
+};
