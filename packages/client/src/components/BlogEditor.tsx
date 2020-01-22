@@ -1,8 +1,14 @@
 import React from 'react';
 import { Input } from './Input';
 import MarkdownEditor from './MarkdownEditor';
+import { BlogEditorProps } from '../types';
 
-export function BlogEditor({ title, setTitle, content, setContent }) {
+export const BlogEditor: React.FC<BlogEditorProps> = function({
+  title,
+  setTitle,
+  content,
+  setContent
+}) {
   return (
     <>
       <div className="pb-4">
@@ -11,4 +17,4 @@ export function BlogEditor({ title, setTitle, content, setContent }) {
       <MarkdownEditor value={content} onChange={setContent} />
     </>
   );
-}
+};

@@ -62,3 +62,10 @@ export type HeightAnimationComponentProps = {
   height: number;
   duration: number;
 };
+
+export type BlogEditorProps = {
+  title: string;
+  setTitle: (value: string) => void;
+  content: string;
+  setContent: (value: string) => void;
+};
