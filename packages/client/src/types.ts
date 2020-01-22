@@ -55,7 +55,7 @@ export type SetTopBlogsPayload = {
 
 export type AnimationComponentProps = {
   condition: boolean;
-  duration: number;
+  duration?: number;
 };
 
 export type HeightAnimationComponentProps = {

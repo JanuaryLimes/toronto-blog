@@ -1,11 +1,30 @@
 import React, { useState } from 'react';
 import { SlideInOut } from './Animate';
 
-function useAlertProps() {
+type UseAlertProps = {
+  alertVisible: boolean;
+  show: (text: string) => void;
+  hide: () => void;
+  _setAlertVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  _setAlertText: React.Dispatch<React.SetStateAction<string>>;
+  _alertText: string;
+};
+
+type BaseAlertProps = UseAlertProps & {
+  getType: () => string; // TODO enum
+};
+
+type AlertProps = {
+  text: string;
+  type: string;
+  onClose?: () => void;
+};
+
+function useAlertProps(): UseAlertProps {
   const [_alertText, _setAlertText] = useState('');
   const [alertVisible, _setAlertVisible] = useState(false);
 
-  function show(text) {
+  function show(text: string) {
     _setAlertText(text);
     _setAlertVisible(true);
   }
@@ -25,15 +44,14 @@ function useAlertProps() {
   };
 }
 
-function BaseErrorAlert({
+export const BaseAlert: React.FC<BaseAlertProps> = function({
   alertVisible,
   show,
   hide,
   _setAlertVisible,
   _alertText,
   _setAlertText,
-  getType,
-  ...rest
+  getType
 }) {
   const alertProps = {
     text: _alertText,
@@ -46,7 +64,7 @@ function BaseErrorAlert({
   function render() {
     return (
       <SlideInOut condition={alertVisible}>
-        <div {...rest}>
+        <div>
           <Alert {...alertProps} />
         </div>
       </SlideInOut>
@@ -54,25 +72,25 @@ function BaseErrorAlert({
   }
 
   return render();
-}
+};
 
-function ErrorAlert(props) {
+const ErrorAlert: React.FC<UseAlertProps> = function(props) {
   function getType() {
     return 'alert-danger';
   }
 
-  return BaseErrorAlert({ ...props, getType });
-}
+  return BaseAlert({ ...props, getType });
+};
 
-function SuccessAlert(props) {
+const SuccessAlert: React.FC<UseAlertProps> = function(props) {
   function getType() {
     return 'alert-success';
   }
 
-  return BaseErrorAlert({ ...props, getType });
-}
+  return BaseAlert({ ...props, getType });
+};
 
-const Alert = ({ text, type, onClose }) => {
+const Alert: React.FC<AlertProps> = ({ text, type, onClose }) => {
   const getDataDismiss = () => {
     if (onClose) {
       return null;
@@ -115,11 +133,6 @@ const Alert = ({ text, type, onClose }) => {
   return render();
 };
 
-Alert.defaultProps = {
-  text: '',
-  type: 'alert-success'
-};
-
 function useSuccessErrorAlert() {
   const successAlertProps = useAlertProps();
   const errorAlertProps = useAlertProps();
@@ -140,7 +153,7 @@ function useSuccessErrorAlert() {
   }
 
   const showSuccessAlert = React.useMemo(
-    () => message => {
+    () => (message: string) => {
       errorAlertProps.hide();
       successAlertProps.show(message);
     },
@@ -148,7 +161,7 @@ function useSuccessErrorAlert() {
   );
 
   const showErrorAlert = React.useMemo(
-    () => error => {
+    () => (error: string) => {
       errorAlertProps.show(error);
       successAlertProps.hide();
     },
@@ -158,4 +171,4 @@ function useSuccessErrorAlert() {
   return { showSuccessAlert, showErrorAlert, renderAlertsContainer };
 }
 
-export { Alert, SuccessAlert, ErrorAlert, useAlertProps, useSuccessErrorAlert };
+export { useSuccessErrorAlert };
