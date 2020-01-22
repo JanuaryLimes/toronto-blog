@@ -69,3 +69,11 @@ export type BlogEditorProps = {
   content: string;
   setContent: (value: string) => void;
 };
+
+export type DefaultButtonProps = {
+  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onContextMenu?: (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => void;
+  disabled: boolean;
+};

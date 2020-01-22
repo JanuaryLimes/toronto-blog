@@ -1,7 +1,14 @@
 import React from 'react';
+import { DefaultButtonProps } from '../types';
 
-function DefaultButton({ children, onClick, onContextMenu, disabled = false }) {
+const DefaultButton: React.FC<DefaultButtonProps> = function({
+  children,
+  onClick,
+  onContextMenu,
+  disabled = false
+}) {
   function getDisabledClassName() {
+    // TODO classnames
     if (disabled) {
       return 'cursor-not-allowed';
     } else {
@@ -31,6 +38,6 @@ function DefaultButton({ children, onClick, onContextMenu, disabled = false }) {
   }
 
   return render();
-}
+};
 
 export { DefaultButton };
