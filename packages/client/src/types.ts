@@ -1,3 +1,5 @@
+import { RouteProps } from 'react-router-dom';
+
 export type LoginPayload = {
   loggedUser: string;
 };
@@ -118,4 +120,9 @@ export type DonutSpinnerLoaderProps = {
   foregroundClassName?: string;
   height: 'h-5'; // | 'h-4'
   width: 'w-5'; //
+};
+
+export type PrivateRouteProps = {
+  component: React.ComponentType<any>;
+  rest?: RouteProps;
 };

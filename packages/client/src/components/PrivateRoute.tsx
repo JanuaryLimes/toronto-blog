@@ -2,10 +2,14 @@ import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { useLoggedUser } from '../hooks/useLoggedUser';
 import { useCookies } from 'react-cookie';
+import { PrivateRouteProps } from '../types';
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
+export const PrivateRoute: React.FC<PrivateRouteProps> = ({
+  component: Component,
+  rest
+}) => {
   const loggedUser = useLoggedUser();
-  const cookies = useCookies();
+  const cookies = useCookies(); // TODO
 
   return (
     <Route
@@ -27,5 +31,3 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
     />
   );
 };
-
-export default PrivateRoute;
