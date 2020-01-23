@@ -77,3 +77,8 @@ export type DefaultButtonProps = {
   ) => void;
   disabled: boolean;
 };
+
+export type TorontoTippyProps = {
+  appendTarget: React.RefObject<Element>;
+  tooltipColor?: string;
+};
