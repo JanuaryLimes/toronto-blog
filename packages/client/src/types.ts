@@ -82,3 +82,24 @@ export type TorontoTippyProps = {
   appendTarget: React.RefObject<Element>;
   tooltipColor?: string;
 };
+
+export enum InputType {
+  Input = 'Input',
+  TextArea = 'TextArea'
+}
+
+export type InputControlProps = {
+  type?: InputType;
+  caption?: string;
+  value: string;
+  onChange?: (e: string) => void;
+  validationStatus?: string; // TODO enum
+  placeholder?: string;
+  style?: React.CSSProperties;
+};
+
+export type CheckboxControlProps = {
+  label?: string;
+  checked?: boolean;
+  onChange?: (e: boolean) => void;
+};

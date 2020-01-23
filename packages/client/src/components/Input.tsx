@@ -1,46 +1,58 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import uuidv1 from 'uuid/v1';
+import { InputType, InputControlProps, CheckboxControlProps } from '../types';
 
-const INPUT_TYPE = {
-  Input: 0,
-  TextArea: 1
-};
-
-function getValidationStatusClassName(status) {
-  if (status) {
-    if (status === 'is-valid') {
-      return 'border-green-600';
-    } else if (status === 'is-invalid') {
-      return 'border-red-600';
+function render(type: InputType, props: InputControlProps) {
+  function getValidationStatusClassName() {
+    const status = props.validationStatus;
+    if (status) {
+      if (status === 'is-valid') {
+        return 'border-green-600';
+      } else if (status === 'is-invalid') {
+        return 'border-red-600';
+      }
     }
+    return 'border-gray-800';
   }
-  return 'border-gray-800';
-}
 
-function render(type, props) {
   const inputProps = {
     className: [
-      'text-white py-1 px-2 rounded border-2 outline-none',
+      'text-white py-1 px-2 rounded border-2 outline-none', // TODO classnames
       'focus:border-purple-700',
-      getValidationStatusClassName(props.validationStatus)
+      getValidationStatusClassName()
     ].join(' '),
     value: props.value,
-    type: props.type,
-    onChange: e => props.onChange(e.target.value),
+    type: getType(),
+    onChange: (
+      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
+      if (props?.onChange) {
+        props.onChange(e.target.value);
+      }
+    },
     placeholder: props.placeholder
   };
 
+  function getType() {
+    if (props.type === InputType.Input) {
+      return 'text';
+    }
+    return undefined;
+  }
+
   function getInput() {
     switch (type) {
-      case INPUT_TYPE.Input:
+      case InputType.Input:
         return (
           <input
             {...inputProps}
-            style={{ backgroundColor: 'rgb(17, 17, 17)' }}
+            style={{
+              backgroundColor: 'rgb(17, 17, 17)',
+              ...props.style
+            }}
           />
         );
-      case INPUT_TYPE.TextArea:
+      case InputType.TextArea:
         return (
           <textarea
             {...inputProps}
@@ -71,15 +83,15 @@ function render(type, props) {
   );
 }
 
-const Input = ({
-  type,
+const Input: React.FC<InputControlProps> = ({
+  type = InputType.Input,
   caption,
   value,
   onChange,
   validationStatus,
   placeholder
 }) => {
-  return render(INPUT_TYPE.Input, {
+  return render(InputType.Input, {
     type,
     caption,
     value,
@@ -89,21 +101,8 @@ const Input = ({
   });
 };
 
-Input.propTypes = {
-  caption: PropTypes.string,
-  onChange: PropTypes.func,
-  type: PropTypes.string,
-  validationStatus: PropTypes.string,
-  value: PropTypes.string
-};
-
-Input.defaultProps = {
-  type: 'text',
-  validationStatus: ''
-};
-
-function TextArea({
-  type,
+const TextArea: React.FC<InputControlProps> = function({
+  type = InputType.TextArea,
   caption,
   value,
   onChange,
@@ -111,7 +110,7 @@ function TextArea({
   style,
   placeholder
 }) {
-  return render(INPUT_TYPE.TextArea, {
+  return render(InputType.TextArea, {
     type,
     caption,
     value,
@@ -120,9 +119,13 @@ function TextArea({
     validationStatus,
     style
   });
-}
+};
 
-function CheckBox({ label = 'label', checked = false, onChange }) {
+const CheckBox: React.FC<CheckboxControlProps> = function({
+  label = 'label',
+  checked = false,
+  onChange
+}) {
   const id = React.useMemo(() => uuidv1(), []);
 
   function render() {
@@ -148,6 +151,6 @@ function CheckBox({ label = 'label', checked = false, onChange }) {
   }
 
   return render();
-}
+};
 
 export { Input, TextArea, CheckBox };
