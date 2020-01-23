@@ -126,3 +126,8 @@ export type PrivateRouteProps = {
   component: React.ComponentType<any>;
   rest?: RouteProps;
 };
+
+export type MarkdownEditorProps = {
+  value: string;
+  onChange: (value: string) => void;
+};

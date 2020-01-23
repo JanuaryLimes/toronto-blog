@@ -3,14 +3,20 @@ import ReactMde from 'react-mde';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 import ReactMarkdown from 'react-markdown';
 import { renderToString } from 'react-dom/server';
+import { MarkdownEditorProps } from '../types';
 
-function generateHtmlFromMarkdown(markdown) {
+type SelectedTab = 'write' | 'preview';
+
+function generateHtmlFromMarkdown(markdown: string) {
   let html = renderToString(<ReactMarkdown source={markdown} />);
   return Promise.resolve(html);
 }
 
-export default function MarkdownEditor({ value, onChange }) {
-  const [selectedTab, setSelectedTab] = React.useState('write');
+export const MarkdownEditor: React.FC<MarkdownEditorProps> = function({
+  value,
+  onChange
+}) {
+  const [selectedTab, setSelectedTab] = React.useState<SelectedTab>('write');
 
   function render() {
     return (
@@ -29,4 +35,4 @@ export default function MarkdownEditor({ value, onChange }) {
   }
 
   return render();
-}
+};

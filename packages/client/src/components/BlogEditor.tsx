@@ -1,6 +1,6 @@
 import React from 'react';
 import { Input } from './Input';
-import MarkdownEditor from './MarkdownEditor';
+import { MarkdownEditor } from './MarkdownEditor';
 import { BlogEditorProps } from '../types';
 
 export const BlogEditor: React.FC<BlogEditorProps> = function({
