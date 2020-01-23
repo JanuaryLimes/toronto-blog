@@ -103,3 +103,8 @@ export type CheckboxControlProps = {
   checked?: boolean;
   onChange?: (e: boolean) => void;
 };
+
+export type LoadableDivProps = {
+  isLoading: boolean;
+  className?: string;
+};

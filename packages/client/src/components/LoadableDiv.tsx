@@ -1,8 +1,13 @@
 import React from 'react';
 import { BouncingLoader } from './Loaders';
 import { OpacityModifier } from './Animate';
+import { LoadableDivProps } from '../types';
 
-function LoadableDiv({ children, isLoading = false, className }) {
+export const LoadableDiv: React.FC<LoadableDivProps> = function({
+  children,
+  isLoading = false,
+  className
+}) {
   function render() {
     return (
       <div className={'relative ' + className}>
@@ -17,6 +22,4 @@ function LoadableDiv({ children, isLoading = false, className }) {
   }
 
   return render();
-}
-
-export { LoadableDiv };
+};
