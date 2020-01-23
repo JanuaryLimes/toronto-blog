@@ -1,7 +1,8 @@
 import React from 'react';
 import { getColorFromClassName } from '../utils';
+import { BouncingLoaderProps, DonutSpinnerLoaderProps } from '../types';
 
-export function BouncingLoader({
+export const BouncingLoader: React.FC<BouncingLoaderProps> = function({
   backgroundClassName = 'bg-gray-900',
   foregroundClassName = 'bg-white'
 }) {
@@ -26,18 +27,19 @@ export function BouncingLoader({
   }
 
   return render();
-}
+};
 
-export function DonutSpinnerLoader({
+export const DonutSpinnerLoader: React.FC<DonutSpinnerLoaderProps> = function({
   foregroundClassName = 'bg-purple-400',
-  size = 5
+  height = 'h-5',
+  width = 'w-5'
 }) {
   const foregroundColor = getColorFromClassName(foregroundClassName);
 
   function render() {
     return (
       <div
-        className={['donut', 'h-' + size, 'w-' + size].join(' ')}
+        className={['donut', height, width].join(' ')} // TODO classnames
         style={{
           borderLeftColor: foregroundColor
         }}
@@ -46,4 +48,4 @@ export function DonutSpinnerLoader({
   }
 
   return render();
-}
+};

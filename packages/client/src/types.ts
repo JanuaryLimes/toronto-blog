@@ -108,3 +108,14 @@ export type LoadableDivProps = {
   isLoading: boolean;
   className?: string;
 };
+
+export type BouncingLoaderProps = {
+  backgroundClassName?: string;
+  foregroundClassName?: string;
+};
+
+export type DonutSpinnerLoaderProps = {
+  foregroundClassName?: string;
+  height: 'h-5'; // | 'h-4'
+  width: 'w-5'; //
+};
