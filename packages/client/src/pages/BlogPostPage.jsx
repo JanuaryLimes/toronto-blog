@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { DefaultButton } from '../components/Button';
 import { LoadableDiv } from '../components/LoadableDiv';
 import { TextArea, Input, CheckBox } from '../components/Input';
-import Separator from '../components/Separator';
+import { Separator } from '../components/Separator';
 import { useLoggedUser } from '../hooks/useLoggedUser';
 import * as moment from 'moment';
 import { useSuccessErrorAlert } from '../components/Alert';

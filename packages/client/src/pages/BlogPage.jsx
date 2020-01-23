@@ -6,7 +6,7 @@ import { setBlogPosts, deleteBlogPostById } from '../actions';
 import { getBlogPosts } from '../selectors/blogPosts.selector';
 import { useGet, useDelete } from '../hooks/useAxios';
 import { Link, withRouter } from 'react-router-dom';
-import Separator from '../components/Separator';
+import { Separator } from '../components/Separator';
 import { useLoggedUser } from '../hooks/useLoggedUser';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
