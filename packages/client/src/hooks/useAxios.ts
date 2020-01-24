@@ -1,7 +1,34 @@
 import { useState, useEffect, useMemo } from 'react';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import { RestCallWithBodyProps, RestCallProps } from '../types';
 
-function onResolved({ response, setData, setError, onSuccess }) {
+type MethodResponse = {
+  isValid: boolean;
+  promise: Promise<AxiosResponse<any>> | null;
+};
+
+type BaseHttpProps = {
+  methodResponse: MethodResponse;
+  onSuccess: (data: any) => void;
+  onError: (error: any) => void;
+};
+
+type CallbackProps = {
+  setData: React.Dispatch<any>;
+  setError: React.Dispatch<React.SetStateAction<string | undefined>>;
+};
+
+type ResolvedProps = CallbackProps & {
+  response: any;
+  onSuccess: (data: any) => void;
+};
+
+type ExceptionProps = CallbackProps & {
+  error: any;
+  onError: (error: any) => void;
+};
+
+function onResolved({ response, setData, setError, onSuccess }: ResolvedProps) {
   setData(response.data);
   setError(undefined);
   if (onSuccess) {
@@ -9,7 +36,7 @@ function onResolved({ response, setData, setError, onSuccess }) {
   }
 }
 
-function onException({ error, setData, setError, onError }) {
+function onException({ error, setData, setError, onError }: ExceptionProps) {
   let errorMessage = '';
   setData(undefined);
 
@@ -31,9 +58,9 @@ function onException({ error, setData, setError, onError }) {
   }
 }
 
-function useBaseHttp({ methodResponse, onSuccess, onError }) {
-  const [data, setData] = useState(undefined);
-  const [error, setError] = useState(undefined);
+function useBaseHttp({ methodResponse, onSuccess, onError }: BaseHttpProps) {
+  const [data, setData] = useState<any>(undefined);
+  const [error, setError] = useState<string | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -79,9 +106,9 @@ function useBaseHttp({ methodResponse, onSuccess, onError }) {
   return { isLoading, data, error };
 }
 
-function useGet({ path, onSuccess, onError }) {
+function useGet({ path, onSuccess, onError }: RestCallProps) {
   const canExecute = path != null;
-  const methodResponse = useMemo(() => {
+  const methodResponse: MethodResponse = useMemo(() => {
     if (canExecute) {
       return {
         isValid: true,
@@ -99,9 +126,9 @@ function useGet({ path, onSuccess, onError }) {
   });
 }
 
-function usePost({ path, body, onSuccess, onError }) {
+function usePost({ path, body, onSuccess, onError }: RestCallWithBodyProps) {
   const canExecute = path != null && body != null;
-  const methodResponse = useMemo(() => {
+  const methodResponse: MethodResponse = useMemo(() => {
     if (canExecute) {
       return {
         isValid: true,
@@ -119,9 +146,9 @@ function usePost({ path, body, onSuccess, onError }) {
   });
 }
 
-function usePut({ path, body, onSuccess, onError }) {
+function usePut({ path, body, onSuccess, onError }: RestCallWithBodyProps) {
   const canExecute = path != null && body != null;
-  const methodResponse = useMemo(() => {
+  const methodResponse: MethodResponse = useMemo(() => {
     if (canExecute) {
       return {
         isValid: true,
@@ -139,9 +166,9 @@ function usePut({ path, body, onSuccess, onError }) {
   });
 }
 
-function useDelete({ path, onSuccess, onError }) {
+function useDelete({ path, onSuccess, onError }: RestCallProps) {
   const canExecute = path != null;
-  const methodResponse = useMemo(() => {
+  const methodResponse: MethodResponse = useMemo(() => {
     if (canExecute) {
       return {
         isValid: true,
