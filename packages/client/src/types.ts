@@ -133,11 +133,11 @@ export type MarkdownEditorProps = {
 };
 
 export type RestCallProps = {
-  path: string;
-  onSuccess: (data: any) => void;
-  onError: (error: any) => void;
+  path?: string;
+  onSuccess?: (data: any) => void;
+  onError?: (error: any) => void;
 };
 
 export type RestCallWithBodyProps = RestCallProps & {
-  body: any;
+  body?: any;
 };

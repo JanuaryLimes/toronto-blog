@@ -9,8 +9,8 @@ type MethodResponse = {
 
 type BaseHttpProps = {
   methodResponse: MethodResponse;
-  onSuccess: (data: any) => void;
-  onError: (error: any) => void;
+  onSuccess?: (data: any) => void;
+  onError?: (error: any) => void;
 };
 
 type CallbackProps = {
@@ -20,12 +20,12 @@ type CallbackProps = {
 
 type ResolvedProps = CallbackProps & {
   response: any;
-  onSuccess: (data: any) => void;
+  onSuccess?: (data: any) => void;
 };
 
 type ExceptionProps = CallbackProps & {
   error: any;
-  onError: (error: any) => void;
+  onError?: (error: any) => void;
 };
 
 function onResolved({ response, setData, setError, onSuccess }: ResolvedProps) {
@@ -109,7 +109,7 @@ function useBaseHttp({ methodResponse, onSuccess, onError }: BaseHttpProps) {
 function useGet({ path, onSuccess, onError }: RestCallProps) {
   const canExecute = path != null;
   const methodResponse: MethodResponse = useMemo(() => {
-    if (canExecute) {
+    if (canExecute && path != null) {
       return {
         isValid: true,
         promise: axios.get(path)
@@ -129,7 +129,7 @@ function useGet({ path, onSuccess, onError }: RestCallProps) {
 function usePost({ path, body, onSuccess, onError }: RestCallWithBodyProps) {
   const canExecute = path != null && body != null;
   const methodResponse: MethodResponse = useMemo(() => {
-    if (canExecute) {
+    if (canExecute && path != null) {
       return {
         isValid: true,
         promise: axios.post(path, body)
@@ -149,7 +149,7 @@ function usePost({ path, body, onSuccess, onError }: RestCallWithBodyProps) {
 function usePut({ path, body, onSuccess, onError }: RestCallWithBodyProps) {
   const canExecute = path != null && body != null;
   const methodResponse: MethodResponse = useMemo(() => {
-    if (canExecute) {
+    if (canExecute && path != null) {
       return {
         isValid: true,
         promise: axios.put(path, body)
@@ -169,7 +169,7 @@ function usePut({ path, body, onSuccess, onError }: RestCallWithBodyProps) {
 function useDelete({ path, onSuccess, onError }: RestCallProps) {
   const canExecute = path != null;
   const methodResponse: MethodResponse = useMemo(() => {
-    if (canExecute) {
+    if (canExecute && path != null) {
       return {
         isValid: true,
         promise: axios.delete(path)

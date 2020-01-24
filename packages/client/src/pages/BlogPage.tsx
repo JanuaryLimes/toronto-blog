@@ -1,35 +1,37 @@
 import React, { useMemo, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useSelector, useDispatch } from 'react-redux';
-import * as moment from 'moment';
+import moment from 'moment';
 import { setBlogPosts, deleteBlogPostById } from '../actions';
 import { getBlogPosts } from '../selectors/blogPosts.selector';
 import { useGet, useDelete } from '../hooks/useAxios';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, useRouteMatch } from 'react-router-dom';
 import { Separator } from '../components/Separator';
 import { useLoggedUser } from '../hooks/useLoggedUser';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { UserBlogPost, RestCallProps } from '../types';
 
-const BlogPage = function({ blogName }) {
+type BlogPostTemplateProps = {
+  blogPost: UserBlogPost;
+};
+
+const BlogPage = function({ blogName }: { blogName: string }) {
   const dispatch = useDispatch();
-  const userBlogPosts = useSelector(
-    state => {
-      const blogPosts = getBlogPosts(state).find(
-        blogPost => blogPost.user === blogName
-      );
+  const userBlogPosts = useSelector(state => {
+    const blogPosts = getBlogPosts(state).find(
+      (blogPost: any) => blogPost.user === blogName // TODO selector
+    );
 
-      if (blogPosts && blogPosts.userBlogPosts) {
-        return blogPosts.userBlogPosts;
-      } else {
-        return null;
-      }
-    },
-    [blogName]
-  );
+    if (blogPosts && blogPosts.userBlogPosts) {
+      return blogPosts.userBlogPosts;
+    } else {
+      return null;
+    }
+  });
 
   const mOnSuccess = useMemo(
-    () => data => {
+    () => (data: any) => {
       dispatch(setBlogPosts({ ...data }));
     },
     [dispatch]
@@ -43,7 +45,8 @@ const BlogPage = function({ blogName }) {
   function displayUserBlogPosts() {
     return (
       <ul>
-        {userBlogPosts?.map(blogPost => {
+        {userBlogPosts?.map((blogPost: UserBlogPost) => {
+          // TODO selector
           return (
             <li key={blogPost._id} className="">
               <BlogPostTemplate blogPost={blogPost} />
@@ -60,7 +63,10 @@ const BlogPage = function({ blogName }) {
   return render();
 };
 
-const BlogPostTemplate = withRouter(function({ blogPost, match, ...rest }) {
+const BlogPostTemplate: React.FC<BlogPostTemplateProps> = function({
+  blogPost
+}) {
+  const match = useRouteMatch();
   const date = new Date(blogPost.postDate);
   const createdFromNow = moment(date).fromNow();
   const dispatch = useDispatch();
@@ -68,7 +74,7 @@ const BlogPostTemplate = withRouter(function({ blogPost, match, ...rest }) {
   const blogOwner =
     !blogPost || !loggedUser ? false : blogPost?.blogName === loggedUser;
 
-  const [deleteArgs, setDeleteArgs] = useState({});
+  const [deleteArgs, setDeleteArgs] = useState<RestCallProps>({});
   /* const { isLoading, data, error } = */ useDelete(deleteArgs); // TODO
 
   function getBlogPostLink() {
@@ -94,7 +100,7 @@ const BlogPostTemplate = withRouter(function({ blogPost, match, ...rest }) {
                 if (window.confirm('Are you sure to delete this item?')) {
                   setDeleteArgs({
                     path: '/api/public/blog-post/id/' + blogPost._id,
-                    onSuccess: result => {
+                    onSuccess: (result: any) => {
                       console.log('delete success', result);
                       dispatch(
                         deleteBlogPostById({
@@ -103,7 +109,7 @@ const BlogPostTemplate = withRouter(function({ blogPost, match, ...rest }) {
                         })
                       );
                     },
-                    onError: error => {
+                    onError: (error: any) => {
                       console.error('delete error:\n\n', error);
                     }
                   });
@@ -140,6 +146,6 @@ const BlogPostTemplate = withRouter(function({ blogPost, match, ...rest }) {
       <Separator />
     </div>
   );
-});
+};
 
 export { BlogPage };
