@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { withRouter, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { usePost } from '../hooks/useAxios';
 import { useLoggedUser } from '../hooks/useLoggedUser';
 import { DefaultButton } from '../components/Button';
@@ -8,7 +8,7 @@ import { useSuccessErrorAlert } from '../components/Alert';
 import faker from 'faker';
 import { BlogEditor } from '../components/BlogEditor';
 
-export default withRouter(function DashboardPage({ match, location }) {
+export const DashboardPage = function() {
   const loggedUser = useLoggedUser();
   const [postArgs, setPostArgs] = useState({});
   const { isLoading } = usePost(postArgs);
@@ -42,10 +42,10 @@ export default withRouter(function DashboardPage({ match, location }) {
         content: content,
         blogName: loggedUser
       },
-      onSuccess: data => {
+      onSuccess: (_data: any) => {
         showSuccessAlert('Blog post successfully added');
       },
-      onError: error => {
+      onError: (error: string) => {
         showErrorAlert(error);
       }
     });
@@ -103,4 +103,4 @@ export default withRouter(function DashboardPage({ match, location }) {
   }
 
   return render();
-});
+};

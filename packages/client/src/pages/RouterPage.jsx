@@ -4,7 +4,7 @@ import { Header } from '../components/Header';
 import { PrivateRoute } from '../components/PrivateRoute';
 import MainPage from './MainPage';
 import LoginRegisterPage, { LogoutComponent } from './LoginRegisterPage';
-import DashboardPage from './DashboardPage';
+import { DashboardPage } from './DashboardPage';
 import { BlogPageHandler } from './BlogPageHandler';
 
 const headerHeight = '50px';
