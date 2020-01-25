@@ -1,28 +1,36 @@
 import React, { useMemo, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useGet, usePost, usePut } from '../hooks/useAxios';
-import { withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { DefaultButton } from '../components/Button';
 import { LoadableDiv } from '../components/LoadableDiv';
 import { TextArea, Input, CheckBox } from '../components/Input';
 import { Separator } from '../components/Separator';
 import { useLoggedUser } from '../hooks/useLoggedUser';
-import * as moment from 'moment';
+import moment from 'moment';
 import { useSuccessErrorAlert } from '../components/Alert';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faTimes, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { BlogEditor } from '../components/BlogEditor';
 import { useDispatch, useSelector } from 'react-redux';
 import { setBlogPostById } from '../actions';
+import { BlogPostPageProps } from '../types';
 
-const BlogPostPage = withRouter(function({ blogName, blogPostId, history }) {
+// TODO remove 'any' types
+
+const BlogPostPage: React.FC<BlogPostPageProps> = function({
+  blogName,
+  blogPostId
+}) {
+  const history = useHistory();
   const dispatch = useDispatch();
   const loggedUser = useLoggedUser();
-  const blogPostFromStore = useSelector(state => {
+  const blogPostFromStore = useSelector((state: any) => {
+    // TODO selector
     const userBlogPosts = state?.blogPosts?.find(
-      blogPost => blogPost.user === blogName
+      (blogPost: any) => blogPost.user === blogName
     )?.userBlogPosts;
-    return userBlogPosts?.find(post => post._id === blogPostId);
+    return userBlogPosts?.find((post: any) => post._id === blogPostId);
   });
   const [blogPost, setBlogPost] = useState(blogPostFromStore ?? {});
   const [comment, setComment] = useState('');
@@ -119,7 +127,7 @@ const BlogPostPage = withRouter(function({ blogName, blogPostId, history }) {
                         title,
                         content
                       },
-                      onSuccess: result => {
+                      onSuccess: (result: any) => {
                         console.log('put success', result);
                         dispatch(
                           setBlogPostById({
@@ -130,7 +138,7 @@ const BlogPostPage = withRouter(function({ blogName, blogPostId, history }) {
                         setBlogPost(result.blogPost);
                         setEditMode(false);
                       },
-                      onError: error => {
+                      onError: (error: any) => {
                         console.error('put error:\n\n', error);
                       }
                     });
@@ -233,7 +241,7 @@ const BlogPostPage = withRouter(function({ blogName, blogPostId, history }) {
           commentText: comment,
           commentUsername: getCommentUsername()
         },
-        onSuccess: result => {
+        onSuccess: (result: any) => {
           showSuccessAlert('Comment successfully added');
 
           if (blogPost && result.comment) {
@@ -243,7 +251,7 @@ const BlogPostPage = withRouter(function({ blogName, blogPostId, history }) {
             blogPost.comments.push(result.comment);
           }
         },
-        onError: error => {
+        onError: (error: any) => {
           showErrorAlert(error);
         }
       });
@@ -277,7 +285,7 @@ const BlogPostPage = withRouter(function({ blogName, blogPostId, history }) {
       return <div>No comments</div>;
     }
 
-    function displaySeparator(id) {
+    function displaySeparator(id: string) {
       if (
         blogPost &&
         blogPost.comments &&
@@ -290,7 +298,7 @@ const BlogPostPage = withRouter(function({ blogName, blogPostId, history }) {
       }
     }
 
-    function commentTime(time) {
+    function commentTime(time: string) {
       const date = new Date(time);
       const createdFromNow = moment(date).fromNow();
 
@@ -301,7 +309,7 @@ const BlogPostPage = withRouter(function({ blogName, blogPostId, history }) {
       return (
         <ul>
           {hasComments &&
-            blogPost.comments.map(comment => (
+            blogPost.comments.map((comment: any) => (
               <li key={comment._id}>
                 {displaySeparator(comment._id)}
                 <div className="flex pb-1 text-sm">
@@ -339,6 +347,6 @@ const BlogPostPage = withRouter(function({ blogName, blogPostId, history }) {
     );
   }
   return render();
-});
+};
 
 export { BlogPostPage };

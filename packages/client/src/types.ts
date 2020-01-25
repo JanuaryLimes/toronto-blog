@@ -1,5 +1,8 @@
 import { RouteProps } from 'react-router-dom';
 
+// import { rootReducer } from './reducers/rootReducer';
+// export type RootState = typeof rootReducer;
+
 export type LoginPayload = {
   loggedUser: string;
 };
@@ -77,7 +80,7 @@ export type DefaultButtonProps = {
   onContextMenu?: (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => void;
-  disabled: boolean;
+  disabled?: boolean;
 };
 
 export type TorontoTippyProps = {
@@ -140,4 +143,11 @@ export type RestCallProps = {
 
 export type RestCallWithBodyProps = RestCallProps & {
   body?: any;
+};
+
+export type BlogPageProps = { blogName: string };
+
+export type BlogPostPageProps = {
+  blogName: string;
+  blogPostId: string;
 };

@@ -1,8 +1,13 @@
 import React from 'react';
-import { BlogPostPage } from '../pages/BlogPostPage';
-import { BlogPage } from '../pages/BlogPage';
+import { BlogPostPage } from './BlogPostPage';
+import { BlogPage } from './BlogPage';
+import { useRouteMatch } from 'react-router-dom';
 
-export function BlogPageHandler({ match }) {
+export const BlogPageHandler = function() {
+  const match = useRouteMatch<{
+    blogName: string;
+    blogPostId: string;
+  }>();
   const { blogName, blogPostId } = match.params;
   function render() {
     if (blogPostId) {
@@ -12,4 +17,4 @@ export function BlogPageHandler({ match }) {
     }
   }
   return render();
-}
+};

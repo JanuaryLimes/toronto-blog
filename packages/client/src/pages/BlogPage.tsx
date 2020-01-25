@@ -10,13 +10,13 @@ import { Separator } from '../components/Separator';
 import { useLoggedUser } from '../hooks/useLoggedUser';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { UserBlogPost, RestCallProps } from '../types';
+import { UserBlogPost, RestCallProps, BlogPageProps } from '../types';
 
 type BlogPostTemplateProps = {
   blogPost: UserBlogPost;
 };
 
-const BlogPage = function({ blogName }: { blogName: string }) {
+const BlogPage: React.FC<BlogPageProps> = function({ blogName }) {
   const dispatch = useDispatch();
   const userBlogPosts = useSelector(state => {
     const blogPosts = getBlogPosts(state).find(
