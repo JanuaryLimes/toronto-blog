@@ -106,18 +106,18 @@ function useBaseHttp({ methodResponse, onSuccess, onError }: BaseHttpProps) {
   return { isLoading, data, error };
 }
 
-function useGet({ path, onSuccess, onError }: RestCallProps) {
+function useGet({ path, onSuccess, onError, config }: RestCallProps) {
   const canExecute = path != null;
   const methodResponse: MethodResponse = useMemo(() => {
     if (canExecute && path != null) {
       return {
         isValid: true,
-        promise: axios.get(path)
+        promise: axios.get(path, config)
       };
     } else {
       return { isValid: false, promise: null };
     }
-  }, [canExecute, path]);
+  }, [canExecute, config, path]);
 
   return useBaseHttp({
     methodResponse,
@@ -126,18 +126,24 @@ function useGet({ path, onSuccess, onError }: RestCallProps) {
   });
 }
 
-function usePost({ path, body, onSuccess, onError }: RestCallWithBodyProps) {
+function usePost({
+  path,
+  body,
+  onSuccess,
+  onError,
+  config
+}: RestCallWithBodyProps) {
   const canExecute = path != null && body != null;
   const methodResponse: MethodResponse = useMemo(() => {
     if (canExecute && path != null) {
       return {
         isValid: true,
-        promise: axios.post(path, body)
+        promise: axios.post(path, body, config)
       };
     } else {
       return { isValid: false, promise: null };
     }
-  }, [canExecute, path, body]);
+  }, [canExecute, path, body, config]);
 
   return useBaseHttp({
     methodResponse,
@@ -146,18 +152,24 @@ function usePost({ path, body, onSuccess, onError }: RestCallWithBodyProps) {
   });
 }
 
-function usePut({ path, body, onSuccess, onError }: RestCallWithBodyProps) {
+function usePut({
+  path,
+  body,
+  onSuccess,
+  onError,
+  config
+}: RestCallWithBodyProps) {
   const canExecute = path != null && body != null;
   const methodResponse: MethodResponse = useMemo(() => {
     if (canExecute && path != null) {
       return {
         isValid: true,
-        promise: axios.put(path, body)
+        promise: axios.put(path, body, config)
       };
     } else {
       return { isValid: false, promise: null };
     }
-  }, [canExecute, path, body]);
+  }, [canExecute, path, body, config]);
 
   return useBaseHttp({
     methodResponse,
@@ -166,18 +178,18 @@ function usePut({ path, body, onSuccess, onError }: RestCallWithBodyProps) {
   });
 }
 
-function useDelete({ path, onSuccess, onError }: RestCallProps) {
+function useDelete({ path, onSuccess, onError, config }: RestCallProps) {
   const canExecute = path != null;
   const methodResponse: MethodResponse = useMemo(() => {
     if (canExecute && path != null) {
       return {
         isValid: true,
-        promise: axios.delete(path)
+        promise: axios.delete(path, config)
       };
     } else {
       return { isValid: false, promise: null };
     }
-  }, [canExecute, path]);
+  }, [canExecute, config, path]);
 
   return useBaseHttp({
     methodResponse,

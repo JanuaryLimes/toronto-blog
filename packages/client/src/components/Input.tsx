@@ -22,7 +22,7 @@ function render(type: InputType, props: InputControlProps) {
       getValidationStatusClassName()
     ].join(' '),
     value: props.value,
-    type: getType(),
+    type: props.type,
     onChange: (
       e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => {
@@ -32,13 +32,6 @@ function render(type: InputType, props: InputControlProps) {
     },
     placeholder: props.placeholder
   };
-
-  function getType() {
-    if (props.type === InputType.Input) {
-      return 'text';
-    }
-    return undefined;
-  }
 
   function getInput() {
     switch (type) {
@@ -84,7 +77,7 @@ function render(type: InputType, props: InputControlProps) {
 }
 
 const Input: React.FC<InputControlProps> = ({
-  type = InputType.Input,
+  type = 'text',
   caption,
   value,
   onChange,
@@ -102,7 +95,7 @@ const Input: React.FC<InputControlProps> = ({
 };
 
 const TextArea: React.FC<InputControlProps> = function({
-  type = InputType.TextArea,
+  type,
   caption,
   value,
   onChange,

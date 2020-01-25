@@ -1,4 +1,5 @@
 import { RouteProps } from 'react-router-dom';
+import { AxiosRequestConfig } from 'axios';
 
 // import { rootReducer } from './reducers/rootReducer';
 // export type RootState = typeof rootReducer;
@@ -65,7 +66,7 @@ export type AnimationComponentProps = {
 
 export type HeightAnimationComponentProps = {
   height: number;
-  duration: number;
+  duration?: number;
 };
 
 export type BlogEditorProps = {
@@ -94,7 +95,7 @@ export enum InputType {
 }
 
 export type InputControlProps = {
-  type?: InputType;
+  type?: 'text' | 'password';
   caption?: string;
   value: string;
   onChange?: (e: string) => void;
@@ -121,8 +122,8 @@ export type BouncingLoaderProps = {
 
 export type DonutSpinnerLoaderProps = {
   foregroundClassName?: string;
-  height: 'h-5'; // | 'h-4'
-  width: 'w-5'; //
+  height?: 'h-5'; // | 'h-4'
+  width?: 'w-5'; //
 };
 
 export type PrivateRouteProps = {
@@ -139,6 +140,7 @@ export type RestCallProps = {
   path?: string;
   onSuccess?: (data: any) => void;
   onError?: (error: any) => void;
+  config?: AxiosRequestConfig;
 };
 
 export type RestCallWithBodyProps = RestCallProps & {

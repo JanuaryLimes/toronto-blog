@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { withRouter } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { login, logout } from '../actions';
 import { isUsernameValid, isPasswordValid } from '@toronto-blog/utils';
@@ -18,10 +18,12 @@ import {
 } from '../components/Animate';
 import { LoadableDiv } from '../components/LoadableDiv';
 import { usePost } from '../hooks/useAxios';
+import { InputControlProps, RestCallWithBodyProps } from '../types';
 
-let debounceCheck;
+let debounceCheck: (((username: string) => void) & lodash.Cancelable) | null;
 
-export const LogoutComponent = withRouter(({ history }) => {
+export const LogoutComponent = () => {
+  const history = useHistory();
   const dispatch = useDispatch();
   const dispatchLogout = useCallback(() => dispatch(logout()), [dispatch]);
   const [hasError, setHasError] = useState(false);
@@ -62,9 +64,12 @@ export const LogoutComponent = withRouter(({ history }) => {
   }
 
   return render();
-});
+};
 
-const LoginRegisterPage = ({ location }) => {
+// TODO feedback
+
+export const LoginRegisterPage = () => {
+  const location = useLocation();
   const dispatch = useDispatch();
   const dispatchLogin = useCallback(
     loggedUser => dispatch(login({ loggedUser })),
@@ -75,12 +80,13 @@ const LoginRegisterPage = ({ location }) => {
   const [isLoginPage, setIsLoginPage] = useState(true);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const [canLogin, setCanLogin] = useState(false);
   const [repeatPassword, setRepeatPassword] = useState('');
-  const [canRegister, setCanRegister] = useState(false);
+  const [canRegister, setCanRegister] = useState<boolean>(false);
   const [usernameIsChecking, setUsernameIsChecking] = useState(false);
-  const [usernameIsAvailable, setUsernameIsAvailable] = useState(undefined);
+  const [usernameIsAvailable, setUsernameIsAvailable] = useState<boolean>(
+    false
+  );
   const [passwordStrengthCheck, setPasswordStrengthCheck] = useState();
   const {
     showSuccessAlert,
@@ -101,7 +107,8 @@ const LoginRegisterPage = ({ location }) => {
     if (
       password === repeatPassword &&
       password !== '' &&
-      passwordStrengthCheck && passwordStrengthCheck.valid
+      passwordStrengthCheck &&
+      passwordStrengthCheck.valid
     ) {
       return true;
     } else {
@@ -110,10 +117,11 @@ const LoginRegisterPage = ({ location }) => {
   }, [password, repeatPassword, passwordStrengthCheck]);
 
   useEffect(() => {
-    const canRegisterVal =
+    const canRegisterVal = !!(
       isUsernameValid(username).valid &&
       passwordPolicyPassed() &&
-      usernameIsAvailable;
+      usernameIsAvailable
+    );
     setCanRegister(canRegisterVal);
   }, [
     username,
@@ -161,7 +169,7 @@ const LoginRegisterPage = ({ location }) => {
         <div className="invalid-feedback text-sm bg-red-700 mt-1 px-2 py-1 rounded">
           <ul className="list-disc m-0 mt-1 pl-2 pl-4 ">
             <AnimatePresence>
-              {arr.map(m => (
+              {arr.map((m: any) => (
                 <motion.li
                   transition={{ duration: 0.5, type: 'tween' }}
                   key={m}
@@ -179,7 +187,7 @@ const LoginRegisterPage = ({ location }) => {
     );
   };
 
-  const debounceCallback = username => {
+  const debounceCallback = (username: string) => {
     console.log('before axios', username);
     axios
       .get('/api/auth/is-user-available?user=' + username)
@@ -212,16 +220,25 @@ const LoginRegisterPage = ({ location }) => {
         debounceCheck(username);
       }
     } else {
-      setUsernameIsAvailable(undefined);
+      setUsernameIsAvailable(false);
       if (debounceCheck) {
         debounceCheck.cancel();
       }
     }
   }, [username]);
 
-  const [div1, { height: viewHeight1 }] = useMeasure();
-  const [div2, { height: viewHeight2 }] = useMeasure();
-  const [div3, { height: viewHeight3 }] = useMeasure();
+  const {
+    ref: div1,
+    bounds: { height: viewHeight1 }
+  } = useMeasure<HTMLDivElement>();
+  const {
+    ref: div2,
+    bounds: { height: viewHeight2 }
+  } = useMeasure<HTMLDivElement>();
+  const {
+    ref: div3,
+    bounds: { height: viewHeight3 }
+  } = useMeasure<HTMLDivElement>();
 
   const checkUsernameAvailability = () => {
     let checkingAvailability = false,
@@ -345,21 +362,24 @@ const LoginRegisterPage = ({ location }) => {
     }
   };
 
-  const postArgs = () => {
+  const getPostArgs = (): RestCallWithBodyProps => {
     if (isLoginPage) {
-      return [
-        '/api/auth/login',
-        { username, password },
-        { withCredentials: true }
-      ];
+      return {
+        path: '/api/auth/login',
+        body: {
+          username,
+          password
+        },
+        config: { withCredentials: true }
+      };
     } else {
-      return [
-        '/api/auth/register',
-        {
+      return {
+        path: '/api/auth/register',
+        body: {
           username,
           password
         }
-      ];
+      };
     }
   };
 
@@ -369,7 +389,8 @@ const LoginRegisterPage = ({ location }) => {
     setRepeatPassword('');
   };
 
-  const successText = user => {
+  const successText = (user: string) => {
+    console.warn('successText', user);
     if (isLoginPage) {
       return 'Logged in as: ' + user;
     } else {
@@ -377,13 +398,13 @@ const LoginRegisterPage = ({ location }) => {
     }
   };
 
-  const onSuccess = user => {
+  const onSuccess = (user: string) => {
     clearInputs();
     dispatchLogin(user);
     showSuccessAlert(successText(user));
   };
 
-  const errorText = error => {
+  const errorText = (error: { response: { data: { pCheck: any } } }) => {
     if (error.response && error.response.data && error.response.data.pCheck) {
       const passwordCheck = error.response.data.pCheck;
       setPasswordStrengthCheck(passwordCheck);
@@ -396,43 +417,43 @@ const LoginRegisterPage = ({ location }) => {
     }
   };
 
-  const onError = error => {
+  const onError = (error: { response: { data: { pCheck: any } } }) => {
     showErrorAlert(errorText(error));
   };
 
-  const onClickHandler = e => {
+  const [postArgs, setPostArgs] = useState<RestCallWithBodyProps>({});
+  const { isLoading } = usePost(postArgs);
+
+  const onClickHandler = (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     if (canClick()) {
-      setIsLoading(true);
-      axios
-        .post(...postArgs())
-        .then(response => {
-          onSuccess(response.data.user);
-        })
-        .catch(error => {
+      setPostArgs({
+        ...getPostArgs(),
+        onSuccess: data => {
+          onSuccess(data.user);
+        },
+        onError: error => {
           onError(error);
-        })
-        .then(() => {
-          setIsLoading(false);
-        });
+        }
+      });
     }
   };
 
-  const usernameProps = {
+  const usernameProps: InputControlProps = {
     caption: 'Username',
     value: username,
-    onChange: val => setUsername(val.trim()),
+    onChange: (val: string) => setUsername(val.trim()),
     validationStatus: getUsernameValidationStatus()
   };
-  const passwordProps = {
+  const passwordProps: InputControlProps = {
     caption: 'Password',
     value: password,
     onChange: setPassword,
     type: 'password',
     validationStatus: getPasswordValidationStatus()
   };
-  const repeatPasswordProps = {
+  const repeatPasswordProps: InputControlProps = {
     caption: 'Repeat password',
     value: repeatPassword,
     onChange: setRepeatPassword,
@@ -496,5 +517,3 @@ const LoginRegisterPage = ({ location }) => {
 
   return render();
 };
-
-export default withRouter(LoginRegisterPage);
