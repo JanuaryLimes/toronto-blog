@@ -1,8 +1,7 @@
 import mongoose from 'mongoose';
-import { loadDevEnv } from '@toronto-blog/utils';
+import { env } from '@toronto-blog/utils';
 
-loadDevEnv();
-mongoose.connect(process.env.MONGO_CS, {
+mongoose.connect(env().MONGO_CS, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
