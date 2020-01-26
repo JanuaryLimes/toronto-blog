@@ -8,7 +8,7 @@ import { AuthPayload } from 'types';
 
 const secret = env().SECRET;
 const expirationTime = parseInt(env().JWT_EXPIRATION_MS);
-const router = express.Router();
+export const authRouter = express.Router();
 
 const setJwtCookie = (res: Response, payload: AuthPayload) => {
   const token = jwt.sign(payload, secret, { algorithm: 'HS256' });
@@ -33,7 +33,7 @@ const setLoginCookie = (res: Response, payload: AuthPayload) => {
   res.cookie('u', payload.username, cookieOptions);
 };
 
-router.post('/register', (req, res) => {
+authRouter.post('/register', (req, res) => {
   const { username, password } = req.body;
   const hashCost = 10;
 
@@ -73,7 +73,7 @@ router.post('/register', (req, res) => {
     });
 });
 
-router.post('/login', (req, res) => {
+authRouter.post('/login', (req, res) => {
   passport.authenticate('local', { session: false }, (error, user) => {
     if (error || !user) {
       console.log(error);
@@ -99,7 +99,7 @@ router.post('/login', (req, res) => {
 });
 
 // /api/auth/is-user-available?user=...
-router.get('/is-user-available', (req, res) => {
+authRouter.get('/is-user-available', (req, res) => {
   const inputUser = req.query.user;
 
   console.log(req.query);
@@ -127,7 +127,7 @@ router.get('/is-user-available', (req, res) => {
   }
 });
 
-router.post('/logout', (req, res) => {
+authRouter.post('/logout', (req, res) => {
   console.log('logout success');
 
   let options: CookieOptions = { expires: new Date(Date.now() - 300000) };
@@ -139,5 +139,3 @@ router.post('/logout', (req, res) => {
 
   return res.status(200).send();
 });
-
-export default router;

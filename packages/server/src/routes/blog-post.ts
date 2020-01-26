@@ -4,9 +4,9 @@ import { getUserFromRequestJwt } from '../auth/utils';
 import { mConnection } from '../mongoose';
 
 // /api/public/blog-post
-const router = express.Router();
+export const blogPostRouter = express.Router();
 
-router.get('/id/:id', async (req, res) => {
+blogPostRouter.get('/id/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -19,11 +19,11 @@ router.get('/id/:id', async (req, res) => {
   }
 });
 
-router.put('/id/:id', async (req, res) => {
+blogPostRouter.put('/id/:id', async (req, res) => {
   const { id } = req.params;
   const { title, content } = req.body;
   try {
-    const result = await BlogPost.findById(id).exec();
+    const result: any = await BlogPost.findById(id).exec();
 
     const user = getUserFromRequestJwt(req);
     if (!user || user !== result.blogName) {
@@ -47,10 +47,10 @@ router.put('/id/:id', async (req, res) => {
   }
 });
 
-router.delete('/id/:id', async (req, res) => {
+blogPostRouter.delete('/id/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    const itemToDelete = await BlogPost.findById(id).exec();
+    const itemToDelete: any = await BlogPost.findById(id).exec();
     const user = getUserFromRequestJwt(req);
     if (!user || user !== itemToDelete.blogName) {
       return res
@@ -65,7 +65,7 @@ router.delete('/id/:id', async (req, res) => {
   }
 });
 
-router.post('/comment/:blogPostId', async (req, res) => {
+blogPostRouter.post('/comment/:blogPostId', async (req, res) => {
   const { commentText, commentUsername } = req.body;
   const { blogPostId } = req.params;
   const user = getUserFromRequestJwt(req);
@@ -95,5 +95,3 @@ router.post('/comment/:blogPostId', async (req, res) => {
     return res.status(400).send({ error });
   }
 });
-
-export default router;

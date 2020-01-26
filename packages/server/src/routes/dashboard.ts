@@ -1,9 +1,9 @@
 import express from 'express';
 import { BlogPost } from '../model/blog-post.model';
 
-const router = express.Router();
+export const dashboardRouter = express.Router();
 
-router.post('/create-new-blog-post', async (req, res) => {
+dashboardRouter.post('/create-new-blog-post', async (req, res) => {
   const { title, content, blogName } = req.body;
 
   if (!title || !content || !blogName) {
@@ -28,5 +28,3 @@ router.post('/create-new-blog-post', async (req, res) => {
     return res.status(400).send({ error });
   }
 });
-
-export default router;

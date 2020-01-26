@@ -5,9 +5,9 @@ import { BlogPost } from '../model/blog-post.model';
 import { incrementViewCounter } from '../services/blog-popularity';
 
 // /api/public/blogs
-const router = express.Router();
+export const blogRouter = express.Router();
 
-router.get('/allblogs', (req, res) => {
+blogRouter.get('/allblogs', (req, res) => {
   Blog.find({})
     .then(doc => {
       console.log('Sent list of items...');
@@ -19,10 +19,10 @@ router.get('/allblogs', (req, res) => {
     });
 });
 
-router.post('/blog', (req, res) => {
+blogRouter.post('/blog', (req, res) => {
   console.log('req.body', req.body, req.body.name);
   if (req.body && req.body.name) {
-    Blog.create({ name: req.body.name }, (err, result) => {
+    Blog.create({ name: req.body.name }, (err: any, result: any) => {
       if (err) {
         res.status(500).json({ error: 'Unable to create blog', err: err });
       } else {
@@ -35,7 +35,7 @@ router.post('/blog', (req, res) => {
   }
 });
 
-router.get(
+blogRouter.get(
   '/protected-blogs',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
@@ -45,7 +45,7 @@ router.get(
   }
 );
 
-router.get('/:blogName', (req, res) => {
+blogRouter.get('/:blogName', (req, res) => {
   const { blogName: user } = req.params;
 
   incrementViewCounter(user);
@@ -62,5 +62,3 @@ router.get('/:blogName', (req, res) => {
       return res.status(400).send({ error: err });
     });
 });
-
-export default router;
