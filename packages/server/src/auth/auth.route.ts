@@ -1,18 +1,19 @@
-import express from 'express';
+import express, { CookieOptions, Response } from 'express';
 import bcrypt from 'bcrypt';
 import { User } from './auth.model';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
 import { env, isProduction, isPasswordValid } from '@toronto-blog/utils';
+import { AuthPayload } from 'types';
 
 const secret = env().SECRET;
 const expirationTime = parseInt(env().JWT_EXPIRATION_MS);
 const router = express.Router();
 
-const setJwtCookie = (res, payload) => {
+const setJwtCookie = (res: Response, payload: AuthPayload) => {
   const token = jwt.sign(payload, secret, { algorithm: 'HS256' });
 
-  let cookieOptions = {
+  let cookieOptions: CookieOptions = {
     expires: new Date(payload.expires)
   };
   if (isProduction()) {
@@ -21,8 +22,8 @@ const setJwtCookie = (res, payload) => {
   console.log('set jwt cookie');
   res.cookie('jwt', token, cookieOptions);
 };
-const setLoginCookie = (res, payload) => {
-  let cookieOptions = {
+const setLoginCookie = (res: Response, payload: AuthPayload) => {
+  let cookieOptions: CookieOptions = {
     expires: new Date(payload.expires)
   };
   if (isProduction()) {
@@ -45,7 +46,7 @@ router.post('/register', (req, res) => {
   bcrypt
     .hash(password, hashCost)
     .then(passwordHash => {
-      User.create({ username, passwordHash }, (err, user) => {
+      User.create({ username, passwordHash }, (err: any, user: any) => {
         if (err) {
           return res.status(400).send({ err });
         }
@@ -79,7 +80,7 @@ router.post('/login', (req, res) => {
       return res.status(400).send({ error });
     }
 
-    const payload = {
+    const payload: AuthPayload = {
       username: user,
       expires: Date.now() + expirationTime
     };
@@ -129,7 +130,7 @@ router.get('/is-user-available', (req, res) => {
 router.post('/logout', (req, res) => {
   console.log('logout success');
 
-  let options = { expires: new Date(Date.now() - 300000) };
+  let options: CookieOptions = { expires: new Date(Date.now() - 300000) };
   if (isProduction()) {
     options = { ...options, httpOnly: true, secure: true };
   }

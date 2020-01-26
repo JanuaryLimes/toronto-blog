@@ -9,7 +9,7 @@ const secret = env().SECRET;
 
 passport.use(
   new passportLocal.Strategy((username, password, done) => {
-    User.findOne({ username: username }, (err, user) => {
+    User.findOne({ username: username }, (err, user: any) => {
       if (err || !user) {
         return done(err || 'Incorrect Username / Password');
       }

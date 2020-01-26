@@ -1,10 +1,11 @@
 import jwt from 'jsonwebtoken';
 import { env } from '@toronto-blog/utils';
+import { Request } from 'express';
 
 const secret = env().SECRET;
 
-export function getUserFromRequestJwt(req) {
-  const cookieExtractor = function(req) {
+export function getUserFromRequestJwt(req: Request) {
+  const cookieExtractor = function(req: Request) {
     let token = null;
     if (req && req.cookies) {
       token = req.cookies['jwt'];
@@ -12,16 +13,15 @@ export function getUserFromRequestJwt(req) {
     return token;
   };
 
-  let decoded;
   const token = cookieExtractor(req);
   if (token) {
     try {
-      decoded = jwt.verify(token, secret);
+      let decoded: any = jwt.verify(token, secret);
+      if (decoded && decoded.username) {
+        return decoded.username;
+      }
     } catch (error) {}
   }
 
-  if (decoded && decoded.username) {
-    return decoded.username;
-  }
   return null;
 }
