@@ -227,18 +227,9 @@ export const LoginRegisterPage = () => {
     }
   }, [username]);
 
-  const {
-    ref: div1,
-    bounds: { height: viewHeight1 }
-  } = useMeasure<HTMLDivElement>();
-  const {
-    ref: div2,
-    bounds: { height: viewHeight2 }
-  } = useMeasure<HTMLDivElement>();
-  const {
-    ref: div3,
-    bounds: { height: viewHeight3 }
-  } = useMeasure<HTMLDivElement>();
+  const [div1, { height: viewHeight1 }] = useMeasure<HTMLDivElement>();
+  const [div2, { height: viewHeight2 }] = useMeasure<HTMLDivElement>();
+  const [div3, { height: viewHeight3 }] = useMeasure<HTMLDivElement>();
 
   const checkUsernameAvailability = () => {
     let checkingAvailability = false,
@@ -323,6 +314,7 @@ export const LoginRegisterPage = () => {
   };
   const getUsernameValidationStatus = () => {
     if (
+      !username ||
       isLoginPage ||
       usernameIsChecking ||
       usernameIsAvailable === undefined

@@ -1,8 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
 import ResizeObserver from 'resize-observer-polyfill';
 
-export function useMeasure<T extends Element>() {
-  const ref = useRef<T>();
+export function useMeasure<T extends Element>(): [
+  { ref: React.RefObject<T> },
+  {
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+  }
+] {
+  const ref = useRef<T | null>(null);
   const [bounds, set] = useState<{
     left: number;
     top: number;
@@ -16,5 +24,5 @@ export function useMeasure<T extends Element>() {
     if (ref.current) ro.observe(ref.current);
     return () => ro.disconnect();
   }, [ro]);
-  return { ref, bounds };
+  return [{ ref }, bounds];
 }
