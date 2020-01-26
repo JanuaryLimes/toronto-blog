@@ -1,10 +1,10 @@
 import { BlogPopularity } from '../model/blog-popularity.model';
 
-async function incrementViewCounter(blogName) {
+async function incrementViewCounter(blogName: string) {
   // sleep 2s
   // await new Promise(r => setTimeout(r, 2000));
 
-  const blogPopularityItem = await BlogPopularity.findOne({
+  const blogPopularityItem: any = await BlogPopularity.findOne({
     blogName
   }).exec();
 
