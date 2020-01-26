@@ -390,7 +390,6 @@ export const LoginRegisterPage = () => {
   };
 
   const successText = (user: string) => {
-    console.warn('successText', user);
     if (isLoginPage) {
       return 'Logged in as: ' + user;
     } else {
