@@ -1,7 +1,7 @@
 import express from 'express';
 import { Application } from 'express';
 import { join } from 'path';
-import apiRouter from './routes/api-router';
+import { apiRouter } from './routes/api-router';
 
 export class App {
   public app: Application;
