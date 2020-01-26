@@ -21,10 +21,10 @@ export function env() {
   loadDevEnv();
 
   return {
-    JWT_EXPIRATION_MS: process.env.JWT_EXPIRATION_MS || 129600000,
-    MONGO_CS: process.env.MONGO_CS,
-    SECRET: process.env.SECRET,
-    PORT: process.env.PORT
+    JWT_EXPIRATION_MS: process.env.JWT_EXPIRATION_MS || '129600000',
+    MONGO_CS: process.env.MONGO_CS || '',
+    SECRET: process.env.SECRET || '',
+    PORT: process.env.PORT || ''
   };
 }
 
