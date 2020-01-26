@@ -1,4 +1,3 @@
-import { RouteProps } from 'react-router-dom';
 import { AxiosRequestConfig } from 'axios';
 
 // import { rootReducer } from './reducers/rootReducer';
@@ -124,11 +123,6 @@ export type DonutSpinnerLoaderProps = {
   foregroundClassName?: string;
   height?: 'h-5'; // | 'h-4'
   width?: 'w-5'; //
-};
-
-export type PrivateRouteProps = {
-  component: React.ComponentType<any>;
-  rest?: RouteProps;
 };
 
 export type MarkdownEditorProps = {

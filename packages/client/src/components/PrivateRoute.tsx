@@ -1,12 +1,11 @@
 import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { Route, Redirect, RouteProps } from 'react-router-dom';
 import { useLoggedUser } from '../hooks/useLoggedUser';
 import { useCookies } from 'react-cookie';
-import { PrivateRouteProps } from '../types';
 
-export const PrivateRoute: React.FC<PrivateRouteProps> = ({
+export const PrivateRoute: React.FC<RouteProps> = ({
   component: Component,
-  rest
+  ...rest
 }) => {
   const loggedUser = useLoggedUser();
   const cookies = useCookies(); // TODO
@@ -15,7 +14,7 @@ export const PrivateRoute: React.FC<PrivateRouteProps> = ({
     <Route
       {...rest}
       render={props => {
-        if (loggedUser || cookies[0].u) {
+        if (Component != null && (loggedUser || cookies[0].u)) {
           return <Component {...props} />;
         } else {
           return (
