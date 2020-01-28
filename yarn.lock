@@ -5030,11 +5030,6 @@ currently-unhandled@^0.4.1:
   dependencies:
     array-find-index "^1.0.1"
 
-curriable@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/curriable/-/curriable-1.3.0.tgz#cb054bc7bbc1f440cbc613527b8a05b57e19e1ab"
-  integrity sha512-7kfjDPRSF+pguU0TlfSFBMCd8XlmF29ZAiXcq/zaN4LhZvWdvV0Y72AvaWFqInXZG9Yg1kA1UMkpE9lFBKMpQA==
-
 cyclist@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
@@ -6102,11 +6097,6 @@ fast-deep-equal@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-3.1.1.tgz#545145077c501491e33b15ec408c294376e94ae4"
   integrity sha512-8UEa58QDLauDNfpbrX55Q9jrGHThw2ZMdOky5Gl1CDtVeJDPVrG4Jxx1N8jw2gkWaff5UUuX1KJd+9zGe2B+ZA==
-
-fast-equals@^1.2.1:
-  version "1.6.3"
-  resolved "https://registry.yarnpkg.com/fast-equals/-/fast-equals-1.6.3.tgz#84839a1ce20627c463e1892f2ae316380c81b459"
-  integrity sha512-4WKW0AL5+WEqO0zWavAfYGY1qwLsBgE//DN4TTcVEN2UlINgkv9b3vm2iHicoenWKSX9mKWmGOsU/iI5IST7pQ==
 
 fast-glob@^2.0.2, fast-glob@^2.2.6:
   version "2.2.7"
@@ -7215,13 +7205,6 @@ icss-utils@^4.0.0, icss-utils@^4.1.1:
   integrity sha512-4aFq7wvWyMHKgxsH8QQtGpvbASCf+eM3wPRLI6R+MgAnTCZ6STYsRvttLvRWK0Nfif5piF394St3HeJDaljGPA==
   dependencies:
     postcss "^7.0.14"
-
-identitate@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/identitate/-/identitate-1.0.1.tgz#4b8bed39454f1d7a476e60ff0e4f82a094841dfc"
-  integrity sha512-xnDJ0JYhiZjBDuJRKbHoVzj5yP9FhATxLyUYswQyPdnJrwzGVBqS6DOmvKJi1lk7P+4dkL+hhUhuOZIcOUtG5A==
-  dependencies:
-    pathington "^1.0.1"
 
 identity-obj-proxy@3.0.0:
   version "3.0.0"
@@ -10550,11 +10533,6 @@ path-type@^4.0.0:
   resolved "https://registry.yarnpkg.com/path-type/-/path-type-4.0.0.tgz#84ed01c0a7ba380afe09d90a8c180dcd9d03043b"
   integrity sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==
 
-pathington@^1.0.1, pathington@^1.1.7:
-  version "1.1.7"
-  resolved "https://registry.yarnpkg.com/pathington/-/pathington-1.1.7.tgz#caf2d2db899a31fea4e81e3657af6acde5171903"
-  integrity sha512-JxzhUzagDfNIOm4qqwQqP3rWeo7rNNOfIahy4n+3GTEdwXLqw5cJHUR0soSopQtNEv763lzxb6eA2xBllpR8zw==
-
 pause@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/pause/-/pause-0.0.1.tgz#1d408b3fdb76923b9543d96fb4c9dfd535d9cb5d"
@@ -12704,16 +12682,6 @@ select-hose@^2.0.0:
   resolved "https://registry.yarnpkg.com/select-hose/-/select-hose-2.0.0.tgz#625d8658f865af43ec962bfc376a37359a4994ca"
   integrity sha1-Yl2GWPhlr0Psliv8N2o3NZpJlMo=
 
-selectorator@^4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/selectorator/-/selectorator-4.0.3.tgz#d33b11027da7e6838de277cd6eb1134125aa788b"
-  integrity sha512-A8+paRhzTab4Qm/38RAVnCgEZFbpn5xIWLyTCDqvyU3Obhmo94RS6UK1H00bVH7+U609sOhqbFJha09POsWURA==
-  dependencies:
-    fast-equals "^1.2.1"
-    identitate "^1.0.0"
-    reselect "^4.0.0"
-    unchanged "^2.0.1"
-
 selfsigned@^1.10.7:
   version "1.10.7"
   resolved "https://registry.yarnpkg.com/selfsigned/-/selfsigned-1.10.7.tgz#da5819fd049d5574f28e88a9bcc6dbc6e6f3906b"
@@ -13983,14 +13951,6 @@ umask@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/umask/-/umask-1.1.0.tgz#f29cebf01df517912bb58ff9c4e50fde8e33320d"
   integrity sha1-8pzr8B31F5ErtY/5xOUP3o4zMg0=
-
-unchanged@^2.0.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/unchanged/-/unchanged-2.2.1.tgz#426f8b3c3b98a95a4acc801b0ba67babaabe1bec"
-  integrity sha512-pMlMNfqtfjOVpDAKVBH+LjnhnTwWYUrJq9fU3nGRYrw6JnprJEH1/cehJikRTf+o6dmkpX5XRRspb5mUAhxeZQ==
-  dependencies:
-    curriable "^1.3.0"
-    pathington "^1.1.7"
 
 undefsafe@^2.0.2:
   version "2.0.2"

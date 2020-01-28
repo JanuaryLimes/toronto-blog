@@ -1,8 +1,8 @@
-import { getLoggedUser } from '../selectors/auth.selector';
+import { getLoggedUser } from '../selectors/getLoggedUser';
 import { useSelector } from 'react-redux';
 
 function useLoggedUser(): string | undefined {
-  return useSelector(state => getLoggedUser(state));
+  return useSelector(getLoggedUser);
 }
 
 export { useLoggedUser };

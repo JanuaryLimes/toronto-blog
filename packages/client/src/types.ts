@@ -1,7 +1,7 @@
 import { AxiosRequestConfig } from 'axios';
+import { rootReducer } from './reducers/rootReducer';
 
-// import { rootReducer } from './reducers/rootReducer';
-// export type RootState = typeof rootReducer;
+export type RootState = ReturnType<typeof rootReducer>;
 
 export type LoginPayload = {
   loggedUser: string;
