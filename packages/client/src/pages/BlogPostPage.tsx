@@ -12,9 +12,11 @@ import { useSuccessErrorAlert } from '../components/Alert';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faTimes, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { BlogEditor } from '../components/BlogEditor';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setBlogPostById } from '../actions';
-import { BlogPostPageProps } from '../types';
+import { BlogPostPageProps, UserBlogPost } from '../types';
+import { getBlogPost } from '../selectors/getBlogPost';
+import { useSelector } from '../hooks/useSelector';
 
 // TODO remove 'any' types
 
@@ -25,14 +27,13 @@ const BlogPostPage: React.FC<BlogPostPageProps> = function({
   const history = useHistory();
   const dispatch = useDispatch();
   const loggedUser = useLoggedUser();
-  const blogPostFromStore = useSelector((state: any) => {
-    // TODO selector
-    const userBlogPosts = state?.blogPosts?.find(
-      (blogPost: any) => blogPost.user === blogName
-    )?.userBlogPosts;
-    return userBlogPosts?.find((post: any) => post._id === blogPostId);
+  const getBlogPostMemo = useMemo(() => getBlogPost, []);
+  const blogPostFromStore = useSelector(state => {
+    return getBlogPostMemo(state, { blogName, blogPostId });
   });
-  const [blogPost, setBlogPost] = useState(blogPostFromStore ?? {});
+  const [blogPost, setBlogPost] = useState<UserBlogPost | undefined>(
+    blogPostFromStore
+  );
   const [comment, setComment] = useState('');
   const [canAddComment, setCanAddComment] = useState(false);
   const isPostAuthor =
@@ -55,13 +56,15 @@ const BlogPostPage: React.FC<BlogPostPageProps> = function({
     },
     [commentAsGuest, commentGuestUsername, loggedUser]
   );
-  const [title, setTitle] = React.useState(blogPost.title);
-  const [content, setContent] = React.useState(blogPost.content);
+  const [title, setTitle] = React.useState(blogPost?.title);
+  const [content, setContent] = React.useState(blogPost?.content);
 
   React.useEffect(() => {
-    setTitle(blogPost.title);
-    setContent(blogPost.content);
-  }, [blogPost.content, blogPost.title]);
+    const content = blogPost?.content;
+    const title = blogPost?.title;
+    setTitle(title);
+    setContent(content);
+  }, [blogPost]);
 
   React.useEffect(() => {
     if (comment && getCommentUsername()) {
@@ -109,7 +112,7 @@ const BlogPostPage: React.FC<BlogPostPageProps> = function({
           <span className="px-1">{'<'}</span>
         </DefaultButton>
         <span className="text-lg font-semibold pl-2 flex-auto">
-          {blogPost.title}
+          {blogPost?.title}
         </span>
 
         {isPostAuthor && (
@@ -175,9 +178,9 @@ const BlogPostPage: React.FC<BlogPostPageProps> = function({
     return (
       <div className="pt-2">
         <BlogEditor
-          title={title}
+          title={title ?? ''}
           setTitle={setTitle}
-          content={content}
+          content={content ?? ''}
           setContent={setContent}
         />
       </div>
@@ -189,7 +192,7 @@ const BlogPostPage: React.FC<BlogPostPageProps> = function({
       <div className="pt-2 blog-post-preview">
         <div className="mde-preview">
           <div className="mde-preview-content">
-            <ReactMarkdown source={blogPost.content} />
+            <ReactMarkdown source={blogPost?.content} />
           </div>
         </div>
       </div>
@@ -309,7 +312,7 @@ const BlogPostPage: React.FC<BlogPostPageProps> = function({
       return (
         <ul>
           {hasComments &&
-            blogPost.comments.map((comment: any) => (
+            blogPost?.comments.map(comment => (
               <li key={comment._id}>
                 {displaySeparator(comment._id)}
                 <div className="flex pb-1 text-sm">
