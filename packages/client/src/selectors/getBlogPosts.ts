@@ -7,6 +7,9 @@ export const getBlogPosts = createSelector<
   BlogPostStateItem | undefined,
   UserBlogPost[] | undefined
 >(
-  (state, blogName) => state.blogPosts.find(value => value.user === blogName),
+  (state, blogName) =>
+    state.blogPosts.find(
+      blogPostStateItem => blogPostStateItem.user === blogName
+    ),
   blogPostStateItem => blogPostStateItem?.userBlogPosts
 );

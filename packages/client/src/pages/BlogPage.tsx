@@ -37,7 +37,6 @@ const BlogPage: React.FC<BlogPageProps> = function({ blogName }) {
     return (
       <ul>
         {userBlogPosts?.map((blogPost: UserBlogPost) => {
-          // TODO selector
           return (
             <li key={blogPost._id} className="">
               <BlogPostTemplate blogPost={blogPost} />
