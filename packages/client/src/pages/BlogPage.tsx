@@ -1,37 +1,25 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useDispatch } from 'react-redux';
 import moment from 'moment';
-import { setBlogPosts, deleteBlogPostById } from '../actions';
-import { useGet, useDelete } from '../hooks/useAxios';
+import { deleteBlogPostById } from '../actions';
+import { useDelete } from '../hooks/useAxios';
 import { Link, useRouteMatch } from 'react-router-dom';
 import { Separator } from '../components/Separator';
 import { useLoggedUser } from '../hooks/useLoggedUser';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { UserBlogPost, RestCallProps, BlogPageProps } from '../types';
-import { useSelector } from '../hooks/useSelector';
-import { getBlogPosts } from '../selectors/getBlogPosts';
+import { useBlogPageState } from '../hooks/state/useBlogPageState';
 
 type BlogPostTemplateProps = {
   blogPost: UserBlogPost;
 };
 
 const BlogPage: React.FC<BlogPageProps> = function({ blogName }) {
-  const dispatch = useDispatch();
-  const getBlogPostsMemo = useMemo(() => getBlogPosts, []);
-  const userBlogPosts = useSelector(state => getBlogPostsMemo(state, blogName));
-  const mOnSuccess = useMemo(
-    () => (data: any) => {
-      dispatch(setBlogPosts({ ...data }));
-    },
-    [dispatch]
-  );
+  const { userBlogPosts } = useBlogPageState(blogName);
 
-  /* const { isLoading: isBlogPostDataLoading } = */ useGet({
-    path: '/api/public/blogs/' + blogName,
-    onSuccess: mOnSuccess
-  });
+  return <div className="BlogPage">{displayUserBlogPosts()}</div>;
 
   function displayUserBlogPosts() {
     return (
@@ -46,11 +34,6 @@ const BlogPage: React.FC<BlogPageProps> = function({ blogName }) {
       </ul>
     );
   }
-  function render() {
-    return <div className="BlogPage">{displayUserBlogPosts()}</div>;
-  }
-
-  return render();
 };
 
 const BlogPostTemplate: React.FC<BlogPostTemplateProps> = function({
