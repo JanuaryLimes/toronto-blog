@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useGet } from '../hooks/useAxios';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setTopBlogs } from '../actions';
 import { Link } from 'react-router-dom';
+import { getTopBlogs } from '../selectors/getTopBlogs';
+import { useSelector } from '../hooks/useSelector';
 
 export const MainPage = () => {
   const dispatch = useDispatch();
@@ -17,10 +19,8 @@ export const MainPage = () => {
     }
   });
   /* const { isLoading, data, error } = */ useGet(topBlogsArgs);
-  const topBlogs = useSelector((state: any) => {
-    // TODO selector
-    return state?.topBlogs;
-  });
+  const getTopBlogsMemo = useMemo(() => getTopBlogs, []);
+  const topBlogs = useSelector(getTopBlogsMemo);
 
   function render() {
     return (
@@ -33,7 +33,7 @@ export const MainPage = () => {
           <>
             <div className="text-xl">Top blogs</div>
             <ul className="list-disc pl-6">
-              {topBlogs?.map((item: any) => {
+              {topBlogs?.map(item => {
                 return (
                   <li key={item._id}>
                     {item.blogName}{' '}

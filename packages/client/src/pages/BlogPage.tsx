@@ -1,9 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import moment from 'moment';
 import { setBlogPosts, deleteBlogPostById } from '../actions';
-import { getBlogPosts } from '../selectors/blogPosts.selector';
 import { useGet, useDelete } from '../hooks/useAxios';
 import { Link, useRouteMatch } from 'react-router-dom';
 import { Separator } from '../components/Separator';
@@ -11,6 +10,8 @@ import { useLoggedUser } from '../hooks/useLoggedUser';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { UserBlogPost, RestCallProps, BlogPageProps } from '../types';
+import { useSelector } from '../hooks/useSelector';
+import { getBlogPosts } from '../selectors/getBlogPosts';
 
 type BlogPostTemplateProps = {
   blogPost: UserBlogPost;
@@ -18,18 +19,8 @@ type BlogPostTemplateProps = {
 
 const BlogPage: React.FC<BlogPageProps> = function({ blogName }) {
   const dispatch = useDispatch();
-  const userBlogPosts = useSelector(state => {
-    const blogPosts = getBlogPosts(state).find(
-      (blogPost: any) => blogPost.user === blogName // TODO selector
-    );
-
-    if (blogPosts && blogPosts.userBlogPosts) {
-      return blogPosts.userBlogPosts;
-    } else {
-      return null;
-    }
-  });
-
+  const getBlogPostsMemo = useMemo(() => getBlogPosts, []);
+  const userBlogPosts = useSelector(state => getBlogPostsMemo(state, blogName));
   const mOnSuccess = useMemo(
     () => (data: any) => {
       dispatch(setBlogPosts({ ...data }));
@@ -46,7 +37,6 @@ const BlogPage: React.FC<BlogPageProps> = function({ blogName }) {
     return (
       <ul>
         {userBlogPosts?.map((blogPost: UserBlogPost) => {
-          // TODO selector
           return (
             <li key={blogPost._id} className="">
               <BlogPostTemplate blogPost={blogPost} />
