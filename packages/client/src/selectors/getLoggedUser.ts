@@ -1,4 +1,4 @@
-import { createSelector } from 'reselect';
+import { createSelector } from '@reduxjs/toolkit';
 import { AuthState, RootState } from '../types';
 
 export const getLoggedUser = createSelector<
