@@ -1,25 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import { useDispatch } from 'react-redux';
-import moment from 'moment';
-import { deleteBlogPostById } from '../actions';
-import { useDelete } from '../hooks/useAxios';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Separator } from '../components/Separator';
-import { useLoggedUser } from '../hooks/useLoggedUser';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { UserBlogPost, RestCallProps, BlogPageProps } from '../types';
-import { useBlogPageState } from '../hooks/state/useBlogPageState';
-
-type BlogPostTemplateProps = {
-  blogPost: UserBlogPost;
-};
+import { UserBlogPost, BlogPageProps } from '../types';
+import {
+  useBlogPageState,
+  useBlogPostTemplateState
+} from '../hooks/state/useBlogPageState';
 
 const BlogPage: React.FC<BlogPageProps> = function({ blogName }) {
   const { userBlogPosts } = useBlogPageState(blogName);
-
-  return <div className="BlogPage">{displayUserBlogPosts()}</div>;
 
   function displayUserBlogPosts() {
     return (
@@ -34,31 +26,23 @@ const BlogPage: React.FC<BlogPageProps> = function({ blogName }) {
       </ul>
     );
   }
+
+  return <div className="BlogPage">{displayUserBlogPosts()}</div>;
+};
+
+type BlogPostTemplateProps = {
+  blogPost: UserBlogPost;
 };
 
 const BlogPostTemplate: React.FC<BlogPostTemplateProps> = function({
   blogPost
 }) {
-  const match = useRouteMatch();
-  const date = new Date(blogPost.postDate);
-  const createdFromNow = moment(date).fromNow();
-  const dispatch = useDispatch();
-  const loggedUser = useLoggedUser();
-  const blogOwner =
-    !blogPost || !loggedUser ? false : blogPost?.blogName === loggedUser;
-
-  const [deleteArgs, setDeleteArgs] = useState<RestCallProps>({});
-  /* const { isLoading, data, error } = */ useDelete(deleteArgs); // TODO
-
-  function getBlogPostLink() {
-    let url = match.url;
-    const lastChar = match.url.slice(-1);
-    if (lastChar === '/') {
-      url = url.slice(0, -1);
-    }
-
-    return url + '/' + blogPost._id;
-  }
+  const {
+    createdFromNow,
+    blogOwner,
+    onDelete,
+    getBlogPostLink
+  } = useBlogPostTemplateState(blogPost);
 
   function blogPostHeader() {
     return (
@@ -69,25 +53,7 @@ const BlogPostTemplate: React.FC<BlogPostTemplateProps> = function({
           <span className="pl-2">
             <button
               className="px-2 py-1 w-8 hover:bg-red-700 rounded"
-              onClick={() => {
-                if (window.confirm('Are you sure to delete this item?')) {
-                  setDeleteArgs({
-                    path: '/api/public/blog-post/id/' + blogPost._id,
-                    onSuccess: (result: any) => {
-                      console.log('delete success', result);
-                      dispatch(
-                        deleteBlogPostById({
-                          id: blogPost._id,
-                          blogName: blogPost.blogName
-                        })
-                      );
-                    },
-                    onError: (error: any) => {
-                      console.error('delete error:\n\n', error);
-                    }
-                  });
-                }
-              }}
+              onClick={onDelete}
             >
               <FontAwesomeIcon icon={faTrash} />
             </button>
