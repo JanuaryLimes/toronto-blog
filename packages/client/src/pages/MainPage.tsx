@@ -1,26 +1,9 @@
-import React, { useState, useMemo } from 'react';
-import { useGet } from '../hooks/useAxios';
-import { useDispatch } from 'react-redux';
-import { setTopBlogs } from '../actions';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { getTopBlogs } from '../selectors/getTopBlogs';
-import { useSelector } from '../hooks/useSelector';
+import { useMainPageState } from '../hooks/state/useMainPageState';
 
 export const MainPage = () => {
-  const dispatch = useDispatch();
-  const [topBlogsArgs] = useState({
-    path: '/api/public/top-blogs/10',
-    onSuccess: (result: { topBlogs: any }) => {
-      // console.log('result: ', result);
-      dispatch(setTopBlogs({ topBlogs: result.topBlogs /* */ }));
-    },
-    onError: (error: any) => {
-      console.log('error: ', error);
-    }
-  });
-  /* const { isLoading, data, error } = */ useGet(topBlogsArgs);
-  const getTopBlogsMemo = useMemo(() => getTopBlogs, []);
-  const topBlogs = useSelector(getTopBlogsMemo);
+  const { topBlogs } = useMainPageState();
 
   function render() {
     return (
