@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { login, logout } from '../actions';
+import { login } from '../actions';
 import { isUsernameValid, isPasswordValid } from '@toronto-blog/utils';
 import axios from 'axios';
 import { Input } from '../components/Input';
@@ -21,50 +21,6 @@ import { usePost } from '../hooks/useAxios';
 import { InputControlProps, RestCallWithBodyProps } from '../types';
 
 let debounceCheck: (((username: string) => void) & lodash.Cancelable) | null;
-
-export const LogoutComponent = () => {
-  const history = useHistory();
-  const dispatch = useDispatch();
-  const dispatchLogout = useCallback(() => dispatch(logout()), [dispatch]);
-  const [hasError, setHasError] = useState(false);
-  const { showErrorAlert, renderAlertsContainer } = useSuccessErrorAlert();
-
-  const [logoutArgs] = useState({
-    path: '/api/auth/logout',
-    body: {},
-    onSuccess: () => {
-      dispatchLogout();
-      setTimeout(() => {
-        history.push('/');
-      }, 1000);
-    },
-    onError: () => {
-      setTimeout(() => {
-        setHasError(true);
-        showErrorAlert('Error logging out, try refreshing the page');
-      }, 500);
-    }
-  });
-
-  usePost(logoutArgs);
-
-  function render() {
-    return (
-      <div className="p-2">
-        {hasError ? (
-          <div className="h-40">{renderAlertsContainer()}</div>
-        ) : (
-          <div className="h-40 flex items-center justify-center">
-            <DonutSpinnerLoader />
-            <div className="pl-2">Logging out...</div>
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  return render();
-};
 
 // TODO feedback
 
