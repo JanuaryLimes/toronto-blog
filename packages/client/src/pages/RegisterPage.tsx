@@ -24,7 +24,7 @@ let debounceCheck: (((username: string) => void) & lodash.Cancelable) | null;
 
 // TODO feedback
 
-export const LoginRegisterPage = () => {
+export const RegisterPage = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const dispatchLogin = useCallback(
