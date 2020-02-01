@@ -1,55 +1,22 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { usePost } from '../hooks/useAxios';
-import { useLoggedUser } from '../hooks/useLoggedUser';
 import { DefaultButton } from '../components/Button';
 import { LoadableDiv } from '../components/LoadableDiv';
-import { useSuccessErrorAlert } from '../components/Alert';
-import faker from 'faker';
 import { BlogEditor } from '../components/BlogEditor';
+import { useDashboardPageState } from '../hooks/state/useDashboardPageState';
 
 export const DashboardPage = function() {
-  const loggedUser = useLoggedUser();
-  const [postArgs, setPostArgs] = useState({});
-  const { isLoading } = usePost(postArgs);
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [addPostDisabled, setAddPostDisabled] = useState(true);
   const {
-    showSuccessAlert,
-    showErrorAlert,
-    renderAlertsContainer
-  } = useSuccessErrorAlert();
-
-  React.useEffect(() => {
-    if (!title || !content) {
-      setAddPostDisabled(true);
-    } else {
-      setAddPostDisabled(false);
-    }
-  }, [content, title]);
-
-  function addPost() {
-    if (addPostDisabled) {
-      showErrorAlert('Can not add empty blog post');
-      return;
-    }
-
-    setPostArgs({
-      path: '/api/secure/dashboard/create-new-blog-post',
-      body: {
-        title: title,
-        content: content,
-        blogName: loggedUser
-      },
-      onSuccess: (_data: any) => {
-        showSuccessAlert('Blog post successfully added');
-      },
-      onError: (error: string) => {
-        showErrorAlert(error);
-      }
-    });
-  }
+    title,
+    setTitle,
+    content,
+    setContent,
+    addPost,
+    loggedUser,
+    renderAlertsContainer,
+    isLoading,
+    generateFakePostData
+  } = useDashboardPageState();
 
   function getMarkdownEditor() {
     return (
@@ -65,14 +32,7 @@ export const DashboardPage = function() {
   function getActionButtons() {
     return (
       <div className="pt-4 flex">
-        <DefaultButton
-          onClick={addPost}
-          onContextMenu={e => {
-            e.preventDefault();
-            setTitle(faker.lorem.sentence());
-            setContent(faker.lorem.paragraphs());
-          }}
-        >
+        <DefaultButton onClick={addPost} onContextMenu={generateFakePostData}>
           Add post
         </DefaultButton>
         <div className="flex-1" />

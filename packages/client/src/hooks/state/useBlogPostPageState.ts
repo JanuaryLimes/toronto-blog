@@ -1,8 +1,8 @@
+import React, { useMemo, useState } from 'react';
 import { BlogPostPageProps, UserBlogPost } from '../../types';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useLoggedUser } from '../useLoggedUser';
-import React, { useMemo, useState } from 'react';
 import { getBlogPost } from '../../selectors/getBlogPost';
 import { useSuccessErrorAlert } from '../../components/Alert';
 import { useGet, usePost, usePut } from '../useAxios';
