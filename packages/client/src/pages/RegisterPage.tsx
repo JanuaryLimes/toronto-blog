@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { login } from '../actions';
 import { isUsernameValid, isPasswordValid } from '@toronto-blog/utils';
@@ -25,18 +24,14 @@ let debounceCheck: (((username: string) => void) & lodash.Cancelable) | null;
 // TODO feedback
 
 export const RegisterPage = () => {
-  const location = useLocation();
   const dispatch = useDispatch();
   const dispatchLogin = useCallback(
     loggedUser => dispatch(login({ loggedUser })),
     [dispatch]
   );
 
-  const { pathname } = location;
-  const [isLoginPage, setIsLoginPage] = useState(true);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [canLogin, setCanLogin] = useState(false);
   const [repeatPassword, setRepeatPassword] = useState('');
   const [canRegister, setCanRegister] = useState<boolean>(false);
   const [usernameIsChecking, setUsernameIsChecking] = useState(false);
@@ -49,14 +44,6 @@ export const RegisterPage = () => {
     showErrorAlert,
     renderAlertsContainer
   } = useSuccessErrorAlert();
-
-  useEffect(() => {
-    if (pathname === '/login') {
-      setIsLoginPage(true);
-    } else {
-      setIsLoginPage(false);
-    }
-  }, [pathname]);
 
   const passwordPolicyPassed = useCallback(() => {
     console.log('passwordPolicyPassed');
@@ -89,11 +76,6 @@ export const RegisterPage = () => {
   ]);
 
   useEffect(() => {
-    const canRegisterVal = username !== '' && password !== '';
-    setCanLogin(canRegisterVal);
-  }, [username, password]);
-
-  useEffect(() => {
     return () => {
       console.log('componentWillUnmount');
       if (debounceCheck) {
@@ -104,12 +86,12 @@ export const RegisterPage = () => {
   }, []);
 
   useEffect(() => {
-    if (!password || isLoginPage) {
+    if (!password) {
       setPasswordStrengthCheck(undefined);
       return;
     }
     setPasswordStrengthCheck(isPasswordValid(password));
-  }, [isLoginPage, password]);
+  }, [password]);
 
   const checkPasswordStrength = () => {
     let arr = [];
@@ -193,7 +175,7 @@ export const RegisterPage = () => {
       usernameStatusNotAvailable = false,
       containerHeight = 0;
 
-    if (!(isLoginPage || username === '')) {
+    if (!(username === '')) {
       if (usernameIsChecking) {
         checkingAvailability = true;
         containerHeight = viewHeight1;
@@ -258,7 +240,7 @@ export const RegisterPage = () => {
   };
 
   const getPasswordValidationStatus = () => {
-    if (isLoginPage || !passwordStrengthCheck) {
+    if (!passwordStrengthCheck) {
       return '';
     }
 
@@ -269,12 +251,7 @@ export const RegisterPage = () => {
     }
   };
   const getUsernameValidationStatus = () => {
-    if (
-      !username ||
-      isLoginPage ||
-      usernameIsChecking ||
-      usernameIsAvailable === undefined
-    ) {
+    if (!username || usernameIsChecking || usernameIsAvailable === undefined) {
       return '';
     }
 
@@ -303,32 +280,7 @@ export const RegisterPage = () => {
   };
 
   const canClick = () => {
-    if (isLoginPage) {
-      return canLogin;
-    } else {
-      return canRegister;
-    }
-  };
-
-  const getPostArgs = (): RestCallWithBodyProps => {
-    if (isLoginPage) {
-      return {
-        path: '/api/auth/login',
-        body: {
-          username,
-          password
-        },
-        config: { withCredentials: true }
-      };
-    } else {
-      return {
-        path: '/api/auth/register',
-        body: {
-          username,
-          password
-        }
-      };
-    }
+    return canRegister;
   };
 
   const clearInputs = () => {
@@ -338,11 +290,7 @@ export const RegisterPage = () => {
   };
 
   const successText = (user: string) => {
-    if (isLoginPage) {
-      return 'Logged in as: ' + user;
-    } else {
-      return `User '${user}' successfully registered`;
-    }
+    return `User '${user}' successfully registered`;
   };
 
   const onSuccess = (user: string) => {
@@ -357,11 +305,7 @@ export const RegisterPage = () => {
       setPasswordStrengthCheck(passwordCheck);
     }
 
-    if (isLoginPage) {
-      return 'Wrong username or password';
-    } else {
-      return 'Registration failed';
-    }
+    return 'Registration failed';
   };
 
   const onError = (error: { response: { data: { pCheck: any } } }) => {
@@ -376,7 +320,11 @@ export const RegisterPage = () => {
 
     if (canClick()) {
       setPostArgs({
-        ...getPostArgs(),
+        path: '/api/auth/register',
+        body: {
+          username,
+          password
+        },
         onSuccess: data => {
           onSuccess(data.user);
         },
@@ -413,10 +361,6 @@ export const RegisterPage = () => {
   }
 
   function getRepeatPasswordSection() {
-    if (isLoginPage) {
-      return '';
-    }
-
     return (
       <>
         <Input {...repeatPasswordProps} />
@@ -450,10 +394,10 @@ export const RegisterPage = () => {
               <button
                 className="bg-green-700 hover:bg-green-600 my-2 px-2 px-4 py-1 rounded shadow"
                 type="submit"
-                disabled={isLoginPage ? !canLogin : !canRegister}
+                disabled={!canRegister}
                 onClick={onClickHandler}
               >
-                {isLoginPage ? 'Login' : 'Register'}
+                Register
               </button>
             </form>
           </LoadableDiv>
