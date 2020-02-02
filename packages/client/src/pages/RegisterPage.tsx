@@ -1,11 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
-import { login } from '../actions';
-import { isUsernameValid, isPasswordValid } from '@toronto-blog/utils';
-import axios from 'axios';
+import React from 'react';
 import { Input } from '../components/Input';
-import { useSuccessErrorAlert } from '../components/Alert';
-import lodash from 'lodash';
 import { DonutSpinnerLoader } from '../components/Loaders';
 import { useMeasure } from '../hooks/useMeasure';
 import {
@@ -16,160 +10,29 @@ import {
   motion
 } from '../components/Animate';
 import { LoadableDiv } from '../components/LoadableDiv';
-import { usePost } from '../hooks/useAxios';
-import { InputControlProps, RestCallWithBodyProps } from '../types';
-
-let debounceCheck: (((username: string) => void) & lodash.Cancelable) | null;
-
-// TODO feedback
+import { useRegisterPageState } from '../hooks/state/useRegisterPageState';
 
 export const RegisterPage = () => {
-  const dispatch = useDispatch();
-  const dispatchLogin = useCallback(
-    loggedUser => dispatch(login({ loggedUser })),
-    [dispatch]
-  );
-
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [repeatPassword, setRepeatPassword] = useState('');
-  const [canRegister, setCanRegister] = useState<boolean>(false);
-  const [usernameIsChecking, setUsernameIsChecking] = useState(false);
-  const [usernameIsAvailable, setUsernameIsAvailable] = useState<boolean>(
-    false
-  );
-  const [passwordStrengthCheck, setPasswordStrengthCheck] = useState();
   const {
-    showSuccessAlert,
-    showErrorAlert,
-    renderAlertsContainer
-  } = useSuccessErrorAlert();
-
-  const passwordPolicyPassed = useCallback(() => {
-    console.log('passwordPolicyPassed');
-    if (
-      password === repeatPassword &&
-      password !== '' &&
-      passwordStrengthCheck &&
-      passwordStrengthCheck.valid
-    ) {
-      return true;
-    } else {
-      return false;
-    }
-  }, [password, repeatPassword, passwordStrengthCheck]);
-
-  useEffect(() => {
-    const canRegisterVal = !!(
-      isUsernameValid(username).valid &&
-      passwordPolicyPassed() &&
-      usernameIsAvailable
-    );
-    setCanRegister(canRegisterVal);
-  }, [
+    isLoading,
+    usernameProps,
+    passwordProps,
+    renderAlertsContainer,
+    canRegister,
+    onClickHandler,
+    repeatPasswordProps,
+    getRepeatPasswordValidationStatus,
     username,
-    password,
-    repeatPassword,
+    usernameIsChecking,
     usernameIsAvailable,
-    passwordStrengthCheck,
-    passwordPolicyPassed
-  ]);
-
-  useEffect(() => {
-    return () => {
-      console.log('componentWillUnmount');
-      if (debounceCheck) {
-        debounceCheck.cancel();
-      }
-      debounceCheck = null;
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!password) {
-      setPasswordStrengthCheck(undefined);
-      return;
-    }
-    setPasswordStrengthCheck(isPasswordValid(password));
-  }, [password]);
-
-  const checkPasswordStrength = () => {
-    let arr = [];
-
-    if (!passwordStrengthCheck || passwordStrengthCheck.valid) {
-      arr = [];
-    } else {
-      arr = passwordStrengthCheck.msg;
-    }
-
-    return (
-      <FadeInOut condition={arr.length > 0}>
-        <div className="invalid-feedback text-sm bg-red-700 mt-1 px-2 py-1 rounded">
-          <ul className="list-disc m-0 mt-1 pl-2 pl-4 ">
-            <AnimatePresence>
-              {arr.map((m: any) => (
-                <motion.li
-                  transition={{ duration: 0.5, type: 'tween' }}
-                  key={m}
-                  initial={{ opacity: 0, x: 50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 50 }}
-                >
-                  {m}
-                </motion.li>
-              ))}
-            </AnimatePresence>
-          </ul>
-        </div>
-      </FadeInOut>
-    );
-  };
-
-  const debounceCallback = (username: string) => {
-    console.log('before axios', username);
-    axios
-      .get('/api/auth/is-user-available?user=' + username)
-      .then(response => {
-        const { usernameAvailable } = response.data;
-        if (usernameAvailable) {
-          console.log('username check', true);
-          setUsernameIsAvailable(true);
-        } else {
-          console.log('username check', false);
-          setUsernameIsAvailable(false);
-        }
-      })
-      .catch(error => {
-        setUsernameIsAvailable(false);
-        console.log('error checking username', error);
-      })
-      .then(() => {
-        setUsernameIsChecking(false);
-      });
-  };
-
-  useEffect(() => {
-    if (username !== '') {
-      setUsernameIsChecking(true);
-      if (debounceCheck) {
-        debounceCheck(username);
-      } else {
-        debounceCheck = lodash.debounce(debounceCallback, 1000);
-        debounceCheck(username);
-      }
-    } else {
-      setUsernameIsAvailable(false);
-      if (debounceCheck) {
-        debounceCheck.cancel();
-      }
-    }
-  }, [username]);
+    passwordStrengthCheck
+  } = useRegisterPageState();
 
   const [div1, { height: viewHeight1 }] = useMeasure<HTMLDivElement>();
   const [div2, { height: viewHeight2 }] = useMeasure<HTMLDivElement>();
   const [div3, { height: viewHeight3 }] = useMeasure<HTMLDivElement>();
 
-  const checkUsernameAvailability = () => {
+  function checkUsernameAvailability() {
     let checkingAvailability = false,
       usernameStatusAvailable = false,
       usernameStatusNotAvailable = false,
@@ -237,127 +100,38 @@ export const RegisterPage = () => {
         </HeightModifier>
       </div>
     );
-  };
+  }
 
-  const getPasswordValidationStatus = () => {
-    if (!passwordStrengthCheck) {
-      return '';
-    }
+  function checkPasswordStrength() {
+    let arr = [];
 
-    if (passwordStrengthCheck.valid) {
-      return 'is-valid';
+    if (!passwordStrengthCheck || passwordStrengthCheck.valid) {
+      arr = [];
     } else {
-      return 'is-invalid';
-    }
-  };
-  const getUsernameValidationStatus = () => {
-    if (!username || usernameIsChecking || usernameIsAvailable === undefined) {
-      return '';
+      arr = passwordStrengthCheck.msg;
     }
 
-    if (usernameIsAvailable) {
-      return 'is-valid';
-    } else {
-      return 'is-invalid';
-    }
-  };
-
-  const getRepeatPasswordValidationStatus = () => {
-    const result = { className: '', showRepeatPasswordErrorMessage: false };
-
-    if (repeatPassword === '') {
-      return result;
-    } else {
-      if (password === repeatPassword) {
-        result.className = 'is-valid';
-      } else {
-        result.showRepeatPasswordErrorMessage = true;
-        result.className = 'is-invalid';
-      }
-    }
-
-    return result;
-  };
-
-  const canClick = () => {
-    return canRegister;
-  };
-
-  const clearInputs = () => {
-    setUsername('');
-    setPassword('');
-    setRepeatPassword('');
-  };
-
-  const successText = (user: string) => {
-    return `User '${user}' successfully registered`;
-  };
-
-  const onSuccess = (user: string) => {
-    clearInputs();
-    dispatchLogin(user);
-    showSuccessAlert(successText(user));
-  };
-
-  const errorText = (error: { response: { data: { pCheck: any } } }) => {
-    if (error.response && error.response.data && error.response.data.pCheck) {
-      const passwordCheck = error.response.data.pCheck;
-      setPasswordStrengthCheck(passwordCheck);
-    }
-
-    return 'Registration failed';
-  };
-
-  const onError = (error: { response: { data: { pCheck: any } } }) => {
-    showErrorAlert(errorText(error));
-  };
-
-  const [postArgs, setPostArgs] = useState<RestCallWithBodyProps>({});
-  const { isLoading } = usePost(postArgs);
-
-  const onClickHandler = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-
-    if (canClick()) {
-      setPostArgs({
-        path: '/api/auth/register',
-        body: {
-          username,
-          password
-        },
-        onSuccess: data => {
-          onSuccess(data.user);
-        },
-        onError: error => {
-          onError(error);
-        }
-      });
-    }
-  };
-
-  const usernameProps: InputControlProps = {
-    caption: 'Username',
-    value: username,
-    onChange: (val: string) => setUsername(val.trim()),
-    validationStatus: getUsernameValidationStatus()
-  };
-  const passwordProps: InputControlProps = {
-    caption: 'Password',
-    value: password,
-    onChange: setPassword,
-    type: 'password',
-    validationStatus: getPasswordValidationStatus()
-  };
-  const repeatPasswordProps: InputControlProps = {
-    caption: 'Repeat password',
-    value: repeatPassword,
-    onChange: setRepeatPassword,
-    type: 'password',
-    validationStatus: getRepeatPasswordValidationStatus().className
-  };
-
-  function getAlert() {
-    return <div className="pt-2">{renderAlertsContainer()}</div>;
+    return (
+      <FadeInOut condition={arr.length > 0}>
+        <div className="invalid-feedback text-sm bg-red-700 mt-1 px-2 py-1 rounded">
+          <ul className="list-disc m-0 mt-1 pl-2 pl-4 ">
+            <AnimatePresence>
+              {arr.map((m: any) => (
+                <motion.li
+                  transition={{ duration: 0.5, type: 'tween' }}
+                  key={m}
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 50 }}
+                >
+                  {m}
+                </motion.li>
+              ))}
+            </AnimatePresence>
+          </ul>
+        </div>
+      </FadeInOut>
+    );
   }
 
   function getRepeatPasswordSection() {
@@ -390,7 +164,7 @@ export const RegisterPage = () => {
               <Input {...passwordProps} />
               {checkPasswordStrength()}
               {getRepeatPasswordSection()}
-              {getAlert()}
+              <div className="pt-2">{renderAlertsContainer()}</div>
               <button
                 className="bg-green-700 hover:bg-green-600 my-2 px-2 px-4 py-1 rounded shadow"
                 type="submit"
