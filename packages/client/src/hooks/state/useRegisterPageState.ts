@@ -2,19 +2,25 @@ import { useState, useEffect, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { login } from '../../actions';
 import { isUsernameValid, isPasswordValid } from '@toronto-blog/utils';
-import axios from 'axios';
 import { useSuccessErrorAlert } from '../../components/Alert';
-import lodash from 'lodash';
+import { debounce, Cancelable } from 'lodash';
 import { usePost, useGet } from '../useAxios';
 import {
   InputControlProps,
   RestCallWithBodyProps,
   RestCallProps
 } from '../../types';
+import moment from 'moment';
 
-let debounceCheck: (((username: string) => void) & lodash.Cancelable) | null;
+type DebounceCallback = (username: string) => void;
+type DebounceCheck = (DebounceCallback & Cancelable) | null;
+
+export function getTime() {
+  return moment(new Date()).format('HH:mm:ss.SSS');
+}
 
 // TODO feedback
+
 export function useRegisterPageState() {
   const dispatch = useDispatch();
   const dispatchLogin = useCallback(
@@ -37,7 +43,6 @@ export function useRegisterPageState() {
   } = useSuccessErrorAlert();
 
   const passwordPolicyPassed = useCallback(() => {
-    console.log('passwordPolicyPassed');
     if (
       password === repeatPassword &&
       password !== '' &&
@@ -65,16 +70,6 @@ export function useRegisterPageState() {
     passwordStrengthCheck,
     passwordPolicyPassed
   ]);
-
-  useEffect(() => {
-    return () => {
-      console.log('componentWillUnmount');
-      if (debounceCheck) {
-        debounceCheck.cancel();
-      }
-      debounceCheck = null;
-    };
-  }, []);
 
   useEffect(() => {
     if (!password) {
@@ -211,7 +206,6 @@ export function useRegisterPageState() {
   };
 
   function onFinally() {
-    console.warn('############## finally');
     setUsernameIsChecking(false);
   }
 
@@ -220,9 +214,8 @@ export function useRegisterPageState() {
   >({});
   /*const {}=*/ useGet(isUserAvailableProps);
 
-  const debounceCallback = useCallback((username: string) => {
-    console.log('before axios', username);
-
+  const debounceCallback = useCallback<DebounceCallback>((username: string) => {
+    // console.warn('setIsUserAvailableProps: ', { username, time: getTime() });
     setIsUserAvailableProps({
       path: '/api/auth/is-user-available?user=' + username,
       onSuccess: data => {
@@ -245,20 +238,21 @@ export function useRegisterPageState() {
   }, []);
 
   useEffect(() => {
+    // console.warn('useEffect', { username, time: getTime() });
+    let check: DebounceCheck = null;
+
     if (username !== '') {
       setUsernameIsChecking(true);
-      if (debounceCheck) {
-        debounceCheck(username);
-      } else {
-        debounceCheck = lodash.debounce(debounceCallback, 1000);
-        debounceCheck(username);
-      }
+      check = debounce(debounceCallback, 1000);
+      check(username);
     } else {
       setUsernameIsAvailable(false);
-      if (debounceCheck) {
-        debounceCheck.cancel();
-      }
     }
+
+    return function cleanup() {
+      // console.warn('useEffect cleanup', { username });
+      check?.cancel();
+    };
   }, [debounceCallback, username]);
 
   return {
