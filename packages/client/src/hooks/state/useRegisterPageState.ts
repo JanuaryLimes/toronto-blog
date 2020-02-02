@@ -5,8 +5,12 @@ import { isUsernameValid, isPasswordValid } from '@toronto-blog/utils';
 import axios from 'axios';
 import { useSuccessErrorAlert } from '../../components/Alert';
 import lodash from 'lodash';
-import { usePost } from '../useAxios';
-import { InputControlProps, RestCallWithBodyProps } from '../../types';
+import { usePost, useGet } from '../useAxios';
+import {
+  InputControlProps,
+  RestCallWithBodyProps,
+  RestCallProps
+} from '../../types';
 
 let debounceCheck: (((username: string) => void) & lodash.Cancelable) | null;
 
@@ -206,12 +210,23 @@ export function useRegisterPageState() {
     validationStatus: getRepeatPasswordValidationStatus().className
   };
 
-  const debounceCallback = (username: string) => {
+  function onFinally() {
+    console.warn('############## finally');
+    setUsernameIsChecking(false);
+  }
+
+  const [isUserAvailableProps, setIsUserAvailableProps] = useState<
+    RestCallProps
+  >({});
+  /*const {}=*/ useGet(isUserAvailableProps);
+
+  const debounceCallback = useCallback((username: string) => {
     console.log('before axios', username);
-    axios
-      .get('/api/auth/is-user-available?user=' + username)
-      .then(response => {
-        const { usernameAvailable } = response.data;
+
+    setIsUserAvailableProps({
+      path: '/api/auth/is-user-available?user=' + username,
+      onSuccess: data => {
+        const { usernameAvailable } = data;
         if (usernameAvailable) {
           console.log('username check', true);
           setUsernameIsAvailable(true);
@@ -219,15 +234,15 @@ export function useRegisterPageState() {
           console.log('username check', false);
           setUsernameIsAvailable(false);
         }
-      })
-      .catch(error => {
+        onFinally();
+      },
+      onError: error => {
         setUsernameIsAvailable(false);
         console.log('error checking username', error);
-      })
-      .then(() => {
-        setUsernameIsChecking(false);
-      });
-  };
+        onFinally();
+      }
+    });
+  }, []);
 
   useEffect(() => {
     if (username !== '') {
@@ -244,7 +259,7 @@ export function useRegisterPageState() {
         debounceCheck.cancel();
       }
     }
-  }, [username]);
+  }, [debounceCallback, username]);
 
   return {
     isLoading,
