@@ -11,7 +11,7 @@ import { PrivateRoute } from '../components/PrivateRoute';
 
 const headerHeight = '50px';
 
-const RouterPage = () => {
+export const RouterPage = () => {
   function render() {
     return (
       <Router>
@@ -59,5 +59,3 @@ const RouterPage = () => {
 
   return render();
 };
-
-export default RouterPage;
