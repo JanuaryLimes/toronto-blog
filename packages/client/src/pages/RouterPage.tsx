@@ -1,15 +1,17 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Header } from '../components/Header';
-import { PrivateRoute } from '../components/PrivateRoute';
 import { MainPage } from './MainPage';
-import { LogoutComponent, LoginRegisterPage } from './LoginRegisterPage';
+import { LoginPage } from './LoginPage';
+import { LogoutPage } from './LogoutPage';
+import { RegisterPage } from './RegisterPage';
 import { DashboardPage } from './DashboardPage';
 import { BlogPageHandler } from './BlogPageHandler';
+import { PrivateRoute } from '../components/PrivateRoute';
 
 const headerHeight = '50px';
 
-const RouterPage = () => {
+export const RouterPage = () => {
   function render() {
     return (
       <Router>
@@ -33,9 +35,9 @@ const RouterPage = () => {
             >
               <Switch>
                 <Route exact path="/" component={MainPage} />
-                <Route path="/login" component={LoginRegisterPage} />
-                <Route path="/logout" component={LogoutComponent} />
-                <Route path="/register" component={LoginRegisterPage} />
+                <Route path="/login" component={LoginPage} />
+                <Route path="/logout" component={LogoutPage} />
+                <Route path="/register" component={RegisterPage} />
                 <PrivateRoute path="/dashboard" component={DashboardPage} />
                 <Route
                   path="/blog/:blogName/:blogPostId?"
@@ -57,5 +59,3 @@ const RouterPage = () => {
 
   return render();
 };
-
-export default RouterPage;

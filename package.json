@@ -5,6 +5,7 @@
     "packages/*"
   ],
   "scripts": {
+    "predev": "yarn workspace @toronto-blog/utils build",
     "dev": "lerna run --parallel dev",
     "start": "node packages/server/build/server.js",
     "start:prod": "NODE_ENV=production node packages/server/build/server.js",
