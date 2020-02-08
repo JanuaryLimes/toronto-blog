@@ -1,6 +1,6 @@
 .history/*
 node_modules/*
-.env.local
+.env
 .DS_Store
 
 cypress/videos

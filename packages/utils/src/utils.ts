@@ -1,13 +1,17 @@
 import dotenv from 'dotenv';
 const secureRandom = require('secure-random');
 
-const isProduction = () => {
+function isProduction() {
   return process.env.NODE_ENV === 'production';
-};
+}
+
+function isTesting() {
+  return process.env.NODE_ENV === 'testing';
+}
 
 const loadDevEnv = () => {
   if (!isProduction()) {
-    /* const result = */ dotenv.config({ path: '../../.env.local' });
+    /* const result = */ dotenv.config();
     console.log('.env.local loaded' /* , result */);
   }
 };
@@ -28,4 +32,4 @@ export function env() {
   };
 }
 
-export { isProduction, generateSecret };
+export { isProduction, isTesting, generateSecret };

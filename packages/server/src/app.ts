@@ -2,6 +2,7 @@ import express from 'express';
 import { Application } from 'express';
 import { join } from 'path';
 import { apiRouter } from './routes/api-router';
+import { isProduction, isTesting } from '@toronto-blog/utils';
 
 export class App {
   public app: Application;
@@ -19,7 +20,7 @@ export class App {
   }
 
   private react() {
-    if (process.env.NODE_ENV == 'production') {
+    if (isProduction() || isTesting()) {
       // Serve the static files from the React app
       this.app.use(express.static(join(__dirname, '../../client/build')));
       this.app.get('*', (req, res) => {

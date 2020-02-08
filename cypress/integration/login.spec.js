@@ -4,7 +4,7 @@
 
 context('toronto-blog login', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:5002/login');
+    cy.visit('http://localhost:5001/login');
   });
 
   it('test login form', () => {
