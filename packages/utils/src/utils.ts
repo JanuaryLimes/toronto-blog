@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import { join } from 'path';
 const secureRandom = require('secure-random');
 
 function isProduction() {
@@ -11,8 +12,10 @@ function isTesting() {
 
 const loadDevEnv = () => {
   if (!isProduction()) {
-    /* const result = */ dotenv.config();
-    console.log('.env.local loaded' /* , result */);
+    const envPath = join(__dirname, '../../../.env');
+    console.log('### envPath', envPath);
+    dotenv.config({ path: envPath });
+    console.log('.env loaded');
   }
 };
 
