@@ -9,7 +9,7 @@ mongoose.connect(connectionString, {
 });
 mongoose.set('useCreateIndex', true);
 mongoose.connection.once('open', () => {
-  console.log('db open');
+  console.log('db open: ', ENV.MONGO_DB);
 });
 
 export { mongoose as mConnection };

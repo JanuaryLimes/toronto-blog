@@ -186,7 +186,8 @@ export function useRegisterPageState() {
     caption: 'Username',
     value: username,
     onChange: (val: string) => setUsername(val.trim()),
-    validationStatus: getUsernameValidationStatus()
+    validationStatus: getUsernameValidationStatus(),
+    className: 'username-input'
   };
 
   const passwordProps: InputControlProps = {
@@ -194,7 +195,8 @@ export function useRegisterPageState() {
     value: password,
     onChange: setPassword,
     type: 'password',
-    validationStatus: getPasswordValidationStatus()
+    validationStatus: getPasswordValidationStatus(),
+    className: 'password-input'
   };
 
   const repeatPasswordProps: InputControlProps = {
@@ -202,7 +204,8 @@ export function useRegisterPageState() {
     value: repeatPassword,
     onChange: setRepeatPassword,
     type: 'password',
-    validationStatus: getRepeatPasswordValidationStatus().className
+    validationStatus: getRepeatPasswordValidationStatus().className,
+    className: 'repeat-password-input'
   };
 
   function onFinally() {

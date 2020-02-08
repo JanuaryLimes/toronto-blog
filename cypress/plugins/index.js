@@ -12,10 +12,23 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
+const { mConnection } = require('../../packages/server/build/mongoose');
+
 /**
  * @type {Cypress.PluginConfig}
  */
 module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
-}
+
+  on('task', {
+    clearDB() {
+      if (mConnection.connection.db) {
+        mConnection.connection.db.dropDatabase();
+      }
+      console.warn('clear db');
+
+      return null;
+    }
+  });
+};

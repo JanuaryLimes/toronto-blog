@@ -166,7 +166,7 @@ export const RegisterPage = () => {
               {getRepeatPasswordSection()}
               <div className="pt-2">{renderAlertsContainer()}</div>
               <button
-                className="bg-green-700 hover:bg-green-600 my-2 px-2 px-4 py-1 rounded shadow"
+                className="register-button bg-green-700 hover:bg-green-600 my-2 px-2 px-4 py-1 rounded shadow"
                 type="submit"
                 disabled={!canRegister}
                 onClick={onClickHandler}

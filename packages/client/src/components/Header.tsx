@@ -71,7 +71,7 @@ const TorontoTippy: React.FC<TorontoTippyProps> = ({
           aria-expanded={ariaExpanded}
           className="hover:bg-gray-800 px-2 py-1 relative rounded"
         >
-          <span>
+          <span className="logged-user">
             <FontAwesomeIcon icon={faUser} className="mr-1" />
             {loggedUser}
           </span>

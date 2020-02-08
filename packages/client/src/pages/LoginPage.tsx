@@ -25,7 +25,7 @@ export const LoginPage = () => {
               <Input {...passwordProps} />
               <div className="pt-2">{renderAlertsContainer()}</div>
               <button
-                className="bg-green-700 hover:bg-green-600 my-2 px-2 px-4 py-1 rounded shadow"
+                className="login-button bg-green-700 hover:bg-green-600 my-2 px-2 px-4 py-1 rounded shadow"
                 type="submit"
                 disabled={!canLogin}
                 onClick={onClickHandler}

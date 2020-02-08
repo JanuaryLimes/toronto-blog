@@ -12,10 +12,13 @@
     "start:testing": "NODE_ENV=testing MONGO_DB=toronto-blog-test yarn start",
     "build": "lerna run build",
     "cy:open": "cypress open",
-    "cy:run": "cypress run"
+    "precy:run": "yarn workspace @toronto-blog/server build",
+    "cy:run:internal": "cypress run",
+    "cy:run": "MONGO_DB=toronto-blog-test start-server-and-test dev 5001 cy:run:internal"
   },
   "dependencies": {
     "cypress": "^4.0.0",
-    "lerna": "^3.20.2"
+    "lerna": "^3.20.2",
+    "start-server-and-test": "^1.10.8"
   }
 }
