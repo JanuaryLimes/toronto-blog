@@ -21,4 +21,6 @@ const app = new App({
   ]
 });
 
+console.warn('display process env NODE_ENV', process.env.NODE_ENV);
+
 app.listen();
