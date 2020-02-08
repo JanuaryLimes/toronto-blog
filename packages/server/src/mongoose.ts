@@ -1,7 +1,9 @@
 import mongoose from 'mongoose';
-import { env } from '@toronto-blog/utils';
+import { ENV } from '@toronto-blog/utils';
 
-mongoose.connect(env().MONGO_CS, {
+const connectionString = `mongodb+srv://${ENV.MONGO_URL}/${ENV.MONGO_DB}?retryWrites=true`;
+
+mongoose.connect(connectionString, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });

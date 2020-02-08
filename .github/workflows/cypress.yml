@@ -11,11 +11,12 @@ jobs:
         with:
           build: yarn run build
           start: yarn run start
-          wait-on: http://localhost:5001
+          wait-on: 'http://localhost:5001'
         env:
-          NODE_ENV: testing
+          NODE_ENV: 'testing'
           JWT_EXPIRATION_MS: ${{ secrets.JWT_EXPIRATION_MS }}
-          MONGO_CS: ${{ secrets.MONGO_CS }}
+          MONGO_URL: ${{ secrets.MONGO_URL }}
+          MONGO_DB: 'toronto-blog-test'
           SECRET: ${{ secrets.SECRET }}
           PORT: '5001'
       - uses: actions/upload-artifact@v1

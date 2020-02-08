@@ -8,8 +8,8 @@
     "predev": "yarn workspace @toronto-blog/utils build",
     "dev": "lerna run --parallel dev",
     "start": "node packages/server/build/server.js",
-    "start:production": "NODE_ENV=production yarn start",
-    "start:testing": "NODE_ENV=testing yarn start",
+    "start:production": "NODE_ENV=production MONGO_DB=toronto-blog yarn start",
+    "start:testing": "NODE_ENV=testing MONGO_DB=toronto-blog-test yarn start",
     "build": "lerna run build",
     "cy:open": "cypress open",
     "cy:run": "cypress run"

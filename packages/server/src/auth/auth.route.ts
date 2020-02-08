@@ -3,11 +3,11 @@ import bcrypt from 'bcrypt';
 import { User } from './auth.model';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
-import { env, isProduction, isPasswordValid } from '@toronto-blog/utils';
+import { ENV, isProduction, isPasswordValid } from '@toronto-blog/utils';
 import { AuthPayload } from 'types';
 
-const secret = env().SECRET;
-const expirationTime = parseInt(env().JWT_EXPIRATION_MS);
+const secret = ENV.SECRET;
+const expirationTime = parseInt(ENV.JWT_EXPIRATION_MS);
 export const authRouter = express.Router();
 
 const setJwtCookie = (res: Response, payload: AuthPayload) => {

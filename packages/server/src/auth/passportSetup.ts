@@ -3,9 +3,9 @@ import passportLocal from 'passport-local';
 import passportJwt from 'passport-jwt';
 import { User } from './auth.model';
 import bcrypt from 'bcrypt';
-import { env } from '@toronto-blog/utils';
+import { ENV } from '@toronto-blog/utils';
 
-const secret = env().SECRET;
+const secret = ENV.SECRET;
 
 passport.use(
   new passportLocal.Strategy((username, password, done) => {

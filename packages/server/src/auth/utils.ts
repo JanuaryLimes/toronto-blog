@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
-import { env } from '@toronto-blog/utils';
+import { ENV } from '@toronto-blog/utils';
 import { Request } from 'express';
 
-const secret = env().SECRET;
+const secret = ENV.SECRET;
 
 export function getUserFromRequestJwt(req: Request) {
   const cookieExtractor = function(req: Request) {

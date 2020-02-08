@@ -2,14 +2,14 @@ import { App } from './app';
 import * as bodyParser from 'body-parser';
 import { loggerMiddleware } from './middleware/logger';
 import { HomeController } from './controllers/home.controller';
-import { env } from '@toronto-blog/utils';
+import { ENV } from '@toronto-blog/utils';
 import https from './https';
 import cookieParser = require('cookie-parser');
 import cors from 'cors';
 import './auth/passportSetup';
 
 const app = new App({
-  port: Number(env().PORT) || 5002,
+  port: Number(ENV.PORT) || 5002,
   controllers: [new HomeController()],
   middleWares: [
     cookieParser(),
