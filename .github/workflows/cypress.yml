@@ -1,4 +1,4 @@
-name: CI
+name: cypress-tests
 
 on: [push]
 
@@ -11,24 +11,24 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-      
+
       - name: install
         run: yarn install
-      
+
       - name: build
         run: yarn build
-      
+
+      - name: start
+        run: yarn start &
+        env:
+          NODE_ENV: production
+          JWT_EXPIRATION_MS: ${{ secrets.JWT_EXPIRATION_MS }}
+          MONGO_CS: ${{ secrets.MONGO_CS }}
+          SECRET: ${{ secrets.SECRET }}
+
       - name: Cypress run
         uses: cypress-io/github-action@v1
         with:
-          start: npm start
+          # start: npm start
           # quote the url to be safe against YML parsing surprises
           wait-on: 'http://localhost:5002'
-        env: 
-          NODE_ENV: production
-          JWT_EXPIRATION_MS: ${{ secrets.JWT_EXPIRATION_MS }}
-          MONGO_CS: ${{ secrets.MONGO_CS }} 
-          SECRET: ${{ secrets.SECRET }}
-        
-
-
