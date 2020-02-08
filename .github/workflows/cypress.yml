@@ -1,38 +1,21 @@
 name: cypress-tests
-
 on: [push]
-
 jobs:
   cypress-run:
-    runs-on: ubuntu-16.04
-    # Cypress Docker image with Chrome v78
-    # and Firefox v70 pre-installed
-    container: cypress/browsers:node12.13.0-chrome78-ff70
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v1
 
-      # - name: install
-      #   run: yarn install
-
-      # - name: build
-      #   run: yarn build
-
-      # - name: start
-      #   run: yarn start &
-      #   env:
-      #     NODE_ENV: production
-      #     JWT_EXPIRATION_MS: ${{ secrets.JWT_EXPIRATION_MS }}
-      #     MONGO_CS: ${{ secrets.MONGO_CS }}
-      #     SECRET: ${{ secrets.SECRET }}
+      - name: install
+        run: yarn
 
       - name: Cypress run
         uses: cypress-io/github-action@v1
         with:
-          install: yarn
-          build: yarn build
-          start: yarn start
-          # wait-on: 'http://localhost:5002'
+          build: yarn run build
+          start: yarn run start
+          wait-on: http://localhost:5002
         env:
           NODE_ENV: production
           JWT_EXPIRATION_MS: ${{ secrets.JWT_EXPIRATION_MS }}
