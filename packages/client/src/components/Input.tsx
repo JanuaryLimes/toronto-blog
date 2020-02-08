@@ -19,7 +19,8 @@ function render(type: InputType, props: InputControlProps) {
     className: [
       'text-white py-1 px-2 rounded border-2 outline-none', // TODO classnames
       'focus:border-purple-700',
-      getValidationStatusClassName()
+      getValidationStatusClassName(),
+      props.className
     ].join(' '),
     value: props.value,
     type: props.type,
@@ -82,7 +83,8 @@ const Input: React.FC<InputControlProps> = ({
   value,
   onChange,
   validationStatus,
-  placeholder
+  placeholder,
+  className
 }) => {
   return render(InputType.Input, {
     type,
@@ -90,7 +92,8 @@ const Input: React.FC<InputControlProps> = ({
     value,
     onChange,
     validationStatus,
-    placeholder
+    placeholder,
+    className
   });
 };
 

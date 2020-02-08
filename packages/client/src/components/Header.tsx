@@ -72,8 +72,8 @@ const TorontoTippy: React.FC<TorontoTippyProps> = ({
           className="hover:bg-gray-800 px-2 py-1 relative rounded"
         >
           <span>
-            <FontAwesomeIcon icon={faUser} />
-            {' ' + loggedUser}
+            <FontAwesomeIcon icon={faUser} className="mr-1" />
+            {loggedUser}
           </span>
         </button>
       </Tippy>

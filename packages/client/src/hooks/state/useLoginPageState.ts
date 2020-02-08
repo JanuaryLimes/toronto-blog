@@ -92,13 +92,15 @@ export function useLoginPageState() {
   const usernameProps: InputControlProps = {
     caption: 'Username',
     value: username,
-    onChange: (val: string) => setUsername(val.trim())
+    onChange: (val: string) => setUsername(val.trim()),
+    className: 'username-input'
   };
   const passwordProps: InputControlProps = {
     caption: 'Password',
     value: password,
     onChange: setPassword,
-    type: 'password'
+    type: 'password',
+    className: 'password-input'
   };
 
   return {

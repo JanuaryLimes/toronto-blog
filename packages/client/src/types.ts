@@ -101,6 +101,7 @@ export type InputControlProps = {
   validationStatus?: string; // TODO enum
   placeholder?: string;
   style?: React.CSSProperties;
+  className?: string;
 };
 
 export type CheckboxControlProps = {
