@@ -8,15 +8,14 @@
     "predev": "yarn workspace @toronto-blog/utils build",
     "dev": "lerna run --parallel dev",
     "start": "node packages/server/build/server.js",
-    "start:prod": "NODE_ENV=production node packages/server/build/server.js",
+    "start:production": "NODE_ENV=production node packages/server/build/server.js",
+    "start:testing": "NODE_ENV=testing node packages/server/build/server.js",
     "build": "lerna run build",
     "cy:open": "cypress open",
-    "cy:run": "cypress run",
-    "test:ci": "yarn start-server-and-test start 5002 cy:run"
+    "cy:run": "cypress run"
   },
   "dependencies": {
     "cypress": "^4.0.0",
-    "lerna": "^3.20.2",
-    "start-server-and-test": "^1.10.8"
+    "lerna": "^3.20.2"
   }
 }
