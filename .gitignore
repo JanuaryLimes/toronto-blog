@@ -1,6 +1,7 @@
 .history/*
 node_modules/*
 .env.local
+.DS_Store
 
 cypress/videos
 cypress/screenshots

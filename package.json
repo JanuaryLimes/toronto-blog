@@ -10,7 +10,8 @@
     "start": "node packages/server/build/server.js",
     "start:prod": "NODE_ENV=production node packages/server/build/server.js",
     "build": "lerna run build",
-    "cy:test": "cypress open"
+    "cy:open": "cypress open",
+    "cy:run": "cypress run"
   },
   "devDependencies": {
     "cypress": "^4.0.0",
