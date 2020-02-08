@@ -9,9 +9,11 @@
     "dev": "lerna run --parallel dev",
     "start": "node packages/server/build/server.js",
     "start:prod": "NODE_ENV=production node packages/server/build/server.js",
-    "build": "lerna run build"
+    "build": "lerna run build",
+    "cy:test": "cypress open"
   },
   "devDependencies": {
+    "cypress": "^4.0.0",
     "lerna": "^3.20.2"
   }
 }
