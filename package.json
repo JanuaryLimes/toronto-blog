@@ -13,7 +13,7 @@
     "cy:open": "cypress open",
     "cy:run": "cypress run"
   },
-  "devDependencies": {
+  "dependencies": {
     "cypress": "^4.0.0",
     "lerna": "^3.20.2"
   }
