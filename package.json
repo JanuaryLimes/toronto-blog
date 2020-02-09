@@ -11,7 +11,9 @@
     "start:production": "NODE_ENV=production MONGO_DB=toronto-blog yarn start",
     "start:testing": "NODE_ENV=testing MONGO_DB=toronto-blog-test yarn start",
     "build": "lerna run build",
-    "cy:open": "cypress open",
+    "precy:open": "yarn workspace @toronto-blog/server build",
+    "cy:open:internal": "cypress open",
+    "cy:open": "MONGO_DB=toronto-blog-test start-server-and-test dev 5001 cy:open:internal",
     "precy:run": "yarn workspace @toronto-blog/server build",
     "cy:run:internal": "cypress run",
     "cy:run": "MONGO_DB=toronto-blog-test start-server-and-test dev 5001 cy:run:internal"

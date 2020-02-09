@@ -23,3 +23,11 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('registerTestUser', () => {
+  cy.task('clearDB');
+  cy.request('POST', '/api/auth/register', {
+    username: 'a',
+    password: '1qaz@WSX'
+  });
+});

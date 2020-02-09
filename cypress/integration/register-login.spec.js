@@ -8,7 +8,7 @@ context('toronto-blog login', () => {
   });
 
   it('test register and login form', () => {
-    cy.visit('http://localhost:5001/register');
+    cy.visit('/register');
     cy.get('.username-input')
       .type('a')
       .should('have.value', 'a');
@@ -17,7 +17,7 @@ context('toronto-blog login', () => {
     cy.get('.register-button').click();
     cy.get('.logged-user').should('have.text', 'a');
 
-    cy.visit('http://localhost:5001/login');
+    cy.visit('/login');
     cy.get('.username-input')
       .type('a')
       .should('have.value', 'a');
