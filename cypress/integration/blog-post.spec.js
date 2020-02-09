@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe('Delete blog post', function() {
+describe('Blog post page - test delete, edit', function() {
   beforeEach(function() {
     cy.registerTestUser();
     cy.request('POST', '/api/secure/dashboard/create-new-blog-post', {
@@ -26,5 +26,24 @@ describe('Delete blog post', function() {
       .first()
       .click();
     cy.get('.BlogPage > ul > li').should('have.length', 1);
+  });
+
+  // TODO confirm false
+  // TODO delete error
+
+  it('edit blog post', function() {
+    cy.visit('/blog/a');
+    cy.get('.BlogPage > ul > li').should('have.length', 2);
+    cy.contains('blog post 1').click();
+    cy.get('button[title="Edit post"]').click();
+    cy.get('input')
+      .first()
+      .type(' edited');
+    cy.server();
+    cy.route('PUT', '/api/public/blog-post/id/*').as('update');
+    cy.get('button[title="Save changes"]').click();
+    cy.wait('@update');
+    cy.get('.blog-post-page-element button span').click();
+    cy.contains('blog post 1 edited').should('exist');
   });
 });
